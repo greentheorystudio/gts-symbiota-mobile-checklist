@@ -2,7 +2,7 @@
   "name": "gts-symbiota-mobile-checklist",
   "version": "0.0.1",
   "description": "A Quasar Project",
-  "productName": "Symbiota Mobile Checklist",
+  "productName": "Green Theory Studio's Symbiota Mobile Checklist",
   "author": "Ben Brandt <benjamin.brandt@nau.edu>",
   "type": "module",
   "private": true,
