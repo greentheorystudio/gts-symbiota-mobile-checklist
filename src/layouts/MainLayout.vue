@@ -1,27 +1,46 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="hHh lpR fFf">
     <q-header elevated>
       <q-toolbar>
-        <q-btn
+        <!-- <q-btn
           flat
           dense
           round
           icon="menu"
           aria-label="Menu"
           @click="toggleLeftDrawer"
-        />
+        /> -->
 
         <q-toolbar-title>
-          Quasar App
+          <div class="cursor-pointer" @click="$router.push('/');">
+            Symbiota Mobile Checklist
+          </div>
         </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
+        <div class="row q-gutter-sm">
+          <q-btn
+              flat
+              dense
+              round
+              icon="settings"
+              aria-label="Management"
+              to="management"
+          />
+          <q-btn
+              flat
+              dense
+              round
+              icon="info"
+              aria-label="Help"
+              to="help"
+          />
+        </div>
+
       </q-toolbar>
     </q-header>
 
     <q-drawer
       v-model="leftDrawerOpen"
-      show-if-above
       bordered
     >
       <q-list>
