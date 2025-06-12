@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Green Theory Studio\'s Symbiota Mobile Checklist</string>
+    <string name="title_activity_main">Green Theory Studio\'s Symbiota Mobile Checklist</string>
+    <string name="package_name">com.greentheorystudio.symbiota.mobile.checklist</string>
+    <string name="custom_url_scheme">com.greentheorystudio.symbiota.mobile.checklist</string>
+</resources>

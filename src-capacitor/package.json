@@ -1,0 +1,14 @@
+{
+  "name": "gts-symbiota-mobile-checklist",
+  "version": "0.0.1",
+  "description": "A Quasar Project",
+  "author": "Ben Brandt <ben@greentheorystudio.com>",
+  "private": true,
+  "dependencies": {
+    "@capacitor/android": "^7.3.0",
+    "@capacitor/app": "^7.0.0",
+    "@capacitor/cli": "^7.0.0",
+    "@capacitor/core": "^7.0.0",
+    "@capacitor/ios": "^7.3.0"
+  }
+}

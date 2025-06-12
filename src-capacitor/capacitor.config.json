@@ -1,0 +1,21 @@
+{
+  "appId": "com.greentheorystudio.symbiota.mobile.checklist",
+  "appName": "Green Theory Studio's Symbiota Mobile Checklist",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https",
+    "url": "http://192.168.5.59:9500"
+  },
+  "plugins": {
+    "CapacitorSQLite": {
+      "iosDatabaseLocation": "Library/CapacitorDatabase",
+      "iosIsEncryption": false,
+      "iosKeychainPrefix": "ionic7-vue-sqlite-app",
+      "androidIsEncryption": false,
+      "electronIsEncryption": false,
+      "electronWindowsLocation": "C:\\ProgramData\\CapacitorDatabases",
+      "electronMacLocation": "/Volumes/Development_Lacie/Development/CapacitorDatabases",
+      "electronLinuxLocation": "Databases"
+    }
+  }
+}
