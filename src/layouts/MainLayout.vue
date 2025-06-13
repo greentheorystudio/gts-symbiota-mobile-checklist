@@ -40,20 +40,20 @@
     </q-header>
 
     <q-drawer
-      v-model="leftDrawerOpen"
-      bordered
+        v-model="leftDrawerOpen"
+        bordered
     >
       <q-list>
         <q-item-label
-          header
+            header
         >
           Essential Links
         </q-item-label>
 
         <EssentialLink
-          v-for="link in linksList"
-          :key="link.title"
-          v-bind="link"
+            v-for="link in linksList"
+            :key="link.title"
+            v-bind="link"
         />
       </q-list>
     </q-drawer>
