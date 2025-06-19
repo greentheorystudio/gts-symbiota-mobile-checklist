@@ -1,7 +1,7 @@
 <template>
-  <q-page class="flex flex-center">
-    Management
-  </q-page>
+    <q-page class="flex flex-center">
+        Management
+    </q-page>
 </template>
 
 <script setup>

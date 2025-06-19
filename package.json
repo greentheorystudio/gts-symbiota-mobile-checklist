@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "A Quasar Project",
   "productName": "Green Theory Studio's Symbiota Mobile Checklist",
-  "author": "Ben Brandt <ben@greentheorystudio.com>",
+  "author": "Ben Brandt <benjamin.brandt@nau.edu>",
   "type": "module",
   "private": true,
   "scripts": {
@@ -17,20 +17,14 @@
     "postinstall": "quasar prepare"
   },
   "dependencies": {
-    "@capacitor-community/electron": "^5.0.1",
-    "@capacitor-community/sqlite": "^7.0.0",
-    "@capacitor/android": "^7.3.0",
-    "@capacitor/core": "^7.3.0",
-    "@capacitor/ios": "^7.3.0",
-    "@capacitor/toast": "^7.0.1",
     "@quasar/extras": "^1.16.4",
     "pinia": "^3.0.1",
     "quasar": "^2.16.0",
+    "sql.js": "^1.13.0",
     "vue": "^3.4.18",
     "vue-router": "^4.0.12"
   },
   "devDependencies": {
-    "@capacitor/cli": "^7.3.0",
     "@quasar/app-vite": "^2.1.0",
     "@types/node": "^20.5.9",
     "autoprefixer": "^10.4.2",
