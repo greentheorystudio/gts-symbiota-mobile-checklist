@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "A Quasar Project",
   "productName": "Green Theory Studio's Symbiota Mobile Checklist",
-  "author": "Ben Brandt <benjamin.brandt@nau.edu>",
+  "author": "Ben Brandt <ben@greentheorystudio.com>",
   "type": "module",
   "private": true,
   "scripts": {
