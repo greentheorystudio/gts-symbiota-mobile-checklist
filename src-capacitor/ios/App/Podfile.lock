@@ -3,6 +3,10 @@ PODS:
     - CapacitorCordova
   - CapacitorApp (7.0.1):
     - Capacitor
+  - CapacitorCommunitySqlite (7.0.0):
+    - Capacitor
+    - SQLCipher
+    - ZIPFoundation
   - CapacitorCordova (7.4.0)
   - CapacitorFilesystem (7.1.1):
     - Capacitor
@@ -10,42 +14,62 @@ PODS:
   - CapacitorFileTransfer (1.0.0):
     - Capacitor
     - IONFileTransferLib (~> 1.0)
+  - CapacitorToast (7.0.1):
+    - Capacitor
   - IONFilesystemLib (1.0.0)
   - IONFileTransferLib (1.0.0)
+  - SQLCipher (4.9.0):
+    - SQLCipher/standard (= 4.9.0)
+  - SQLCipher/common (4.9.0)
+  - SQLCipher/standard (4.9.0):
+    - SQLCipher/common
+  - ZIPFoundation (0.9.19)
 
 DEPENDENCIES:
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorApp (from `../../node_modules/@capacitor/app`)"
+  - "CapacitorCommunitySqlite (from `../../node_modules/@capacitor-community/sqlite`)"
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorFilesystem (from `../../node_modules/@capacitor/filesystem`)"
   - "CapacitorFileTransfer (from `../../node_modules/@capacitor/file-transfer`)"
+  - "CapacitorToast (from `../../node_modules/@capacitor/toast`)"
 
 SPEC REPOS:
   trunk:
     - IONFilesystemLib
     - IONFileTransferLib
+    - SQLCipher
+    - ZIPFoundation
 
 EXTERNAL SOURCES:
   Capacitor:
     :path: "../../node_modules/@capacitor/ios"
   CapacitorApp:
     :path: "../../node_modules/@capacitor/app"
+  CapacitorCommunitySqlite:
+    :path: "../../node_modules/@capacitor-community/sqlite"
   CapacitorCordova:
     :path: "../../node_modules/@capacitor/ios"
   CapacitorFilesystem:
     :path: "../../node_modules/@capacitor/filesystem"
   CapacitorFileTransfer:
     :path: "../../node_modules/@capacitor/file-transfer"
+  CapacitorToast:
+    :path: "../../node_modules/@capacitor/toast"
 
 SPEC CHECKSUMS:
   Capacitor: 10feab36396883c55373328124a677f118cd4b5f
   CapacitorApp: febecbb9582cb353aed037e18ec765141f880fe9
+  CapacitorCommunitySqlite: b11e556cf5d149f9e0b6fbbb47959a6cd718c3d0
   CapacitorCordova: 723e017d8a80ab2ede9959fbe37556c35ac860d5
   CapacitorFilesystem: 39173fe5a0e77851119998d0d8c61c70551a412a
   CapacitorFileTransfer: 2e2e80449760754330bd3b87da438372cd4128bd
+  CapacitorToast: ddfc4b36080dbe3634c9faf510b20f6ddcff9330
   IONFilesystemLib: ceacae793975039530458eabab0c495c70515a0d
   IONFileTransferLib: 06c85b3f8dd9d46f39e2172213f45d810708c61e
+  SQLCipher: 31878d8ebd27e5c96db0b7cb695c96e9f8ad77da
+  ZIPFoundation: b8c29ea7ae353b309bc810586181fd073cb3312c
 
-PODFILE CHECKSUM: 43359bef7c12319576fe40bc4767803453f6b08e
+PODFILE CHECKSUM: 1de8b7da994a37a9348bd0e1877cc2aecd24cc0f
 
 COCOAPODS: 1.16.2
