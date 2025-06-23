@@ -5,7 +5,6 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
 import { Capacitor } from '@capacitor/core';
-import { JeepSqlite } from 'jeep-sqlite/dist/components/jeep-sqlite';
 import { Filesystem,  Directory, Encoding } from '@capacitor/filesystem';
 import AppInitializationService from './services/appInitializationService';
 import DatabaseService from './services/databaseService';
@@ -69,17 +68,6 @@ export default defineComponent({
         onMounted(async () => {
             console.log('here');
             appInitialized.value = await appInitializationService.initializeApp(appPlatform);
-
-            if(appPlatform === 'web'){
-                customElements.define('jeep-sqlite', JeepSqlite);
-                const jeepEl = document.createElement('jeep-sqlite');
-                document.body.appendChild(jeepEl);
-                customElements.whenDefined('jeep-sqlite')
-                .then(() => {
-                    console.log('return');
-                    appInitialized.value = await appInitializationService.initializeApp(appPlatform);
-                });
-            }
         });
 
         return {

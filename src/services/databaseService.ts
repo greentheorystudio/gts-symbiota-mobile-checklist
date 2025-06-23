@@ -8,6 +8,7 @@ import { Filesystem,  Directory, Encoding } from '@capacitor/filesystem';
 export interface DatabaseServiceInterface {
     createDatabaseConnection(): Promise<boolean>;
     createDatabaseJsonFile(): Promise<void>;
+    initWebStore(): Promise<void>;
     saveDatabaseToFile(database: SQLiteDBConnection): Promise<void>;
 }
 
@@ -47,10 +48,16 @@ class DatabaseService implements DatabaseServiceInterface {
             'mobileChecklistDb',
             false,
             'no-encryption',
-            0,
+            1,
             false
         );
+        await db.open();
         await this.saveDatabaseToFile(db);
+        return;
+    }
+
+    async initWebStore(): Promise<void> {
+        await this.sqliteConnection.initWebStore();
         return;
     }
 

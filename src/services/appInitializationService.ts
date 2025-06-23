@@ -1,5 +1,4 @@
 import { Filesystem,  Directory, Encoding } from '@capacitor/filesystem';
-import { Capacitor } from '@capacitor/core';
 import { JeepSqlite } from 'jeep-sqlite/dist/components/jeep-sqlite';
 
 import { DatabaseServiceInterface } from '../services/databaseService';
@@ -75,6 +74,7 @@ class AppInitializationService implements AppInitializationServiceInterface {
         let initialized = false;
         if(platform === 'web'){
             await this.setJeepSQLiteElement();
+            await this.databaseService.initWebStore();
         }
         console.log('there');
         const rootValidated = await this.validateRootDirectory();
