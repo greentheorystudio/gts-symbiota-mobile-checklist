@@ -106,10 +106,12 @@ class AppInitializationService implements AppInitializationServiceInterface {
 
     async validateDatabaseFile(): Promise<boolean> {
         let validated = await this.getDatabaseFileExists();
-        if(!validated){
+        /*if(!validated){
             await this.databaseService.createDatabaseJsonFile();
             validated = await this.getDatabaseFileExists();
-        }
+        }*/
+        await this.databaseService.createDatabaseJsonFile();
+        validated = await this.getDatabaseFileExists();
         return validated;
     }
 
