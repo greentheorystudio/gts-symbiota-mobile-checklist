@@ -18,7 +18,7 @@ export interface DatabaseServiceInterface {
 
 class DatabaseService implements DatabaseServiceInterface {
 
-    databaseConnection: SQLiteDBConnection|null = null;
+    databaseConnection: SQLiteDBConnection|undefined;
     newestDbVersion = 0;
     sqliteConnection = new SQLiteConnection(CapacitorSQLite);
     sqlitePlugin = CapacitorSQLite;
@@ -32,11 +32,10 @@ class DatabaseService implements DatabaseServiceInterface {
             directory: Directory.Data,
             encoding: Encoding.UTF8,
         });
-        console.log(databaseJsonStr);
         if(databaseJsonStr.data && typeof databaseJsonStr.data === 'string'){
             const result = await this.sqliteConnection.importFromJson(databaseJsonStr.data);
             console.log(result);
-            this.databaseConnection = await this.sqliteConnection.createConnection(
+            /*this.databaseConnection = await this.sqliteConnection.createConnection(
                 'mobileChecklistDb',
                 false,
                 'no-encryption',
@@ -49,24 +48,18 @@ class DatabaseService implements DatabaseServiceInterface {
             console.log(databaseConnected);
             if(databaseConnected.result){
                 connectionEstablished = true;
-            }
+            }*/
         }
         return connectionEstablished;
     }
 
     async createDatabaseJsonFile(): Promise<void> {
-        const db = await this.sqliteConnection.createConnection(
-            'mobileChecklistDb',
-            false,
-            'no-encryption',
-            1,
-            false
-        );
-        await db.open();
-        await this.runDatabaseUpdates();
-        const tables = await db.getTableList();
-        console.log(tables);
-        //await this.saveDatabaseToFile(db);
+        await this.setDatabaseConnection();
+        if(this.databaseConnection){
+            const tables = await this.databaseConnection.getTableList();
+            console.log(tables);
+            await this.saveDatabaseToFile();
+        }
         return;
     }
 
@@ -75,22 +68,43 @@ class DatabaseService implements DatabaseServiceInterface {
         return;
     }
 
+    async openDatabase(): Promise<SQLiteDBConnection | undefined> {
+        let db = await this.sqliteConnection.createConnection(
+            'mobileChecklistDb',
+            false,
+            'no-encryption',
+            1,
+            false
+        );
+        await db.open();
+        return db;
+    }
+
     async runDatabaseUpdates(): Promise<void> {
         await this.sqlitePlugin.addUpgradeStatement({
             database: 'mobileChecklistDb',
             upgrade: this.updateStatements,
         });
+        console.log('updated');
         return;
     }
 
-    async saveDatabaseToFile(database: SQLiteDBConnection): Promise<void> {
-        const dbJson = await database.exportToJson('full', false);
-        await Filesystem.writeFile({
-            path: 'mobile-checklist/database/database.json',
-            data: JSON.stringify(dbJson),
-            directory: Directory.Data,
-            encoding: Encoding.UTF8,
-        });
+    async saveDatabaseToFile(): Promise<void> {
+        if(this.databaseConnection){
+            const dbJson = await this.databaseConnection.exportToJson('full', false);
+            await Filesystem.writeFile({
+                path: 'mobile-checklist/database/database.json',
+                data: JSON.stringify(dbJson.export),
+                directory: Directory.Data,
+                encoding: Encoding.UTF8,
+            });
+        }
+        return;
+    }
+
+    async setDatabaseConnection(): Promise<void> {
+        await this.runDatabaseUpdates();
+        this.databaseConnection = await this.openDatabase();
         return;
     }
 

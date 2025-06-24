@@ -9,7 +9,7 @@ export interface AppInitializationServiceInterface {
     getSubDirectoryExists(directoryName: string): Promise<boolean>;
     initializeApp(platform: string): Promise<boolean>;
     setJeepSQLiteElement(): Promise<void>;
-    validateDatabaseFile(): Promise<boolean>;
+    validateDatabaseFile(reset: boolean): Promise<boolean>;
     validateRootDirectory(): Promise<boolean>;
     validateSubDirectories(): Promise<boolean>;
 }
@@ -70,18 +70,16 @@ class AppInitializationService implements AppInitializationServiceInterface {
     }
 
     async initializeApp(platform: string): Promise<boolean> {
-        console.log('Initializing database connection');
         let initialized = false;
         if(platform === 'web'){
             await this.setJeepSQLiteElement();
             await this.databaseService.initWebStore();
         }
-        console.log('there');
         const rootValidated = await this.validateRootDirectory();
         if(rootValidated){
             const subDirectoriesValidated = await this.validateSubDirectories();
             if(subDirectoriesValidated){
-                const databaseValidated = await this.validateDatabaseFile();
+                const databaseValidated = await this.validateDatabaseFile(true);
                 if(databaseValidated){
                     const databaseConnectionValidated = await this.databaseService.createDatabaseConnection();
                     if(databaseConnectionValidated){
@@ -99,19 +97,16 @@ class AppInitializationService implements AppInitializationServiceInterface {
         document.body.appendChild(jeepEl);
         customElements.whenDefined('jeep-sqlite')
         .then(() => {
-            console.log('return');
             return;
         });
     }
 
-    async validateDatabaseFile(): Promise<boolean> {
+    async validateDatabaseFile(reset = false): Promise<boolean> {
         let validated = await this.getDatabaseFileExists();
-        /*if(!validated){
+        if(!validated || reset){
             await this.databaseService.createDatabaseJsonFile();
             validated = await this.getDatabaseFileExists();
-        }*/
-        await this.databaseService.createDatabaseJsonFile();
-        validated = await this.getDatabaseFileExists();
+        }
         return validated;
     }
 

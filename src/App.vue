@@ -66,7 +66,6 @@ export default defineComponent({
         writeFile();*/
 
         onMounted(async () => {
-            console.log('here');
             appInitialized.value = await appInitializationService.initializeApp(appPlatform);
         });
 
