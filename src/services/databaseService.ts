@@ -26,29 +26,18 @@ class DatabaseService implements DatabaseServiceInterface {
 
     async createDatabaseConnection(): Promise<boolean> {
         let connectionEstablished = false;
-        await this.setNewestDbVersionNumber();
         const databaseJsonStr = await Filesystem.readFile({
             path: 'mobile-checklist/database/database.json',
             directory: Directory.Data,
             encoding: Encoding.UTF8,
         });
         if(databaseJsonStr.data && typeof databaseJsonStr.data === 'string'){
-            const result = await this.sqliteConnection.importFromJson(databaseJsonStr.data);
-            console.log(result);
-            /*this.databaseConnection = await this.sqliteConnection.createConnection(
-                'mobileChecklistDb',
-                false,
-                'no-encryption',
-                1,
-                false
-            );
-            await this.runDatabaseUpdates();
-            await this.databaseConnection.open();
-            const databaseConnected = await this.sqliteConnection.isConnection('mobileChecklistDb', false);
-            console.log(databaseConnected);
-            if(databaseConnected.result){
+            await this.sqliteConnection.importFromJson(databaseJsonStr.data);
+            await this.setDatabaseConnection();
+            if(this.databaseConnection){
+                const tables = await this.databaseConnection.getTableList();
                 connectionEstablished = true;
-            }*/
+            }
         }
         return connectionEstablished;
     }
@@ -57,7 +46,6 @@ class DatabaseService implements DatabaseServiceInterface {
         await this.setDatabaseConnection();
         if(this.databaseConnection){
             const tables = await this.databaseConnection.getTableList();
-            console.log(tables);
             await this.saveDatabaseToFile();
         }
         return;
@@ -73,7 +61,7 @@ class DatabaseService implements DatabaseServiceInterface {
             'mobileChecklistDb',
             false,
             'no-encryption',
-            1,
+            this.newestDbVersion,
             false
         );
         await db.open();
@@ -85,7 +73,6 @@ class DatabaseService implements DatabaseServiceInterface {
             database: 'mobileChecklistDb',
             upgrade: this.updateStatements,
         });
-        console.log('updated');
         return;
     }
 

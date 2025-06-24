@@ -79,7 +79,8 @@ class AppInitializationService implements AppInitializationServiceInterface {
         if(rootValidated){
             const subDirectoriesValidated = await this.validateSubDirectories();
             if(subDirectoriesValidated){
-                const databaseValidated = await this.validateDatabaseFile(true);
+                await this.databaseService.setNewestDbVersionNumber();
+                const databaseValidated = await this.validateDatabaseFile();
                 if(databaseValidated){
                     const databaseConnectionValidated = await this.databaseService.createDatabaseConnection();
                     if(databaseConnectionValidated){
