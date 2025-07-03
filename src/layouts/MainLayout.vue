@@ -2,15 +2,6 @@
     <q-layout view="hHh lpR fFf">
         <q-header elevated>
             <q-toolbar>
-                <!-- <q-btn
-                  flat
-                  dense
-                  round
-                  icon="menu"
-                  aria-label="Menu"
-                  @click="toggleLeftDrawer"
-                /> -->
-
                 <q-toolbar-title>
                     <div class="cursor-pointer" @click="$router.push('/');">
                         Symbiota Mobile Checklist
@@ -18,104 +9,42 @@
                 </q-toolbar-title>
 
                 <div class="row q-gutter-sm">
-                    <q-btn
-                        flat
-                        dense
-                        round
-                        icon="settings"
-                        aria-label="Management"
-                        to="management"
-                    />
-                    <q-btn
-                        flat
-                        dense
-                        round
-                        icon="info"
-                        aria-label="Help"
-                        to="help"
-                    />
+                    <q-btn flat dense round icon="settings" aria-label="Management" to="management" />
+                    <q-btn flat dense round icon="info" aria-label="Help" to="help" />
                 </div>
-
             </q-toolbar>
         </q-header>
 
-        <q-drawer
-            v-model="leftDrawerOpen"
-            bordered
-        >
-            <q-list>
-                <q-item-label
-                    header
-                >
-                    Essential Links
-                </q-item-label>
+        <q-drawer v-model="leftDrawerOpen" bordered>
 
-                <EssentialLink
-                    v-for="link in linksList"
-                    :key="link.title"
-                    v-bind="link"
-                />
-            </q-list>
         </q-drawer>
 
         <q-page-container>
-            <router-view/>
+            <router-view />
         </q-page-container>
     </q-layout>
 </template>
 
-<script setup>
-import {ref} from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
+<script lang="ts">
+import { computed, defineComponent, inject, ref } from 'vue';
 
-const linksList = [
-    {
-        title: 'Docs',
-        caption: 'quasar.dev',
-        icon: 'school',
-        link: 'https://quasar.dev'
-    },
-    {
-        title: 'Github',
-        caption: 'github.com/quasarframework',
-        icon: 'code',
-        link: 'https://github.com/quasarframework'
-    },
-    {
-        title: 'Discord Chat Channel',
-        caption: 'chat.quasar.dev',
-        icon: 'chat',
-        link: 'https://chat.quasar.dev'
-    },
-    {
-        title: 'Forum',
-        caption: 'forum.quasar.dev',
-        icon: 'record_voice_over',
-        link: 'https://forum.quasar.dev'
-    },
-    {
-        title: 'Twitter',
-        caption: '@quasarframework',
-        icon: 'rss_feed',
-        link: 'https://twitter.quasar.dev'
-    },
-    {
-        title: 'Facebook',
-        caption: '@QuasarFramework',
-        icon: 'public',
-        link: 'https://facebook.quasar.dev'
-    },
-    {
-        title: 'Quasar Awesome',
-        caption: 'Community Quasar projects',
-        icon: 'favorite',
-        link: 'https://awesome.quasar.dev'
+export default defineComponent({
+    name: 'MainLayout',
+    setup() {
+        const checklistDisplayStore = inject('checklistDisplayStore');
+
+        const checklistArr = computed(() => checklistDisplayStore.getChecklistArr);
+        const leftDrawerOpen = ref(false);
+
+        function toggleLeftDrawer() {
+            leftDrawerOpen.value = !leftDrawerOpen.value;
+        }
+
+        return {
+            checklistArr,
+            leftDrawerOpen,
+            toggleLeftDrawer
+        };
     }
-]
-
-const leftDrawerOpen = ref(false)
-
-function toggleLeftDrawer() {
-    leftDrawerOpen.value = !leftDrawerOpen.value
-}
+});
 </script>

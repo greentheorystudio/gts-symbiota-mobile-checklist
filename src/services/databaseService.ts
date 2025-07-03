@@ -10,6 +10,7 @@ import { DatabaseUpdateStatements } from '../updates/database.statements';
 export interface DatabaseServiceInterface {
     createDatabaseConnection(): Promise<boolean>;
     createDatabaseJsonFile(): Promise<void>;
+    getDatabaseConnection(): SQLiteDBConnection|undefined;
     initWebStore(): Promise<void>;
     runDatabaseUpdates(): Promise<void>;
     saveDatabaseToFile(database: SQLiteDBConnection): Promise<void>;
@@ -49,6 +50,10 @@ class DatabaseService implements DatabaseServiceInterface {
             await this.saveDatabaseToFile();
         }
         return;
+    }
+
+    getDatabaseConnection(): SQLiteDBConnection|undefined {
+        return this.databaseConnection;
     }
 
     async initWebStore(): Promise<void> {

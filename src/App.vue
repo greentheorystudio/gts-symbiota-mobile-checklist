@@ -1,13 +1,17 @@
 <template>
-  <router-view />
+    <router-view />
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue';
+import { computed, defineComponent, ref, onMounted, provide } from 'vue';
 import { Capacitor } from '@capacitor/core';
-import { Filesystem,  Directory, Encoding } from '@capacitor/filesystem';
+
 import AppInitializationService from './services/appInitializationService';
 import DatabaseService from './services/databaseService';
+
+import { useChecklistAdminStore } from 'src/stores/checklist-admin';
+import { useChecklistDisplayStore } from 'src/stores/checklist-display';
+import { useChecklistRemoteStore } from 'src/stores/checklist-remote';
 
 const databaseService = new DatabaseService();
 const appInitializationService = new AppInitializationService(databaseService);
@@ -15,66 +19,31 @@ const appInitializationService = new AppInitializationService(databaseService);
 export default defineComponent({
     name: 'App',
     setup() {
+        const checklistAdminStore = useChecklistAdminStore();
+        const checklistDisplayStore = useChecklistDisplayStore();
+        const checklistRemoteStore = useChecklistRemoteStore();
+
         const appInitialized = ref(false);
         const appPlatform = Capacitor.getPlatform();
+        const databaseConnection = computed(() => {
+            return databaseService.getDatabaseConnection();
+        });
 
-        /*const fileContent = ref('');
-        const fileName = 'my-test-file.txt';
-        const fileText = 'Hello from Capacitor Filesystem!';
-
-        const writeFile = async () => {
-            try {
-                await Filesystem.writeFile({
-                    path: 'secrets/text.txt',
-                    data: 'This is a secret message',
-                    directory: Directory.Documents,
-                    encoding: Encoding.UTF8,
-                });
-                console.log('File written successfully!');
-                Filesystem.stat({path: 'secrets/text.txt', directory: Directory.Documents})
-                    .then((info) => console.log('Stat Info: ',  info))
-                    .catch((e) => console.log('Error occurred while doing stat: ', e));
-                readDirectory();
-            } catch (error) {
-                console.error('Unable to write file', error);
-            }
-        };
-        const readFile = async () => {
-            try {
-                const contents = await Filesystem.readFile({
-                    path: fileName,
-                    encoding: Encoding.UTF8,
-                });
-                //fileContent.value = contents.data;
-                console.log('File read successfully:', contents.data);
-            } catch (e) {
-                console.error('Unable to read file', e);
-            }
-        };
-        const readDirectory = async () => {
-            try {
-                const contents = await Filesystem.readdir({
-                    path: '',
-                    directory: Directory.Documents
-                });
-                //fileContent.value = contents.data;
-                console.log('Directory read successfully:', contents);
-            } catch (e) {
-                console.error('Unable to read file', e);
-            }
-        };
-        writeFile();*/
+        provide('checklistAdminStore', checklistAdminStore);
+        provide('checklistDisplayStore', checklistDisplayStore);
+        provide('checklistRemoteStore', checklistRemoteStore);
 
         onMounted(async () => {
             appInitialized.value = await appInitializationService.initializeApp(appPlatform);
+            checklistAdminStore.setDatabaseConnection(databaseConnection.value);
+            checklistDisplayStore.setDatabaseConnection(databaseConnection.value);
+            checklistRemoteStore.setChecklistArr();
+            await checklistDisplayStore.setChecklistArr();
         });
 
         return {
 
         };
-    },
-    provide: {
-        databaseService
     }
 });
 </script>
