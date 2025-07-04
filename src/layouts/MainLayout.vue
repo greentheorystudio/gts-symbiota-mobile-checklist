@@ -25,26 +25,17 @@
     </q-layout>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, inject, ref } from 'vue';
+<script setup lang="ts">
+import { computed, ref } from 'vue';
 
-export default defineComponent({
-    name: 'MainLayout',
-    setup() {
-        const checklistDisplayStore = inject('checklistDisplayStore');
+import { useChecklistDisplayStore } from 'src/stores/checklist-display';
 
-        const checklistArr = computed(() => checklistDisplayStore.getChecklistArr);
-        const leftDrawerOpen = ref(false);
+const checklistDisplayStore = useChecklistDisplayStore();
 
-        function toggleLeftDrawer() {
-            leftDrawerOpen.value = !leftDrawerOpen.value;
-        }
+const checklistArr = computed(() => checklistDisplayStore.getChecklistArr);
+const leftDrawerOpen = ref(false);
 
-        return {
-            checklistArr,
-            leftDrawerOpen,
-            toggleLeftDrawer
-        };
-    }
-});
+function toggleLeftDrawer() {
+    leftDrawerOpen.value = !leftDrawerOpen.value;
+}
 </script>

@@ -14,24 +14,16 @@
     </q-page>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, inject } from 'vue';
+<script setup lang="ts">
+import { computed } from 'vue';
 
-export default defineComponent({
-    name: 'MainPage',
-    setup() {
-        const checklistDisplayStore = inject('checklistDisplayStore');
-        const checklistRemoteStore = inject('checklistRemoteStore');
+import { useChecklistDisplayStore } from 'src/stores/checklist-display';
+import { useChecklistRemoteStore } from 'src/stores/checklist-remote';
 
-        const checklistArr = computed(() => checklistDisplayStore.getChecklistArr);
-        const remoteChecklistArr = computed(() => checklistRemoteStore.getChecklistArr);
-        const remoteConnectionEstablished = computed(() => checklistRemoteStore.getRemoteConnectionEstablished);
+const checklistDisplayStore = useChecklistDisplayStore();
+const checklistRemoteStore = useChecklistRemoteStore();
 
-        return {
-            checklistArr,
-            remoteChecklistArr,
-            remoteConnectionEstablished
-        };
-    }
-});
+const checklistArr = computed(() => checklistDisplayStore.getChecklistArr);
+const remoteChecklistArr = computed(() => checklistRemoteStore.getChecklistArr);
+const remoteConnectionEstablished = computed(() => checklistRemoteStore.getRemoteConnectionEstablished);
 </script>
