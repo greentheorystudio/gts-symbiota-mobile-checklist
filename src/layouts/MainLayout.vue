@@ -9,6 +9,7 @@
                 </q-toolbar-title>
 
                 <div class="row q-gutter-sm">
+                    <q-btn flat dense round icon="download_for_offline" aria-label="Download" to="download" />
                     <q-btn flat dense round icon="settings" aria-label="Management" to="management" />
                     <q-btn flat dense round icon="info" aria-label="Help" to="help" />
                 </div>

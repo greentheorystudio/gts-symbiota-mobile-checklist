@@ -5,7 +5,7 @@
                 <div>Select a checklist from the dropdown above to view</div>
             </template>
             <template v-else-if="remoteChecklistArr.length > 0">
-                <div>Click the Management button in the top right corner to download checklists to your device</div>
+                <div>Tap the Download button in the top right corner to download checklists to your device</div>
             </template>
             <template v-else-if="!remoteConnectionEstablished">
                 <div>Out of internet connection</div>
