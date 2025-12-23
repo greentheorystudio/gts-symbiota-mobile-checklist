@@ -25,9 +25,10 @@ const appPlatform = Capacitor.getPlatform();
 const databaseConnection = computed(() => {
     return databaseService.getDatabaseConnection();
 });
+const resetDatabase = ref(false);
 
 onMounted(async () => {
-    appInitialized.value = await appInitializationService.initializeApp(appPlatform);
+    appInitialized.value = await appInitializationService.initializeApp(appPlatform, resetDatabase.value);
     checklistAdminStore.setDatabaseConnection(databaseConnection.value);
     checklistDisplayStore.setDatabaseConnection(databaseConnection.value);
     checklistRemoteStore.setChecklistArr();

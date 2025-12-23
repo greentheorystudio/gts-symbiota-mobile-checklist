@@ -7,7 +7,7 @@ export interface AppInitializationServiceInterface {
     getDatabaseFileExists(): Promise<boolean>;
     getRootDirectoryExists(): Promise<boolean>;
     getSubDirectoryExists(directoryName: string): Promise<boolean>;
-    initializeApp(platform: string): Promise<boolean>;
+    initializeApp(platform: string, resetDatabase: boolean): Promise<boolean>;
     setJeepSQLiteElement(): Promise<void>;
     validateDatabaseFile(reset: boolean): Promise<boolean>;
     validateRootDirectory(): Promise<boolean>;
@@ -69,7 +69,7 @@ class AppInitializationService implements AppInitializationServiceInterface {
         return exists;
     }
 
-    async initializeApp(platform: string): Promise<boolean> {
+    async initializeApp(platform: string, resetDatabase: boolean): Promise<boolean> {
         let initialized = false;
         if(platform === 'web'){
             await this.setJeepSQLiteElement();
@@ -80,7 +80,7 @@ class AppInitializationService implements AppInitializationServiceInterface {
             const subDirectoriesValidated = await this.validateSubDirectories();
             if(subDirectoriesValidated){
                 await this.databaseService.setNewestDbVersionNumber();
-                const databaseValidated = await this.validateDatabaseFile();
+                const databaseValidated = await this.validateDatabaseFile(resetDatabase);
                 if(databaseValidated){
                     const databaseConnectionValidated = await this.databaseService.createDatabaseConnection();
                     if(databaseConnectionValidated){
