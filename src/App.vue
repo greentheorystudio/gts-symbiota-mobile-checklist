@@ -25,7 +25,7 @@ const appPlatform = Capacitor.getPlatform();
 const databaseConnection = computed(() => {
     return databaseService.getDatabaseConnection();
 });
-const resetDatabase = ref(false);
+const resetDatabase = ref(true);
 
 onMounted(async () => {
     appInitialized.value = await appInitializationService.initializeApp(appPlatform, resetDatabase.value);

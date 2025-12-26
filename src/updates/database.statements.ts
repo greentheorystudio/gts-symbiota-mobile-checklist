@@ -46,7 +46,18 @@ export const DatabaseUpdateStatements: Statement[] = [
             `CREATE TABLE IF NOT EXISTS checklistTaxa (
                 clid INTEGER NOT NULL,
                 tid INTEGER NOT NULL,
-                dataJson TEXT NOT NULL
+                rankid INTEGER NOT NULL,
+                sciname TEXT(250),
+                author TEXT(100),
+                family TEXT(50),
+                acceptedRankid INTEGER NOT NULL,
+                acceptedSciname TEXT(250),
+                acceptedAuthor TEXT(100),
+                acceptedFamily TEXT(50),
+                descriptionJson TEXT NOT NULL,
+                keyJson TEXT NOT NULL,
+                synonymyJson TEXT NOT NULL,
+                vernacularJson TEXT NOT NULL
             );`,
             `CREATE TABLE IF NOT EXISTS checklists (
                 clid INTEGER NOT NULL,

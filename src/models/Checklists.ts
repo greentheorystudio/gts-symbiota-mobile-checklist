@@ -1,16 +1,6 @@
 import { SQLiteDBConnection } from '@capacitor-community/sqlite';
 
-export interface ChecklistInterface {
-    clid: number;
-    name: string;
-    title: string;
-    locality: string;
-    publication: string;
-    abstract: string;
-    authors: string;
-    notes: string;
-    defaultSettings: string;
-}
+import { ChecklistInterface } from 'src/interfaces/ChecklistInterface';
 
 export interface ChecklistsInterface {
     getChecklists(db: SQLiteDBConnection|undefined): Promise<ChecklistInterface[]>;
