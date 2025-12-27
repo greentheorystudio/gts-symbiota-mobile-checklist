@@ -19,7 +19,8 @@ class Checklists implements ChecklistsInterface {
             sql += (checklist.abstract ? "'" + checklist.abstract + "'" : 'NULL') + ',';
             sql += (checklist.authors ? "'" + checklist.authors + "'" : 'NULL') + ',';
             sql += (checklist.notes ? "'" + checklist.notes + "'" : 'NULL') + ',';
-            sql += (checklist.defaultSettings ? "'" + JSON.stringify(checklist.defaultSettings) + "'" : 'NULL') + ')';
+            sql += (checklist.defaultsettings ? "'" + JSON.stringify(checklist.defaultsettings) + "'" : 'NULL') + ')';
+            console.log(sql);
             returnVal = await db.run(sql);
         }
         return returnVal;
@@ -28,7 +29,7 @@ class Checklists implements ChecklistsInterface {
     async getChecklists(db: SQLiteDBConnection | undefined): Promise<DBSQLiteValues | undefined> {
         let returnVal;
         if(db !== undefined){
-            returnVal = await db.query('SELECT clid FROM checklists;');
+            returnVal = await db.query('SELECT * FROM checklists;');
         }
         return returnVal;
     }
