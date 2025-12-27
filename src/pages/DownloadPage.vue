@@ -31,13 +31,13 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { useChecklistDisplayStore } from 'src/stores/checklist-display';
+import { useChecklistStore } from 'src/stores/checklist';
 import { useChecklistRemoteStore } from 'src/stores/checklist-remote';
 
-const checklistDisplayStore = useChecklistDisplayStore();
+const checklistStore = useChecklistStore();
 const checklistRemoteStore = useChecklistRemoteStore();
 
-const checklistArr = computed(() => checklistDisplayStore.getChecklistArr);
+const checklistArr = computed(() => checklistStore.getChecklistArr);
 const checklistDownloadOptionArr = computed(() => {
     const returnArr: any[] = [];
     remoteChecklistArr.value.forEach((checklist) => {
