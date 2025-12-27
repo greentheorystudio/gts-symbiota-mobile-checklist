@@ -9,15 +9,15 @@ import { Capacitor } from '@capacitor/core';
 import AppInitializationService from './services/appInitializationService';
 import DatabaseService from './services/databaseService';
 
-import { useChecklistAdminStore } from 'src/stores/checklist-admin';
-import { useChecklistDisplayStore } from 'src/stores/checklist-display';
+import { useChecklistStore } from 'src/stores/checklist';
 import { useChecklistRemoteStore } from 'src/stores/checklist-remote';
+
+const portalBaseUrl = 'https://www.cal-ibis.org';
 
 const databaseService = new DatabaseService();
 const appInitializationService = new AppInitializationService(databaseService);
 
-const checklistAdminStore = useChecklistAdminStore();
-const checklistDisplayStore = useChecklistDisplayStore();
+const checklistStore = useChecklistStore();
 const checklistRemoteStore = useChecklistRemoteStore();
 
 const appInitialized = ref(false);
@@ -25,13 +25,13 @@ const appPlatform = Capacitor.getPlatform();
 const databaseConnection = computed(() => {
     return databaseService.getDatabaseConnection();
 });
-const resetDatabase = ref(true);
+const resetDatabase = ref(false);
 
 onMounted(async () => {
     appInitialized.value = await appInitializationService.initializeApp(appPlatform, resetDatabase.value);
-    checklistAdminStore.setDatabaseConnection(databaseConnection.value);
-    checklistDisplayStore.setDatabaseConnection(databaseConnection.value);
+    checklistStore.setDatabaseConnection(databaseConnection.value);
+    checklistRemoteStore.setApiBaseUrl(portalBaseUrl);
     checklistRemoteStore.setChecklistArr();
-    await checklistDisplayStore.setChecklistArr();
+    await checklistStore.setChecklistArr();
 });
 </script>
