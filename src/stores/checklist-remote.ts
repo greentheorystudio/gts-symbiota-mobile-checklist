@@ -1,28 +1,32 @@
 import { defineStore } from 'pinia';
-import { ComputedRef, Ref, ref, computed } from 'vue';
-
-import { RemoteChecklistInterface } from 'src/models/RemoteChecklists';
+import { ComputedRef, ref, Ref, computed } from 'vue';
 
 export const useChecklistRemoteStore = defineStore('checklist-remote', () => {
-
-    const apiPrefix: string = 'https://www.cal-ibis.org';
+    const apiBaseUrl: Ref<string|null> = ref(null);
     const checklistArr = ref([]);
     const remoteConnectionEstablished = ref(true);
 
-    const getApiUrl: ComputedRef<string> = computed(() => {
-        return apiPrefix + '/api/checklists/checklistController.php';
+    const getChecklistApiUrl: ComputedRef<string> = computed(() => {
+        return apiBaseUrl.value + '/api/checklists/checklistController.php';
     });
     const getChecklistArr = computed(() => {
         return checklistArr.value;
+    });
+    const getChecklistTaxaApiUrl: ComputedRef<string> = computed(() => {
+        return apiBaseUrl.value + '/api/checklists/checklistTaxaController.php';
     });
     const getRemoteConnectionEstablished = computed(() => {
         return remoteConnectionEstablished.value;
     });
 
+    function setApiBaseUrl(url: string): void {
+        apiBaseUrl.value = url;
+    }
+
     function setChecklistArr(): void {
         const formData = new FormData();
         formData.append('action', 'getChecklistArr');
-        fetch(getApiUrl.value, {
+        fetch(getChecklistApiUrl.value, {
             method: 'POST',
             body: formData
         })
@@ -43,6 +47,7 @@ export const useChecklistRemoteStore = defineStore('checklist-remote', () => {
         checklistArr,
         getChecklistArr,
         getRemoteConnectionEstablished,
+        setApiBaseUrl,
         setChecklistArr
     };
 });
