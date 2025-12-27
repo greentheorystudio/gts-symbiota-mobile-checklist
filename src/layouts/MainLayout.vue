@@ -29,11 +29,11 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-import { useChecklistDisplayStore } from 'src/stores/checklist-display';
+import { useChecklistStore } from 'src/stores/checklist';
 
-const checklistDisplayStore = useChecklistDisplayStore();
+const checklistStore = useChecklistStore();
 
-const checklistArr = computed(() => checklistDisplayStore.getChecklistArr);
+const checklistArr = computed(() => checklistStore.getChecklistArr);
 const leftDrawerOpen = ref(false);
 
 function toggleLeftDrawer() {
