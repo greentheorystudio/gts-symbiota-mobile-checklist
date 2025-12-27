@@ -41,7 +41,7 @@ export const useDatabaseStore = defineStore('database', () => {
     async function createDatabaseJsonFile(): Promise<void> {
         await setDatabaseConnection();
         if(databaseConnection.value){
-            await saveDatabaseToFile();
+            await processDatabaseChange();
         }
         return;
     }
@@ -117,7 +117,6 @@ export const useDatabaseStore = defineStore('database', () => {
         getDatabaseConnection,
         initWebStore,
         processDatabaseChange,
-        saveDatabaseToFile,
         setNewestDbVersionNumber,
         setRuntimeEnvironment
     };
