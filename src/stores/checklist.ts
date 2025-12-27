@@ -16,9 +16,9 @@ export const useChecklistStore = defineStore('checklist', () => {
     async function createChecklist(checklist: ChecklistInterface): Promise<void> {
         const res = await checklistModel.createChecklist(databaseStore.getDatabaseConnection, checklist);
         await databaseStore.processDatabaseChange();
-        /*if(queryRes && queryRes.hasOwnProperty('values')){
-            checklistArr.value = queryRes.values as ChecklistInterface[];
-        }*/
+        if(res && res.hasOwnProperty('changes') && Number(res.changes.changes) > 0){
+            await setChecklistArr();
+        }
     }
 
     async function setChecklistArr(): Promise<void> {

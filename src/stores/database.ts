@@ -46,6 +46,13 @@ export const useDatabaseStore = defineStore('database', () => {
         return;
     }
 
+    async function deleteDatabase(): Promise<boolean> {
+        await CapacitorSQLite.deleteDatabase({
+            database: 'mobileChecklistDb'
+        });
+        return await createDatabaseConnection();;
+    }
+
     async function initWebStore(): Promise<void> {
         await sqliteConnection.initWebStore();
         return;
@@ -114,6 +121,7 @@ export const useDatabaseStore = defineStore('database', () => {
     return {
         createDatabaseConnection,
         createDatabaseJsonFile,
+        deleteDatabase,
         getDatabaseConnection,
         initWebStore,
         processDatabaseChange,

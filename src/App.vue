@@ -20,7 +20,7 @@ const databaseStore = useDatabaseStore();
 
 const appInitialized = ref(false);
 const appPlatform = Capacitor.getPlatform();
-const resetDatabase = ref(false);
+const resetDatabase = ref(true);
 
 async function getDatabaseFileExists(): Promise<boolean> {
     let exists = false;
@@ -83,7 +83,12 @@ async function initializeApp(platform: string): Promise<boolean> {
             if(databaseValidated){
                 const databaseConnectionValidated = await databaseStore.createDatabaseConnection();
                 if(databaseConnectionValidated){
-                    initialized = true;
+                    if(resetDatabase.value){
+                        initialized = await databaseStore.deleteDatabase();
+                    }
+                    else{
+                        initialized = true;
+                    }
                 }
             }
         }
