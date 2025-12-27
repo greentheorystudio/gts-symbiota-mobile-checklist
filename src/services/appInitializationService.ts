@@ -1,4 +1,4 @@
-import { Filesystem,  Directory, Encoding } from '@capacitor/filesystem';
+import { Filesystem,  Directory } from '@capacitor/filesystem';
 import { JeepSqlite } from 'jeep-sqlite/dist/components/jeep-sqlite';
 
 import { DatabaseServiceInterface } from '../services/databaseService';
