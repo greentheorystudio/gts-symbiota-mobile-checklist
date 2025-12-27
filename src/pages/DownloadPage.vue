@@ -11,7 +11,7 @@
                                         <div class="text-h6">
                                             {{ checklist.name }}
                                         </div>
-                                        <q-btn flat dense round icon="download_for_offline" aria-label="Download" to="download" />
+                                        <q-btn flat dense round icon="download_for_offline" aria-label="Download" to="download" @click="processDownload(checklist);" />
                                     </div>
                                 </q-item-section>
                             </q-item>
@@ -41,7 +41,7 @@ const checklistArr = computed(() => checklistStore.getChecklistArr);
 const checklistDownloadOptionArr = computed(() => {
     const returnArr: any[] = [];
     remoteChecklistArr.value.forEach((checklist) => {
-        const existingChecklist = checklistArr.value.find(eChecklist => Number(eChecklist['clid']) === Number(checklist.value['clid']));
+        const existingChecklist = checklistArr.value.find(eChecklist => Number(eChecklist['clid']) === Number(checklist['clid']));
         if(!existingChecklist){
             returnArr.push(checklist);
         }
@@ -49,4 +49,8 @@ const checklistDownloadOptionArr = computed(() => {
     return returnArr;
 });
 const remoteChecklistArr = computed(() => checklistRemoteStore.getChecklistArr);
+
+async function processDownload(checklist: any) {
+    await checklistStore.createChecklist(checklist);
+}
 </script>

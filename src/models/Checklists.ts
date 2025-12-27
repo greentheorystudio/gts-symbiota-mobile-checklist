@@ -1,22 +1,36 @@
-import { SQLiteDBConnection } from '@capacitor-community/sqlite';
+import { capSQLiteChanges, DBSQLiteValues, SQLiteDBConnection } from '@capacitor-community/sqlite';
 
 import { ChecklistInterface } from 'src/interfaces/ChecklistInterface';
 
 export interface ChecklistsInterface {
-    getChecklists(db: SQLiteDBConnection|undefined): Promise<ChecklistInterface[]>;
+    getChecklists(db: SQLiteDBConnection | undefined): Promise<DBSQLiteValues | undefined>;
 }
 
 class Checklists implements ChecklistsInterface {
 
-    async getChecklists(db: SQLiteDBConnection|undefined): Promise<ChecklistInterface[]> {
-        let returnArr: ChecklistInterface[] = [];
+    async createChecklist(db: SQLiteDBConnection | undefined, checklist: any): Promise<capSQLiteChanges | undefined> {
+        let returnVal;
         if(db !== undefined){
-            const results = await db.query('SELECT * FROM checklists;');
-            if(results && results.hasOwnProperty('values')){
-                returnArr = results.values as ChecklistInterface[];
-            }
+            let sql = 'INSERT INTO checklists(clid, `name`, title, locality, publication, abstract, authors, notes, defaultSettings) VALUES (';
+            sql += Number(checklist.clid) + ",'" + checklist.name + "',";
+            sql += (checklist.title ? "'" + checklist.title + "'" : 'NULL') + ',';
+            sql += (checklist.locality ? "'" + checklist.locality + "'" : 'NULL') + ',';
+            sql += (checklist.publication ? "'" + checklist.publication + "'" : 'NULL') + ',';
+            sql += (checklist.abstract ? "'" + checklist.abstract + "'" : 'NULL') + ',';
+            sql += (checklist.authors ? "'" + checklist.authors + "'" : 'NULL') + ',';
+            sql += (checklist.notes ? "'" + checklist.notes + "'" : 'NULL') + ',';
+            sql += (checklist.defaultSettings ? "'" + JSON.stringify(checklist.defaultSettings) + "'" : 'NULL') + ')';
+            returnVal = await db.run(sql);
         }
-        return returnArr;
+        return returnVal;
+    }
+
+    async getChecklists(db: SQLiteDBConnection | undefined): Promise<DBSQLiteValues | undefined> {
+        let returnVal;
+        if(db !== undefined){
+            returnVal = await db.query('SELECT clid FROM checklists;');
+        }
+        return returnVal;
     }
 }
 
