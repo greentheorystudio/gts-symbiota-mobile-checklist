@@ -25,7 +25,6 @@ export const useChecklistStore = defineStore('checklist', () => {
         const queryRes = await checklistModel.getChecklists(databaseStore.getDatabaseConnection);
         if(queryRes && queryRes.hasOwnProperty('values')){
             checklistArr.value = queryRes.values as ChecklistInterface[];
-            console.log(checklistArr.value);
         }
     }
 

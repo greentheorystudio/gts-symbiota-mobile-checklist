@@ -20,7 +20,6 @@ class Checklists implements ChecklistsInterface {
             sql += (checklist.authors ? "'" + checklist.authors + "'" : 'NULL') + ',';
             sql += (checklist.notes ? "'" + checklist.notes + "'" : 'NULL') + ',';
             sql += (checklist.defaultsettings ? "'" + JSON.stringify(checklist.defaultsettings) + "'" : 'NULL') + ')';
-            console.log(sql);
             returnVal = await db.run(sql);
         }
         return returnVal;

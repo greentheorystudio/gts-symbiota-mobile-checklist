@@ -18,7 +18,8 @@ export interface RemoteChecklistInterface {
     footprintwkt: string;
     percenteffort: number;
     access: string;
-    defaultSettings: string;
+    defaultsettings: string;
+    appconfigjson: string;
     iconurl: string;
     headerurl: string;
     uid: number;
