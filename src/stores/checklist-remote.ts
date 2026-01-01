@@ -25,7 +25,7 @@ export const useChecklistRemoteStore = defineStore('checklist-remote', () => {
 
     function setChecklistArr(): void {
         const formData = new FormData();
-        formData.append('action', 'getChecklistArr');
+        formData.append('action', 'getAppChecklistArr');
         fetch(getChecklistApiUrl.value, {
             method: 'POST',
             body: formData

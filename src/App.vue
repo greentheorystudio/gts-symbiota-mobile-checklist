@@ -20,7 +20,7 @@ const databaseStore = useDatabaseStore();
 
 const appInitialized = ref(false);
 const appPlatform = Capacitor.getPlatform();
-const resetDatabase = ref(false);
+const resetDatabase = ref(true);
 
 async function getDatabaseFileExists(): Promise<boolean> {
     let exists = false;
