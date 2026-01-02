@@ -40,8 +40,8 @@
 import { computed, onMounted, defineEmits, Ref, ref, toRefs, watch } from 'vue';
 
 import {
-    clearDownloadDirectory, createDirectory, downloadChecklistDataArchive,
-    getFolderContents, hideWorking, showNotification, showWorking
+    clearDownloadDirectory, createDirectory, downloadChecklistDataArchive, extractZipFile,
+    getFolderContents, hideWorking, showNotification, showWorking, unzipArchive
 } from 'src/hooks/core';
 
 import { RemoteChecklistInterface } from 'src/interfaces/RemoteChecklistInterface';
@@ -102,6 +102,7 @@ async function processDataDownload() {
         if(dataDownloaded){
             const downloadDirContents = await getFolderContents('mobile-checklist/download');
             console.log(downloadDirContents);
+            await processDataExtraction();
         }
         else if(downloadAttempt.value < 4){
             downloadAttempt.value++;
@@ -110,6 +111,22 @@ async function processDataDownload() {
         else{
             hideWorking();
             showNotification('negative', 'The checklist data is not able to be downloaded at this time');
+        }
+    }
+}
+
+async function processDataExtraction() {
+    showWorking('Extracting data');
+    if(newChecklistData.value){
+        const fullPath = 'mobile-checklist/download/' + newChecklistData.value['appconfigjson']['dataArchiveFilename'].toString();
+        const dataExtracted = await extractZipFile(fullPath, 'mobile-checklist/download/extract');
+        if(dataExtracted){
+            const downloadDirContents = await getFolderContents('mobile-checklist/download/extract');
+            console.log(downloadDirContents);
+        }
+        else{
+            hideWorking();
+            showNotification('negative', 'There was an error rxtracting the data');
         }
     }
 }

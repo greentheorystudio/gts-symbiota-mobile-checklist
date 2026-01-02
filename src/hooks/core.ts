@@ -1,10 +1,7 @@
-import { Loading, Notify, QSpinnerHourglass, useQuasar } from 'quasar';
+import { Loading, Notify, QSpinnerHourglass } from 'quasar';
 import { FileTransfer } from '@capacitor/file-transfer';
-import { Directory, Filesystem } from '@capacitor/filesystem';
-
-FileTransfer.addListener('progress', (progress) => {
-    showWorking(`Downloading checklist data ${((progress.bytes / progress.contentLength) * 100).toFixed(0)}% complete`);
-});
+import { Directory, Encoding, Filesystem } from '@capacitor/filesystem';
+import JSZip from 'jszip';
 
 export async function clearDownloadDirectory() {
     const downloadDirExists = await fileFolderExists('mobile-checklist/download');
@@ -60,6 +57,45 @@ export async function downloadChecklistDataArchive(archiveUrl: string, filename:
     }
     catch(error){
         await FileTransfer.removeAllListeners();
+        return false;
+    }
+}
+
+export async function extractZipFile(zipFilePath: string, destinationDirectory: string) {
+    try {
+        const zipData = await Filesystem.readFile({
+            path: zipFilePath,
+            directory: Directory.Data,
+        });
+        const zipContent = await JSZip.loadAsync(zipData.data, {base64: true});
+        const promises: Promise<void>[] = [];
+        zipContent.forEach((relativePath, zipFile) => {
+            if(!zipFile.dir){
+                const filePromise = (async () => {
+                    const fullPath = `${destinationDirectory}/${relativePath}`;
+                    const parentDir = fullPath.substring(0, fullPath.lastIndexOf('/'));
+                    await Filesystem.mkdir({
+                        path: parentDir,
+                        directory: Directory.Data,
+                        recursive: true,
+                    }).catch(e => {});
+                    await zipFile.async('base64').then((content: any) => {
+                        return Filesystem.writeFile({
+                            path: `${destinationDirectory}/${relativePath}`,
+                            directory: Directory.Data,
+                            data: content,
+                            recursive: true
+                        });
+                    });
+                })();
+                promises.push(filePromise);
+            }
+        });
+        await Promise.all(promises);
+        return true;
+
+    }
+    catch(error){
         return false;
     }
 }
