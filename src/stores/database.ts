@@ -3,9 +3,13 @@ import {
     SQLiteConnection,
     SQLiteDBConnection
 } from '@capacitor-community/sqlite';
-import { Filesystem,  Directory, Encoding } from '@capacitor/filesystem';
 import { defineStore } from 'pinia';
 import { ComputedRef, ref, Ref, computed } from 'vue';
+
+import {
+    getFileContents,
+    writeFile
+} from 'src/hooks/core';
 
 import { DatabaseUpdateStatements } from '../updates/database.statements';
 
@@ -23,11 +27,7 @@ export const useDatabaseStore = defineStore('database', () => {
 
     async function createDatabaseConnection(): Promise<boolean> {
         let connectionEstablished = false;
-        const databaseJsonStr = await Filesystem.readFile({
-            path: 'mobile-checklist/database/database.json',
-            directory: Directory.Data,
-            encoding: Encoding.UTF8,
-        });
+        const databaseJsonStr = await getFileContents('mobile-checklist/database/database.json');
         if(databaseJsonStr.data && typeof databaseJsonStr.data === 'string'){
             await sqliteConnection.importFromJson(databaseJsonStr.data);
             await setDatabaseConnection();
@@ -91,12 +91,7 @@ export const useDatabaseStore = defineStore('database', () => {
     async function saveDatabaseToFile(): Promise<void> {
         if(databaseConnection.value){
             const dbJson = await databaseConnection.value.exportToJson('full', false);
-            await Filesystem.writeFile({
-                path: 'mobile-checklist/database/database.json',
-                data: JSON.stringify(dbJson.export),
-                directory: Directory.Data,
-                encoding: Encoding.UTF8,
-            });
+            await writeFile('mobile-checklist/database/database.json', JSON.stringify(dbJson.export));
         }
         return;
     }

@@ -113,6 +113,14 @@ export async function fileFolderExists(path: string):Promise<boolean> {
     }
 }
 
+export async function getFileContents(filePath: string) {
+    return await Filesystem.readFile({
+        path: filePath,
+        directory: Directory.Data,
+        encoding: Encoding.UTF8,
+    });
+}
+
 export async function getFolderContents(path: string) {
     return await Filesystem.readdir({
         path: path,
@@ -145,4 +153,14 @@ export function showWorking(text: string | null = null) {
         messageColor: 'primary',
         customClass: 'text-h4'
     })
+}
+
+export async function writeFile(filePath: string, content: string) {
+    await Filesystem.writeFile({
+        path: filePath,
+        data: content,
+        directory: Directory.Data,
+        encoding: Encoding.UTF8,
+    });
+    return;
 }
