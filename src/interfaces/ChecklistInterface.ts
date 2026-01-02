@@ -8,4 +8,5 @@ export interface ChecklistInterface {
     authors: string;
     notes: string;
     defaultSettings: string;
+    version: number;
 }

@@ -11,7 +11,7 @@ class Checklists implements ChecklistsInterface {
     async createChecklist(db: SQLiteDBConnection | undefined, checklist: any): Promise<capSQLiteChanges | undefined> {
         let returnVal;
         if(db !== undefined){
-            let sql = 'INSERT INTO checklists(clid, `name`, title, locality, publication, abstract, authors, notes, defaultSettings) VALUES (';
+            let sql = 'INSERT INTO checklists(clid, `name`, title, locality, publication, abstract, authors, notes, version, defaultSettings) VALUES (';
             sql += Number(checklist.clid) + ",'" + checklist.name + "',";
             sql += (checklist.title ? "'" + checklist.title + "'" : 'NULL') + ',';
             sql += (checklist.locality ? "'" + checklist.locality + "'" : 'NULL') + ',';
@@ -19,6 +19,7 @@ class Checklists implements ChecklistsInterface {
             sql += (checklist.abstract ? "'" + checklist.abstract + "'" : 'NULL') + ',';
             sql += (checklist.authors ? "'" + checklist.authors + "'" : 'NULL') + ',';
             sql += (checklist.notes ? "'" + checklist.notes + "'" : 'NULL') + ',';
+            sql += ((checklist.appconfigjson && checklist.appconfigjson.hasOwnProperty('datePublished')) ? Number(checklist.appconfigjson.datePublished) : 'NULL') + ',';
             sql += (checklist.defaultsettings ? "'" + JSON.stringify(checklist.defaultsettings) + "'" : 'NULL') + ')';
             returnVal = await db.run(sql);
         }

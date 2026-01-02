@@ -1,3 +1,10 @@
+export interface AppConfig {
+    maxImagesPerTaxon: number;
+    descSourceTab: string;
+    datePublished: number;
+    dataArchiveFilename: string;
+}
+
 export interface RemoteChecklistInterface {
     clid: number;
     name: string;
@@ -19,7 +26,7 @@ export interface RemoteChecklistInterface {
     percenteffort: number;
     access: string;
     defaultsettings: string;
-    appconfigjson: string;
+    appconfigjson: AppConfig;
     iconurl: string;
     headerurl: string;
     uid: number;

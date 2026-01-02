@@ -12,8 +12,8 @@ export const useChecklistRemoteStore = defineStore('checklist-remote', () => {
     const getChecklistArr = computed(() => {
         return checklistArr.value;
     });
-    const getChecklistTaxaApiUrl: ComputedRef<string> = computed(() => {
-        return apiBaseUrl.value + '/api/checklists/checklistTaxaController.php';
+    const getChecklistPackagingServiceApiUrl: ComputedRef<string> = computed(() => {
+        return apiBaseUrl.value + '/api/services/checklistPackagingServiceController.php';
     });
     const getRemoteConnectionEstablished = computed(() => {
         return remoteConnectionEstablished.value;
@@ -46,6 +46,7 @@ export const useChecklistRemoteStore = defineStore('checklist-remote', () => {
     return {
         checklistArr,
         getChecklistArr,
+        getChecklistPackagingServiceApiUrl,
         getRemoteConnectionEstablished,
         setApiBaseUrl,
         setChecklistArr

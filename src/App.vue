@@ -5,8 +5,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { Capacitor } from '@capacitor/core';
-import { Directory, Filesystem } from '@capacitor/filesystem';
 import { JeepSqlite } from 'jeep-sqlite/dist/components/jeep-sqlite';
+
+import { createDirectory, getFolderContents } from 'src/hooks/core';
 
 import { useChecklistStore } from 'stores/checklist';
 import { useChecklistRemoteStore } from 'stores/checklist-remote';
@@ -20,14 +21,11 @@ const databaseStore = useDatabaseStore();
 
 const appInitialized = ref(false);
 const appPlatform = Capacitor.getPlatform();
-const resetDatabase = ref(true);
+const resetDatabase = ref(false);
 
 async function getDatabaseFileExists(): Promise<boolean> {
     let exists = false;
-    const databaseDirContents = await Filesystem.readdir({
-        path: 'mobile-checklist/database',
-        directory: Directory.Data
-    });
+    const databaseDirContents = await getFolderContents('mobile-checklist/database');
     if(databaseDirContents.files.length > 0){
         const databaseFileObj = databaseDirContents.files.find(obj => obj['name'] === 'database.json' && obj['type'] === 'file');
         if(databaseFileObj){
@@ -39,10 +37,7 @@ async function getDatabaseFileExists(): Promise<boolean> {
 
 async function getRootDirectoryExists(): Promise<boolean> {
     let exists = false;
-    const dataDirContents = await Filesystem.readdir({
-        path: '',
-        directory: Directory.Data
-    });
+    const dataDirContents = await getFolderContents('');
     if(dataDirContents.files.length > 0){
         const rootDirObj = dataDirContents.files.find(obj => obj['name'] === 'mobile-checklist' && obj['type'] === 'directory');
         if(rootDirObj){
@@ -54,10 +49,7 @@ async function getRootDirectoryExists(): Promise<boolean> {
 
 async function getSubDirectoryExists(directoryName: string): Promise<boolean> {
     let exists = false;
-    const rootDirContents = await Filesystem.readdir({
-        path: 'mobile-checklist',
-        directory: Directory.Data
-    });
+    const rootDirContents = await getFolderContents('mobile-checklist');
     if(rootDirContents.files.length > 0){
         const rootDirObj = rootDirContents.files.find(obj => obj['name'] === directoryName && obj['type'] === 'directory');
         if(rootDirObj){
@@ -118,10 +110,7 @@ async function validateDatabaseFile(reset = false): Promise<boolean> {
 async function validateRootDirectory(): Promise<boolean> {
     let validated = await getRootDirectoryExists();
     if(!validated){
-        await Filesystem.mkdir({
-            path: 'mobile-checklist',
-            directory: Directory.Data
-        });
+        await createDirectory('mobile-checklist');
         validated = await getRootDirectoryExists();
     }
     return validated;
@@ -130,19 +119,13 @@ async function validateRootDirectory(): Promise<boolean> {
 async function validateSubDirectories(): Promise<boolean> {
     let validated = await getSubDirectoryExists('database');
     if(!validated){
-        await Filesystem.mkdir({
-            path: 'mobile-checklist/database',
-            directory: Directory.Data
-        });
+        await createDirectory('mobile-checklist/database');
         validated = await getSubDirectoryExists('database');
     }
     if(validated){
         validated = await getSubDirectoryExists('images');
         if(!validated){
-            await Filesystem.mkdir({
-                path: 'mobile-checklist/images',
-                directory: Directory.Data
-            });
+            await createDirectory('mobile-checklist/images');
             validated = await getSubDirectoryExists('images');
         }
     }

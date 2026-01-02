@@ -17,7 +17,7 @@
                                                 <div class="text-h6">
                                                     {{ checklist.name }}
                                                 </div>
-                                                <q-btn flat dense round icon="download_for_offline" aria-label="Download" to="download" @click="processDownload(checklist);" />
+                                                <q-btn flat dense round icon="download_for_offline" aria-label="Download" @click="installChecklist(checklist);" />
                                             </div>
                                         </q-item-section>
                                     </q-item>
@@ -37,7 +37,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, defineEmits, ref, toRefs, watch } from 'vue';
+import { computed, onMounted, defineEmits, Ref, ref, toRefs, watch } from 'vue';
+
+import {
+    clearDownloadDirectory, createDirectory, downloadChecklistDataArchive,
+    getFolderContents, hideWorking, showNotification, showWorking
+} from 'src/hooks/core';
+
+import { RemoteChecklistInterface } from 'src/interfaces/RemoteChecklistInterface';
 
 import { useChecklistStore } from 'src/stores/checklist';
 import { useChecklistRemoteStore } from 'src/stores/checklist-remote';
@@ -65,7 +72,10 @@ const checklistDownloadOptionArr = computed(() => {
     });
     return returnArr;
 });
+const checklistPackagingServiceApiUrl = computed(() => checklistRemoteStore.getChecklistPackagingServiceApiUrl);
 const displayPopup = ref(false);
+const downloadAttempt = ref(1);
+const newChecklistData: Ref<RemoteChecklistInterface | null> = ref(null);
 const propsRefs = toRefs(props);
 const remoteChecklistArr = computed(() => checklistRemoteStore.getChecklistArr);
 
@@ -77,12 +87,35 @@ function closePopup() {
     emit('close:popup');
 }
 
-function setDisplayValue() {
-    displayPopup.value = props.showPopup;
+async function installChecklist(checklist: any) {
+    showWorking('Initializing download');
+    newChecklistData.value = Object.assign({}, checklist);
+    downloadAttempt.value = 1;
+    await processDataDownload();
 }
 
-async function processDownload(checklist: any) {
-    await checklistStore.createChecklist(checklist);
+async function processDataDownload() {
+    if(newChecklistData.value){
+        await clearDownloadDirectory();
+        const dataArchiveRequestUrl = checklistPackagingServiceApiUrl.value + '?action=getAppChecklistData&clid=' + newChecklistData.value['clid'];
+        const dataDownloaded = await downloadChecklistDataArchive(dataArchiveRequestUrl, newChecklistData.value['appconfigjson']['dataArchiveFilename'].toString());
+        if(dataDownloaded){
+            const downloadDirContents = await getFolderContents('mobile-checklist/download');
+            console.log(downloadDirContents);
+        }
+        else if(downloadAttempt.value < 4){
+            downloadAttempt.value++;
+            await processDataDownload();
+        }
+        else{
+            hideWorking();
+            showNotification('negative', 'The checklist data is not able to be downloaded at this time');
+        }
+    }
+}
+
+function setDisplayValue() {
+    displayPopup.value = props.showPopup;
 }
 
 onMounted(() => {
