@@ -3,14 +3,10 @@ export interface ChecklistTaxonInterface {
     tid: number;
     rankid: number;
     sciname: string;
-    author: string;
-    family: string;
-    acceptedRankid: number;
-    acceptedSciname: string;
-    acceptedAuthor: string;
-    acceptedFamily: string;
-    descriptionJson: string;
-    keyJson: string;
-    synonymyJson: string;
-    vernacularJson: string;
+    author: string | null;
+    family: string | null;
+    descriptionJson: string | null;
+    keyJson: string | null;
+    synonymyJson: string | null;
+    vernacularJson: string | null;
 }

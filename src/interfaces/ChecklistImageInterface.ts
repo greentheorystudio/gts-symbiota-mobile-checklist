@@ -1,8 +1,7 @@
 export interface ChecklistImageInterface {
     clid: number;
     tid: number;
-    imgid: number;
-    photographer: string;
-    owner: string;
+    photographer: string | null;
+    owner: string | null;
     filePath: string;
 }

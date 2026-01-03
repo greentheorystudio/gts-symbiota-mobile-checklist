@@ -25,7 +25,6 @@ export const DatabaseUpdateStatements: Statement[] = [
             `CREATE TABLE IF NOT EXISTS checklistImages (
                 clid INTEGER NOT NULL,
                 tid INTEGER NOT NULL,
-                imgid INTEGER NOT NULL,
                 photographer TEXT(100),
                 owner TEXT(250),
                 filePath TEXT NOT NULL,
@@ -38,10 +37,6 @@ export const DatabaseUpdateStatements: Statement[] = [
                 sciname TEXT(250),
                 author TEXT(100),
                 family TEXT(50),
-                acceptedRankid INTEGER NOT NULL,
-                acceptedSciname TEXT(250),
-                acceptedAuthor TEXT(100),
-                acceptedFamily TEXT(50),
                 descriptionJson TEXT NOT NULL,
                 keyJson TEXT NOT NULL,
                 synonymyJson TEXT NOT NULL,
@@ -57,6 +52,7 @@ export const DatabaseUpdateStatements: Statement[] = [
                 authors TEXT(250),
                 notes TEXT(500),
                 defaultSettings TEXT,
+                publishtimestamp INTEGER NOT NULL,
                 PRIMARY KEY (clid)
             );`,
             'CREATE INDEX clid_characterHeadings ON characterHeadings (clid ASC);',

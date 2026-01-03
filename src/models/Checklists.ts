@@ -14,7 +14,7 @@ class Checklists implements ChecklistsInterface {
     async createChecklist(db: SQLiteDBConnection | undefined, checklist: any): Promise<capSQLiteChanges | undefined> {
         let returnVal;
         if(db !== undefined){
-            let sql = 'INSERT INTO checklists(clid, `name`, title, locality, publication, abstract, authors, notes, version, defaultSettings) VALUES (';
+            let sql = 'INSERT INTO checklists(clid, `name`, title, locality, publication, abstract, authors, notes, publishtimestamp, defaultSettings) VALUES (';
             sql += Number(checklist.clid) + ",'" + escapeSqlSingleQuotes(checklist.name) + "',";
             sql += (checklist.title ? "'" + escapeSqlSingleQuotes(checklist.title) + "'" : 'NULL') + ',';
             sql += (checklist.locality ? "'" + escapeSqlSingleQuotes(checklist.locality) + "'" : 'NULL') + ',';
@@ -22,8 +22,8 @@ class Checklists implements ChecklistsInterface {
             sql += (checklist.abstract ? "'" + escapeSqlSingleQuotes(checklist.abstract) + "'" : 'NULL') + ',';
             sql += (checklist.authors ? "'" + escapeSqlSingleQuotes(checklist.authors) + "'" : 'NULL') + ',';
             sql += (checklist.notes ? "'" + escapeSqlSingleQuotes(checklist.notes) + "'" : 'NULL') + ',';
-            sql += ((checklist.appconfigjson && checklist.appconfigjson.hasOwnProperty('datePublished')) ? Number(checklist.appconfigjson.datePublished) : 'NULL') + ',';
-            sql += (checklist.defaultsettings ? "'" + escapeSqlSingleQuotes(JSON.stringify(checklist.defaultsettings)) + "'" : 'NULL') + ')';
+            sql += Number(checklist.publishtimestamp) + ',';
+            sql += (checklist.defaultSettings ? "'" + escapeSqlSingleQuotes(checklist.defaultSettings) + "'" : 'NULL') + ')';
             returnVal = await db.run(sql);
         }
         return returnVal;

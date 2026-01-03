@@ -7,6 +7,7 @@ import { defineStore } from 'pinia';
 import { ComputedRef, ref, Ref, computed } from 'vue';
 
 import {
+    deleteFile,
     getFileContents,
     writeFile
 } from 'src/hooks/core';
@@ -46,11 +47,12 @@ export const useDatabaseStore = defineStore('database', () => {
         return;
     }
 
-    async function deleteDatabase(): Promise<boolean> {
+    async function deleteDatabase(): Promise<void> {
+        await deleteFile('mobile-checklist/database/database.json');
         await CapacitorSQLite.deleteDatabase({
             database: 'mobileChecklistDb'
         });
-        return await createDatabaseConnection();;
+        return;
     }
 
     async function initWebStore(): Promise<void> {
@@ -97,6 +99,7 @@ export const useDatabaseStore = defineStore('database', () => {
     }
 
     async function setDatabaseConnection(): Promise<void> {
+        console.log('here');
         await runDatabaseUpdates();
         databaseConnection.value = await openDatabase();
         return;

@@ -1,6 +1,6 @@
 import { Loading, Notify, QSpinnerHourglass } from 'quasar';
 import { FileTransfer } from '@capacitor/file-transfer';
-import { Directory, Encoding, Filesystem } from '@capacitor/filesystem';
+import { CopyOptions, CopyResult, Directory, Encoding, Filesystem } from '@capacitor/filesystem';
 import JSZip from 'jszip';
 
 export async function clearDownloadDirectory() {
@@ -143,6 +143,28 @@ export async function getFolderContents(path: string) {
 
 export function hideWorking() {
     Loading.hide();
+}
+
+export async function moveFile(sourcePath: string, targetPath: string) {
+    if(await fileFolderExists(sourcePath)){
+        const options: CopyOptions = {
+            from: sourcePath,
+            to: targetPath,
+            directory: Directory.Data,
+            toDirectory: Directory.Data
+        };
+        const result: CopyResult = await Filesystem.copy(options);
+        if(result && result.hasOwnProperty('uri') && result.uri){
+            await deleteFile(sourcePath);
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    else{
+        return false;
+    }
 }
 
 export function showNotification(type: string, text: string, duration = 5000) {

@@ -71,16 +71,14 @@ async function initializeApp(platform: string): Promise<boolean> {
         const subDirectoriesValidated = await validateSubDirectories();
         if(subDirectoriesValidated){
             await databaseStore.setNewestDbVersionNumber();
-            const databaseValidated = await validateDatabaseFile(resetDatabase.value);
+            if(resetDatabase.value){
+                await databaseStore.deleteDatabase();
+            }
+            const databaseValidated = await validateDatabaseFile();
             if(databaseValidated){
                 const databaseConnectionValidated = await databaseStore.createDatabaseConnection();
                 if(databaseConnectionValidated){
-                    if(resetDatabase.value){
-                        initialized = await databaseStore.deleteDatabase();
-                    }
-                    else{
-                        initialized = true;
-                    }
+                    initialized = true;
                 }
             }
         }
@@ -98,9 +96,9 @@ async function setJeepSQLiteElement(): Promise<void> {
     });
 }
 
-async function validateDatabaseFile(reset = false): Promise<boolean> {
+async function validateDatabaseFile(): Promise<boolean> {
     let validated = await getDatabaseFileExists();
-    if(!validated || reset){
+    if(!validated){
         await databaseStore.createDatabaseJsonFile();
         validated = await getDatabaseFileExists();
     }

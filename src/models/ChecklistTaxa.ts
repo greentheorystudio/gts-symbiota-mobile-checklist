@@ -14,17 +14,13 @@ class ChecklistTaxa implements ChecklistTaxaInterface {
         const valArr: string[] = [];
         let returnVal;
         if(db !== undefined){
-            let sql = 'INSERT INTO checklistTaxa(clid, tid, rankid, sciname, author, family, acceptedRankid, acceptedSciname, acceptedAuthor, acceptedFamily, descriptionJson, keyJson, synonymyJson, vernacularJson) VALUES ';
+            let sql = 'INSERT INTO checklistTaxa(clid, tid, rankid, sciname, author, family, descriptionJson, keyJson, synonymyJson, vernacularJson) VALUES ';
             checklistTaxaArr.forEach((taxon) => {
                 let sqlStr = '(';
                 sqlStr += Number(taxon.clid) + "," + Number(taxon.tid) + "," + Number(taxon.rankid) + ",";
                 sqlStr += (taxon.sciname ? "'" + escapeSqlSingleQuotes(taxon.sciname) + "'" : 'NULL') + ',';
                 sqlStr += (taxon.author ? "'" + escapeSqlSingleQuotes(taxon.author) + "'" : 'NULL') + ',';
                 sqlStr += (taxon.family ? "'" + escapeSqlSingleQuotes(taxon.family) + "'" : 'NULL') + ',';
-                sqlStr += Number(taxon.acceptedRankid) + ","
-                sqlStr += (taxon.acceptedSciname ? "'" + escapeSqlSingleQuotes(taxon.acceptedSciname) + "'" : 'NULL') + ',';
-                sqlStr += (taxon.acceptedAuthor ? "'" + escapeSqlSingleQuotes(taxon.acceptedAuthor) + "'" : 'NULL') + ',';
-                sqlStr += (taxon.acceptedFamily ? "'" + escapeSqlSingleQuotes(taxon.acceptedFamily) + "'" : 'NULL') + ',';
                 sqlStr += (taxon.descriptionJson ? "'" + escapeSqlSingleQuotes(JSON.stringify(taxon.descriptionJson)) + "'" : 'NULL') + ',';
                 sqlStr += (taxon.keyJson ? "'" + escapeSqlSingleQuotes(JSON.stringify(taxon.keyJson)) + "'" : 'NULL') + ',';
                 sqlStr += (taxon.synonymyJson ? "'" + escapeSqlSingleQuotes(JSON.stringify(taxon.synonymyJson)) + "'" : 'NULL') + ',';

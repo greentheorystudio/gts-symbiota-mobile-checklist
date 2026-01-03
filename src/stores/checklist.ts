@@ -58,11 +58,28 @@ export const useChecklistStore = defineStore('checklist', () => {
         checklistTaxaArr.value.length = 0;
     }
 
-    async function createChecklist(checklist: ChecklistInterface): Promise<void> {
+    async function createChecklist(checklist: ChecklistInterface, checklistImages: ChecklistImageInterface[], checklistTaxa: ChecklistTaxonInterface[], keyData: any): Promise<boolean> {
         const res = await checklistModel.createChecklist(databaseStore.getDatabaseConnection, checklist);
-        await databaseStore.processDatabaseChange();
         if(res && res.hasOwnProperty('changes') && Number(res.changes.changes) > 0){
+            await checklistTaxonModel.batchCreateChecklistTaxa(databaseStore.getDatabaseConnection, checklistTaxa);
+            if(checklistImages.length > 0){
+                await checklistImageModel.batchCreateChecklistImages(databaseStore.getDatabaseConnection, checklistImages);
+            }
+            if(keyData['character-headings']){
+                await characterHeadingModel.createCharacterHeading(databaseStore.getDatabaseConnection, {clid: checklist['clid'], data: keyData['character-headings']});
+            }
+            if(keyData['characters']){
+                await characterModel.createCharacter(databaseStore.getDatabaseConnection, {clid: checklist['clid'], data: keyData['characters']});
+            }
+            if(keyData['character-states']){
+                await characterStateModel.createCharacterState(databaseStore.getDatabaseConnection, {clid: checklist['clid'], data: keyData['character-states']});
+            }
+            await databaseStore.processDatabaseChange();
             await setChecklistArr();
+            return true;
+        }
+        else{
+            return false;
         }
     }
 
@@ -78,6 +95,7 @@ export const useChecklistStore = defineStore('checklist', () => {
         await checklistTaxonModel.deleteChecklistTaxa(databaseStore.getDatabaseConnection, clid);
         const res = await checklistModel.deleteChecklist(databaseStore.getDatabaseConnection, clid);
         await databaseStore.processDatabaseChange();
+        await setChecklistArr();
         return res;
     }
 

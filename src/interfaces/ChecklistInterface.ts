@@ -1,12 +1,12 @@
 export interface ChecklistInterface {
     clid: number;
     name: string;
-    title: string;
-    locality: string;
-    publication: string;
-    abstract: string;
-    authors: string;
-    notes: string;
-    defaultSettings: string;
-    version: number;
+    title: string | null;
+    locality: string | null;
+    publication: string | null;
+    abstract: string | null;
+    authors: string | null;
+    notes: string | null;
+    defaultSettings: string | null;
+    publishtimestamp: number;
 }
