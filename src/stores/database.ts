@@ -99,7 +99,6 @@ export const useDatabaseStore = defineStore('database', () => {
     }
 
     async function setDatabaseConnection(): Promise<void> {
-        console.log('here');
         await runDatabaseUpdates();
         databaseConnection.value = await openDatabase();
         return;
