@@ -61,6 +61,10 @@ export async function downloadChecklistDataArchive(archiveUrl: string, filename:
     }
 }
 
+export function escapeSqlSingleQuotes(inStr: string) {
+    return inStr.replaceAll("'", "''");
+}
+
 export async function extractZipFile(zipFilePath: string, destinationDirectory: string) {
     try {
         const zipData = await Filesystem.readFile({
