@@ -44,11 +44,12 @@ import {
     clearDownloadDirectory,
     downloadChecklistDataArchive,
     extractZipFile,
-    getFolderContents,
     fileFolderExists,
+    getFileContents,
+    getFolderContents,
     hideWorking,
     showNotification,
-    showWorking, getFileContents
+    showWorking
 } from 'src/hooks/core';
 
 import { RemoteChecklistInterface } from 'src/interfaces/RemoteChecklistInterface';

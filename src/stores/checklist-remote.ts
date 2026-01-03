@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { ComputedRef, ref, Ref, computed } from 'vue';
 
 export const useChecklistRemoteStore = defineStore('checklist-remote', () => {
+
     const apiBaseUrl: Ref<string|null> = ref(null);
     const checklistArr = ref([]);
     const remoteConnectionEstablished = ref(true);
@@ -44,7 +45,6 @@ export const useChecklistRemoteStore = defineStore('checklist-remote', () => {
     }
 
     return {
-        checklistArr,
         getChecklistArr,
         getChecklistPackagingServiceApiUrl,
         getRemoteConnectionEstablished,

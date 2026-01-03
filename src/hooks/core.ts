@@ -19,6 +19,15 @@ export async function createDirectory(path: string) {
     return;
 }
 
+export async function deleteChecklistImageDirectory(clid: number) {
+    const directoryPath = 'mobile-checklist/images/' + clid.toString();
+    const dirExists = await fileFolderExists(directoryPath);
+    if(dirExists){
+        await deleteDirectory(directoryPath);
+    }
+    return;
+}
+
 export async function deleteDirectory(path: string) {
     await Filesystem.rmdir({
         path: path,
