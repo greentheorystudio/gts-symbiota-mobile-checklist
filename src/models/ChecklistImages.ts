@@ -14,10 +14,10 @@ class ChecklistImages implements ChecklistImagesInterface {
         const valArr: string[] = [];
         let returnVal;
         if(db !== undefined){
-            let sql = 'INSERT INTO checklistImages(clid, tid, imgid, photographer, owner, filePath) VALUES ';
+            let sql = 'INSERT INTO checklistImages(clid, tid, photographer, owner, filePath) VALUES ';
             checklistImageArr.forEach((image) => {
                 let sqlStr = '(';
-                sqlStr += Number(image.clid) + "," + Number(image.tid) + "," + Number(image.imgid) + ",";
+                sqlStr += Number(image.clid) + "," + Number(image.tid) + ",";
                 sqlStr += (image.photographer ? "'" + escapeSqlSingleQuotes(image.photographer) + "'" : 'NULL') + ',';
                 sqlStr += (image.owner ? "'" + escapeSqlSingleQuotes(image.owner) + "'" : 'NULL') + ',';
                 sqlStr +=  "'" + escapeSqlSingleQuotes(image.filePath) + "'";

@@ -29,19 +29,23 @@ export async function deleteChecklistImageDirectory(clid: number) {
 }
 
 export async function deleteDirectory(path: string) {
-    await Filesystem.rmdir({
-        path: path,
-        directory: Directory.Data,
-        recursive: true
-    });
+    if(await fileFolderExists(path)){
+        await Filesystem.rmdir({
+            path: path,
+            directory: Directory.Data,
+            recursive: true
+        });
+    }
     return;
 }
 
 export async function deleteFile(path: string) {
-    await Filesystem.deleteFile({
-        path: path,
-        directory: Directory.Data
-    });
+    if(await fileFolderExists(path)){
+        await Filesystem.deleteFile({
+            path: path,
+            directory: Directory.Data
+        });
+    }
     return;
 }
 

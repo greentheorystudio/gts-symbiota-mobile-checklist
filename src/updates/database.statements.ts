@@ -55,9 +55,6 @@ export const DatabaseUpdateStatements: Statement[] = [
                 publishtimestamp INTEGER NOT NULL,
                 PRIMARY KEY (clid)
             );`,
-            'CREATE INDEX clid_characterHeadings ON characterHeadings (clid ASC);',
-            'CREATE INDEX clid_characterStates ON characterStates (clid ASC);',
-            'CREATE INDEX clid_characters ON characters (clid ASC);',
             'CREATE INDEX clid_checklistImages ON checklistImages (clid ASC);',
             'CREATE INDEX tid_checklistImages ON checklistImages (tid ASC);',
             'CREATE INDEX clid_checklistTaxa ON checklistTaxa (clid ASC);',

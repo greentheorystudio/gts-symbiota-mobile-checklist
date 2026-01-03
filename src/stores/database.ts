@@ -8,16 +8,20 @@ import { ComputedRef, ref, Ref, computed } from 'vue';
 
 import {
     deleteFile,
-    getFileContents,
+    fileFolderExists,
+    getFileContents, moveFile,
     writeFile
 } from 'src/hooks/core';
 
+import { DatabaseSchemaStatements } from 'src/updates/database.schema';
 import { DatabaseUpdateStatements } from '../updates/database.statements';
 
 export const useDatabaseStore = defineStore('database', () => {
+
     const databaseConnection: Ref<SQLiteDBConnection | undefined> = ref(undefined);
     const newestDbVersion = ref(0);
     const runtimeEnvironment: Ref<string | null> = ref(null);
+    const schemaSetupStatements = DatabaseSchemaStatements;
     const sqliteConnection = new SQLiteConnection(CapacitorSQLite);
     const sqlitePlugin = CapacitorSQLite;
     const updateStatements = DatabaseUpdateStatements;
@@ -40,9 +44,13 @@ export const useDatabaseStore = defineStore('database', () => {
     }
 
     async function createDatabaseJsonFile(): Promise<void> {
-        await setDatabaseConnection();
+        databaseConnection.value = await openDatabase();
         if(databaseConnection.value){
+            for(const statement of schemaSetupStatements) {
+                await databaseConnection.value.execute(statement);
+            }
             await processDatabaseChange();
+            await databaseConnection.value.close()
         }
         return;
     }
@@ -55,13 +63,25 @@ export const useDatabaseStore = defineStore('database', () => {
         return;
     }
 
+    async function initializeDatabase(): Promise<boolean> {
+        await setNewestDbVersionNumber();
+        const databaseValidated = await validateDatabaseFile();
+        if(databaseValidated){
+            const databaseConnectionValidated = await createDatabaseConnection();
+            if(databaseConnectionValidated){
+                return true;
+            }
+        }
+        return false;
+    }
+
     async function initWebStore(): Promise<void> {
         await sqliteConnection.initWebStore();
         return;
     }
 
     async function openDatabase(): Promise<SQLiteDBConnection | undefined> {
-        let db = await sqliteConnection.createConnection(
+        const db = await sqliteConnection.createConnection(
             'mobileChecklistDb',
             false,
             'no-encryption',
@@ -76,9 +96,7 @@ export const useDatabaseStore = defineStore('database', () => {
         if(runtimeEnvironment.value === 'web'){
             await sqliteConnection.saveToStore('mobileChecklistDb');
         }
-        else{
-            await saveDatabaseToFile();
-        }
+        await saveDatabaseToFile();
         return;
     }
 
@@ -115,11 +133,21 @@ export const useDatabaseStore = defineStore('database', () => {
         runtimeEnvironment.value = env;
     }
 
+    async function validateDatabaseFile(): Promise<boolean> {
+        let validated = await fileFolderExists('mobile-checklist/database/database.json');
+        if(!validated){
+            await createDatabaseJsonFile();
+            validated = await fileFolderExists('mobile-checklist/database/database.json');
+        }
+        return validated;
+    }
+
     return {
         createDatabaseConnection,
         createDatabaseJsonFile,
         deleteDatabase,
         getDatabaseConnection,
+        initializeDatabase,
         initWebStore,
         processDatabaseChange,
         setNewestDbVersionNumber,

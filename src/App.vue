@@ -21,19 +21,6 @@ const databaseStore = useDatabaseStore();
 
 const appInitialized = ref(false);
 const appPlatform = Capacitor.getPlatform();
-const resetDatabase = ref(false);
-
-async function getDatabaseFileExists(): Promise<boolean> {
-    let exists = false;
-    const databaseDirContents = await getFolderContents('mobile-checklist/database');
-    if(databaseDirContents.files.length > 0){
-        const databaseFileObj = databaseDirContents.files.find(obj => obj['name'] === 'database.json' && obj['type'] === 'file');
-        if(databaseFileObj){
-            exists = true;
-        }
-    }
-    return exists;
-}
 
 async function getRootDirectoryExists(): Promise<boolean> {
     let exists = false;
@@ -70,17 +57,7 @@ async function initializeApp(platform: string): Promise<boolean> {
     if(rootValidated){
         const subDirectoriesValidated = await validateSubDirectories();
         if(subDirectoriesValidated){
-            await databaseStore.setNewestDbVersionNumber();
-            if(resetDatabase.value){
-                await databaseStore.deleteDatabase();
-            }
-            const databaseValidated = await validateDatabaseFile();
-            if(databaseValidated){
-                const databaseConnectionValidated = await databaseStore.createDatabaseConnection();
-                if(databaseConnectionValidated){
-                    initialized = true;
-                }
-            }
+            initialized = await databaseStore.initializeDatabase();
         }
     }
     return initialized;
@@ -94,15 +71,6 @@ async function setJeepSQLiteElement(): Promise<void> {
     .then(() => {
         return;
     });
-}
-
-async function validateDatabaseFile(): Promise<boolean> {
-    let validated = await getDatabaseFileExists();
-    if(!validated){
-        await databaseStore.createDatabaseJsonFile();
-        validated = await getDatabaseFileExists();
-    }
-    return validated;
 }
 
 async function validateRootDirectory(): Promise<boolean> {
