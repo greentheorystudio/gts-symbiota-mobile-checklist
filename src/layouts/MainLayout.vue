@@ -14,21 +14,25 @@
                 </div>
             </q-toolbar>
             <template v-if="checklistArr.length > 0">
-                <div class="full-width q-px-sm">
-                    <selectorInputElement label="Select Checklist" :options="checklistArr" option-label="name" option-value="clid" :value="Number(checklistId) > 0 ? checklistId.toString() : ''" @update:value="processChecklistSelection"></selectorInputElement>
-                </div>
-                <div v-if="showTopOptions" class="full-width q-px-sm q-pt-sm">
-                    <q-card>
-                        <q-card-section class="bg-white" style="height: 200px;">
+                <div v-touch-swipe.mouse="handleTopSwipe">
+                    <div class="full-width q-px-sm">
+                        <selectorInputElement label="Select Checklist" :options="checklistArr" option-label="name" option-value="clid" :value="Number(checklistId) > 0 ? checklistId.toString() : ''" @update:value="processChecklistSelection"></selectorInputElement>
+                    </div>
+                    <q-slide-transition>
+                        <div v-show="showTopOptions" class="full-width q-px-sm q-pt-sm">
+                            <q-card>
+                                <q-card-section class="bg-white" style="height: 200px;">
 
-                        </q-card-section>
-                    </q-card>
-                </div>
-                <div role="button" class="q-pa-none q-ma-none full-width row justify-center" :class="!showTopOptions ? '' : 'hidden'" @click="showTopOptions = true">
-                    <q-icon color="white" size="lg" name="arrow_drop_down"></q-icon>
-                </div>
-                <div role="button" class="q-pa-none q-ma-none full-width row justify-center" :class="showTopOptions ? '' : 'hidden'" @click="showTopOptions = false">
-                    <q-icon color="white" size="lg" name="arrow_drop_up"></q-icon>
+                                </q-card-section>
+                            </q-card>
+                        </div>
+                    </q-slide-transition>
+                    <div role="button" class="q-pa-none q-ma-none full-width row justify-center" :class="!showTopOptions ? '' : 'hidden'" @click="showTopOptions = true" v-touch-swipe.mouse="handleTopSwipe">
+                        <q-icon color="white" size="lg" name="arrow_drop_down"></q-icon>
+                    </div>
+                    <div role="button" class="q-pa-none q-ma-none full-width row justify-center" :class="showTopOptions ? '' : 'hidden'" @click="showTopOptions = false" v-touch-swipe.mouse="handleTopSwipe">
+                        <q-icon color="white" size="lg" name="arrow_drop_up"></q-icon>
+                    </div>
                 </div>
             </template>
         </q-header>
@@ -61,7 +65,6 @@
 </template>
 <script setup lang="ts">
 import { computed, provide, ref } from 'vue';
-import 'animate.css';
 
 import { useChecklistStore } from 'src/stores/checklist';
 
@@ -82,6 +85,17 @@ const showInformationPopup = ref(false);
 const showManagementPopup = ref(false);
 const showTaxonProfilePopup = ref(false);
 const showTopOptions = ref(false);
+
+function handleTopSwipe ({ evt, ...newInfo }: any) {
+    if(newInfo && newInfo.hasOwnProperty('direction')){
+        if(newInfo.direction === 'down'){
+            showTopOptions.value = true;
+        }
+        else if(newInfo.direction === 'up'){
+            showTopOptions.value = false;
+        }
+    }
+}
 
 function processChecklistSelection(clid: number) {
     checklistStore.setCurrentChecklist(clid);
