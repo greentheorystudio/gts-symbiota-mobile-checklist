@@ -27,8 +27,7 @@ export const DatabaseUpdateStatements: Statement[] = [
                 tid INTEGER NOT NULL,
                 photographer TEXT(100),
                 owner TEXT(250),
-                filePath TEXT NOT NULL,
-                PRIMARY KEY (imgid)
+                filePath TEXT NOT NULL
             );`,
             `CREATE TABLE IF NOT EXISTS checklistTaxa (
                 clid INTEGER NOT NULL,
@@ -37,10 +36,10 @@ export const DatabaseUpdateStatements: Statement[] = [
                 sciname TEXT(250),
                 author TEXT(100),
                 family TEXT(50),
-                descriptionJson TEXT NOT NULL,
-                keyJson TEXT NOT NULL,
-                synonymyJson TEXT NOT NULL,
-                vernacularJson TEXT NOT NULL
+                descriptionJson TEXT,
+                keyJson TEXT,
+                synonymyJson TEXT,
+                vernacularJson TEXT
             );`,
             `CREATE TABLE IF NOT EXISTS checklists (
                 clid INTEGER NOT NULL,
