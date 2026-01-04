@@ -231,6 +231,7 @@ async function processImport() {
             publishtimestamp: newChecklistData.value['appconfigjson']['datePublished']
         };
         const res = await checklistStore.createChecklist(checklistData, newChecklistImageData.value, newChecklistTaxaData.value, newChecklistKeyData.value);
+        await clearDownloadDirectory();
         hideWorking();
         if(res){
             showNotification('positive','Checklist downloaded');
