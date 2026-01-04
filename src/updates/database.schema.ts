@@ -5,29 +5,29 @@ export const DatabaseSchemaStatements: string[] = [
     'DROP TABLE IF EXISTS checklistImages;',
     'DROP TABLE IF EXISTS checklistTaxa;',
     'DROP TABLE IF EXISTS checklists;',
-    `CREATE TABLE IF NOT EXISTS characterHeadings (
+    `CREATE TABLE characterHeadings (
         clid INTEGER NOT NULL,
         dataJson TEXT,
         PRIMARY KEY (clid)
     );`,
-    `CREATE TABLE IF NOT EXISTS characterStates (
+    `CREATE TABLE characterStates (
         clid INTEGER NOT NULL,
         dataJson TEXT,
         PRIMARY KEY (clid)
     );`,
-    `CREATE TABLE IF NOT EXISTS characters (
+    `CREATE TABLE characters (
         clid INTEGER NOT NULL,
         dataJson TEXT,
         PRIMARY KEY (clid)
     );`,
-    `CREATE TABLE IF NOT EXISTS checklistImages (
+    `CREATE TABLE checklistImages (
         clid INTEGER NOT NULL,
         tid INTEGER NOT NULL,
         photographer TEXT(100),
         owner TEXT(250),
         filePath TEXT NOT NULL
     );`,
-    `CREATE TABLE IF NOT EXISTS checklistTaxa (
+    `CREATE TABLE checklistTaxa (
         clid INTEGER NOT NULL,
         tid INTEGER NOT NULL,
         rankid INTEGER NOT NULL,
@@ -39,7 +39,7 @@ export const DatabaseSchemaStatements: string[] = [
         synonymyJson TEXT,
         vernacularJson TEXT
     );`,
-    `CREATE TABLE IF NOT EXISTS checklists (
+    `CREATE TABLE checklists (
         clid INTEGER NOT NULL,
         name TEXT(100) NOT NULL,
         title TEXT(100),
