@@ -15,7 +15,7 @@ class Characters implements CharactersInterface {
         if(db !== undefined){
             let sql = 'INSERT INTO characters(clid, dataJson) VALUES (';
             sql += Number(character.clid) + ",";
-            sql += (character.data ? "'" + escapeSqlSingleQuotes(JSON.stringify(character.data)) + "'" : 'NULL') + ')';
+            sql += (character.data ? "'" + escapeSqlSingleQuotes(character.data) + "'" : 'NULL') + ')';
             returnVal = await db.run(sql);
         }
         return returnVal;

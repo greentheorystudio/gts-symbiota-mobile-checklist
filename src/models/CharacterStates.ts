@@ -15,7 +15,7 @@ class CharacterStates implements CharacterStatesInterface {
         if(db !== undefined){
             let sql = 'INSERT INTO characterStates(clid, dataJson) VALUES (';
             sql += Number(characterState.clid) + ",";
-            sql += (characterState.data ? "'" + escapeSqlSingleQuotes(JSON.stringify(characterState.data)) + "'" : 'NULL') + ')';
+            sql += (characterState.data ? "'" + escapeSqlSingleQuotes(characterState.data) + "'" : 'NULL') + ')';
             returnVal = await db.run(sql);
         }
         return returnVal;

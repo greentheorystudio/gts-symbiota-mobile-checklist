@@ -21,10 +21,10 @@ class ChecklistTaxa implements ChecklistTaxaInterface {
                 sqlStr += (taxon.sciname ? "'" + escapeSqlSingleQuotes(taxon.sciname) + "'" : 'NULL') + ',';
                 sqlStr += (taxon.author ? "'" + escapeSqlSingleQuotes(taxon.author) + "'" : 'NULL') + ',';
                 sqlStr += (taxon.family ? "'" + escapeSqlSingleQuotes(taxon.family) + "'" : 'NULL') + ',';
-                sqlStr += (taxon.descriptionJson ? "'" + escapeSqlSingleQuotes(JSON.stringify(taxon.descriptionJson)) + "'" : 'NULL') + ',';
-                sqlStr += (taxon.keyJson ? "'" + escapeSqlSingleQuotes(JSON.stringify(taxon.keyJson)) + "'" : 'NULL') + ',';
-                sqlStr += (taxon.synonymyJson ? "'" + escapeSqlSingleQuotes(JSON.stringify(taxon.synonymyJson)) + "'" : 'NULL') + ',';
-                sqlStr += (taxon.vernacularJson ? "'" + escapeSqlSingleQuotes(JSON.stringify(taxon.vernacularJson)) + "'" : 'NULL');
+                sqlStr += (taxon.descriptionJson ? "'" + escapeSqlSingleQuotes(taxon.descriptionJson) + "'" : 'NULL') + ',';
+                sqlStr += (taxon.keyJson ? "'" + escapeSqlSingleQuotes(taxon.keyJson) + "'" : 'NULL') + ',';
+                sqlStr += (taxon.synonymyJson ? "'" + escapeSqlSingleQuotes(taxon.synonymyJson) + "'" : 'NULL') + ',';
+                sqlStr += (taxon.vernacularJson ? "'" + escapeSqlSingleQuotes(taxon.vernacularJson) + "'" : 'NULL');
                 sqlStr += ')';
                 valArr.push(sqlStr);
             });

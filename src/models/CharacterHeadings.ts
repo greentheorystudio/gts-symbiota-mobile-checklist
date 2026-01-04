@@ -15,7 +15,7 @@ class CharacterHeadings implements CharacterHeadingsInterface {
         if(db !== undefined){
             let sql = 'INSERT INTO characterHeadings(clid, dataJson) VALUES (';
             sql += Number(characterHeading.clid) + ",";
-            sql += (characterHeading.data ? "'" + escapeSqlSingleQuotes(JSON.stringify(characterHeading.data)) + "'" : 'NULL') + ')';
+            sql += (characterHeading.data ? "'" + escapeSqlSingleQuotes(characterHeading.data) + "'" : 'NULL') + ')';
             returnVal = await db.run(sql);
         }
         return returnVal;
