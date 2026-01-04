@@ -32,10 +32,10 @@
                 </div>
             </template>
         </q-header>
-        <q-drawer v-model="leftDrawerOpen" overlay bordered elevated>
+        <q-drawer v-model="leftDrawerOpen" behavior="desktop" overlay bordered elevated>
             <div>Panel</div>
-            <div class="q-mini-drawer-hide absolute" style="top: calc(50% - 13px); right: 0">
-                <q-btn square padding="25px 0" color="primary" icon="arrow_left" @click="toggleLeftDrawer"></q-btn>
+            <div class="q-mini-drawer-hide absolute" style="top: calc(50% - 30px); right: 0" @click="toggleLeftDrawer">
+                <q-btn square padding="25px 0" color="primary" icon="arrow_left"></q-btn>
             </div>
         </q-drawer>
         <q-page-container>
