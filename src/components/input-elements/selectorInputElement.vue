@@ -17,7 +17,6 @@
         </template>
     </q-select>
 </template>
-
 <script setup>
 import { onMounted, defineEmits, ref, shallowReactive, toRefs, watch } from 'vue';
 

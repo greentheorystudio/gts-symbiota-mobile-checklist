@@ -2,12 +2,12 @@
     <q-page>
         <template v-if="Number(checklistId) > 0">
             <div class="fit">
+                <div class="fit">
+                    <checklistModule></checklistModule>
+                </div>
                 <q-page-sticky v-if="keyDataExists" position="left" :offset="[-5, 0]" @click="toggleLeftDrawer">
                     <q-btn square padding="25px 0" color="primary" icon="arrow_right"></q-btn>
                 </q-page-sticky>
-                <div class="fit">
-
-                </div>
             </div>
         </template>
         <template v-else>
@@ -32,6 +32,8 @@ import { computed, inject } from 'vue';
 
 import { useChecklistStore } from 'src/stores/checklist';
 import { useChecklistRemoteStore } from 'src/stores/checklist-remote';
+
+import checklistModule from 'src/components/layout/checklistModule.vue';
 
 const checklistStore = useChecklistStore();
 const checklistRemoteStore = useChecklistRemoteStore();

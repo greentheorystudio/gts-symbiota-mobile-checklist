@@ -9,7 +9,6 @@
         </template>
     </q-select>
 </template>
-
 <script setup>
 import { defineEmits, ref } from 'vue';
 

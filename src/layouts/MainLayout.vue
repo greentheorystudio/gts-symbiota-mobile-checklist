@@ -27,10 +27,10 @@
                             </q-card>
                         </div>
                     </q-slide-transition>
-                    <div role="button" class="q-pa-none q-ma-none full-width row justify-center" :class="!showTopOptions ? '' : 'hidden'" @click="showTopOptions = true" v-touch-swipe.mouse="handleTopSwipe">
+                    <div role="button" class="q-pa-none q-ma-none full-width row justify-center" :class="!showTopOptions ? '' : 'hidden'" @click="showTopOptions = true">
                         <q-icon color="white" size="lg" name="arrow_drop_down"></q-icon>
                     </div>
-                    <div role="button" class="q-pa-none q-ma-none full-width row justify-center" :class="showTopOptions ? '' : 'hidden'" @click="showTopOptions = false" v-touch-swipe.mouse="handleTopSwipe">
+                    <div role="button" class="q-pa-none q-ma-none full-width row justify-center" :class="showTopOptions ? '' : 'hidden'" @click="showTopOptions = false">
                         <q-icon color="white" size="lg" name="arrow_drop_up"></q-icon>
                     </div>
                 </div>
@@ -70,7 +70,9 @@ import { computed, provide, ref } from 'vue';
 
 import { useChecklistStore } from 'src/stores/checklist';
 
+import checkboxInputElement from 'src/components/input-elements/checkboxInputElement.vue';
 import selectorInputElement from 'src/components/input-elements/selectorInputElement.vue';
+import singleScientificCommonNameAutoComplete from 'src/components/input-elements/singleScientificCommonNameAutoComplete.vue';
 
 import identificationKeyModule from 'src/components/layout/identificationKeyModule.vue';
 

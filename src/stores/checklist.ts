@@ -121,7 +121,6 @@ export const useChecklistStore = defineStore('checklist', () => {
     const getChecklistArr = computed(() => checklistArr.value);
     const getChecklistData = computed(() => checklistData.value);
     const getChecklistFlashcardTaxaArr = computed(() => checklistFlashcardTaxaArr.value);
-    const getPaginationPage = computed(() => paginationPage.value);
     const getChecklistImageData = computed(() => checklistImageData.value);
     const getChecklistKeyDataArr = computed(() => checklistKeyDataArr.value);
     const getChecklistTaxaArr = computed(() => checklistTaxaArr.value);
@@ -195,6 +194,7 @@ export const useChecklistStore = defineStore('checklist', () => {
         }
         return lastPage;
     });
+    const getPaginationPage = computed(() => paginationPage.value);
     const getSelectedCidArr = computed(() => {
         const valueArr = selectedStateArr.value.length > 0 ? selectedStateArr.value.map(state => Number(state['cid'])) : [];
         return valueArr.length > 0 ? valueArr.filter((value, index, array) => array.indexOf(value) === index) : [];
@@ -262,6 +262,7 @@ export const useChecklistStore = defineStore('checklist', () => {
         return newDataArr.slice();
     });
     const getTaxaFilterOptions = computed(() => taxaFilterOptions.value);
+    const getTaxaPerPage = computed(() => taxaPerPage);
 
     function clearCurrentChecklist(): void {
         activeCidArr.value.length = 0;
@@ -538,9 +539,14 @@ export const useChecklistStore = defineStore('checklist', () => {
         displayVernaculars.value = value;
     }
 
+    function setPaginationPage(value: number): void {
+        paginationPage.value = value;
+    }
+
     return {
         getActiveChidArr,
         getActiveCidArr,
+        getActiveTaxaArr,
         getCharacterDependencyDataArr,
         getChecklistArr,
         getChecklistData,
@@ -565,6 +571,7 @@ export const useChecklistStore = defineStore('checklist', () => {
         getSelectedStateArr,
         getTaxaDisplayDataArr,
         getTaxaFilterOptions,
+        getTaxaPerPage,
         createChecklist,
         deleteChecklist,
         processCharacterStateSelectionChange,
@@ -575,6 +582,7 @@ export const useChecklistStore = defineStore('checklist', () => {
         setDisplaySortVal,
         setDisplaySynonyms,
         setDisplayTaxonFilterVal,
-        setDisplayVernaculars
+        setDisplayVernaculars,
+        setPaginationPage
     };
 });
