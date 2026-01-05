@@ -2,7 +2,7 @@
     <div class="fit q-pa-md column">
         <div class="q-mb-md full-width row justify-between q-gutter-sm items-center">
             <div>
-                <h1>{{ checklistData ? checklistData['name'] : '' }}</h1>
+                <div class="text-h3 text-bold">{{ checklistData ? checklistData['name'] : '' }}</div>
             </div>
             <div class="row justify-end items-center">
                 <q-btn text-color="black" size="sm" icon="fas fa-gamepad" dense unelevated :ripple="false" aria-label="Open Flashcard Game" tabindex="0">
@@ -40,25 +40,27 @@
                 <q-separator></q-separator>
             </div>
         </template>
-        <template v-if="displayImagesVal">
-            <taxaImageDisplayModule
-                :display-authors="displayAuthorsVal"
-                :display-common-names="displayCommonNamesVal"
-                :display-synonyms="displaySynonymsVal"
-                :image-data="checklistImageData"
-                :sort-by="selectedSortByOption"
-                :taxa-arr="taxaDisplayDataArr"
-            ></taxaImageDisplayModule>
-        </template>
-        <template v-else>
-            <taxaListDisplayModule
-                :display-authors="displayAuthorsVal"
-                :display-common-names="displayCommonNamesVal"
-                :display-synonyms="displaySynonymsVal"
-                :sort-by="selectedSortByOption"
-                :taxa-arr="taxaDisplayDataArr"
-            ></taxaListDisplayModule>
-        </template>
+        <div class="q-pl-md">
+            <template v-if="displayImagesVal">
+                <taxaImageDisplayModule
+                    :display-authors="displayAuthorsVal"
+                    :display-common-names="displayCommonNamesVal"
+                    :display-synonyms="displaySynonymsVal"
+                    :image-data="checklistImageData"
+                    :sort-by="selectedSortByOption"
+                    :taxa-arr="taxaDisplayDataArr"
+                ></taxaImageDisplayModule>
+            </template>
+            <template v-else>
+                <taxaListDisplayModule
+                    :display-authors="displayAuthorsVal"
+                    :display-common-names="displayCommonNamesVal"
+                    :display-synonyms="displaySynonymsVal"
+                    :sort-by="selectedSortByOption"
+                    :taxa-arr="taxaDisplayDataArr"
+                ></taxaListDisplayModule>
+            </template>
+        </div>
         <template v-if="activeTaxaArr.length > taxaPerPage">
             <div class="q-mb-sm full-width">
                 <q-separator></q-separator>

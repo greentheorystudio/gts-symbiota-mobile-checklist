@@ -17,12 +17,12 @@
                                         <span class="q-ml-sm text-bold">{{ taxon['author'] }}</span>
                                     </template>
                                 </div>
-                                <template v-if="displayCommonNames && taxon['vernacularData']">
-                                    <span>{{ getVernacularStrFromArr(taxon['vernacularData']) }}</span>
+                                <template v-if="displayCommonNames && taxon['vernacularJson']">
+                                    <span>{{ getVernacularStrFromArr(taxon['vernacularJson']) }}</span>
                                 </template>
                             </div>
-                            <div v-if="displaySynonyms && taxon['synonymyData']" class="q-ml-md text-italic">
-                                {{ getSynonymStrFromArr(taxon['synonymyData']) }}
+                            <div v-if="displaySynonyms && taxon['synonymyJson']" class="q-ml-md text-italic">
+                                {{ getSynonymStrFromArr(taxon['synonymyJson']) }}
                             </div>
                         </div>
                     </template>
@@ -41,12 +41,12 @@
                                 <span class="q-ml-sm text-bold">{{ taxon['author'] }}</span>
                             </template>
                         </div>
-                        <template v-if="displayCommonNames && taxon['vernacularData']">
-                            <span>{{ getVernacularStrFromArr(taxon['vernacularData']) }}</span>
+                        <template v-if="displayCommonNames && taxon['vernacularJson']">
+                            <span>{{ getVernacularStrFromArr(taxon['vernacularJson']) }}</span>
                         </template>
                     </div>
-                    <div v-if="displaySynonyms && taxon['synonymyData']" class="q-ml-md text-italic">
-                        {{ getSynonymStrFromArr(taxon['synonymyData']) }}
+                    <div v-if="displaySynonyms && taxon['synonymyJson']" class="q-ml-md text-italic">
+                        {{ getSynonymStrFromArr(taxon['synonymyJson']) }}
                     </div>
                 </div>
             </template>
@@ -79,26 +79,30 @@ defineProps({
 
 function getSynonymStrFromArr(synonymJson) {
     const nameArr = [];
-    const synonymArr = JSON.parse(synonymJson);
-    if(synonymArr.length > 0){
-        synonymArr.forEach(synonym => {
-            if(synonym['sciname']){
-                nameArr.push(synonym['sciname']);
-            }
-        });
+    if(synonymJson){
+        const synonymArr = JSON.parse(synonymJson);
+        if(synonymArr && synonymArr.length > 0){
+            synonymArr.forEach(synonym => {
+                if(synonym['sciname']){
+                    nameArr.push(synonym['sciname']);
+                }
+            });
+        }
     }
     return nameArr.length > 0 ? ('[' + nameArr.join(', ') + ']') : '';
 }
 
 function getVernacularStrFromArr(vernacularJson) {
     const nameArr = [];
-    const vernacularArr = JSON.parse(vernacularJson);
-    if(vernacularArr.length > 0){
-        vernacularArr.forEach(vernacular => {
-            if(vernacular['vernacularname']){
-                nameArr.push(vernacular['vernacularname']);
-            }
-        });
+    if(vernacularJson){
+        const vernacularArr = JSON.parse(vernacularJson);
+        if(vernacularArr && vernacularArr.length > 0){
+            vernacularArr.forEach(vernacular => {
+                if(vernacular['vernacularname']){
+                    nameArr.push(vernacular['vernacularname']);
+                }
+            });
+        }
     }
     return nameArr.length > 0 ? (' - ' + nameArr.join(', ')) : '';
 }

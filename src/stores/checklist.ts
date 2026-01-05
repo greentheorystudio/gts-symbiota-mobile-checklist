@@ -174,7 +174,7 @@ export const useChecklistStore = defineStore('checklist', () => {
     const getDisplayVernaculars = computed(() => displayVernaculars.value);
     const getPaginatedTaxaArr = computed(() => {
         imageContentData.value = Object.assign({}, {});
-        let returnArr = [];
+        let returnArr: any[];
         if(getActiveTaxaArr.value.length > taxaPerPage){
             let endIndex = getActiveTaxaArr.value.length;
             const index = (paginationPage.value - 1) * taxaPerPage;

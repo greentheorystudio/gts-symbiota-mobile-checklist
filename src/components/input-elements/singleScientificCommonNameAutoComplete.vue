@@ -1,7 +1,7 @@
 <template>
-    <q-select ref="autocompleteRef" v-model="sciname" use-input hide-selected fill-input outlined dense options-dense hide-dropdown-icon popup-content-class="z-max" behavior="menu" input-class="z-max" input-debounce="0" bg-color="white" @new-value="createValue" :options="autocompleteOptions" @filter="getOptions" @blur="blurAction" @update:model-value="processChange" :label="label" :tabindex="tabindex">
-        <template v-if="sciname" v-slot:append>
-            <q-icon role="button" v-if="clearable && sciname" name="cancel" class="cursor-pointer" @click="clearAction();" @keyup.enter="clearAction();" aria-label="Clear value" :tabindex="tabindex">
+    <q-select ref="autocompleteRef" v-model="scinameValue" use-input hide-selected fill-input outlined dense options-dense hide-dropdown-icon popup-content-class="z-max" behavior="menu" input-class="z-max" input-debounce="0" bg-color="white" @new-value="createValue" :options="autocompleteOptions" @filter="getOptions" @blur="blurAction" @update:model-value="processChange" :label="label" :tabindex="tabindex">
+        <template v-if="scinameValue" v-slot:append>
+            <q-icon role="button" v-if="clearable && scinameValue" name="cancel" class="cursor-pointer" @click="clearAction();" @keyup.enter="clearAction();" aria-label="Clear value" :tabindex="tabindex">
                 <q-tooltip anchor="top middle" self="bottom middle" class="text-body2" :delay="1000" :offset="[10, 10]">
                     Clear value
                 </q-tooltip>
@@ -10,7 +10,7 @@
     </q-select>
 </template>
 <script setup>
-import { defineEmits, ref } from 'vue';
+import {defineEmits, onMounted, ref, toRefs, watch} from 'vue';
 
 import { showNotification } from 'src/hooks/core.js';
 
@@ -81,6 +81,12 @@ const emit = defineEmits(['update:value']);
 
 const autocompleteOptions = ref([]);
 const autocompleteRef = ref(null);
+const scinameValue = ref(null);
+const propsRefs = toRefs(props);
+
+watch(propsRefs.sciname, () => {
+    setScinameValue();
+});
 
 function blurAction(val) {
     if(val.target.value && val.target.value !== props.sciname){
@@ -152,4 +158,12 @@ function setOptionsFromProps(val) {
     });
     autocompleteOptions.value = newOptions;
 }
+
+function setScinameValue() {
+    scinameValue.value = props.sciname;
+}
+
+onMounted(() => {
+    setScinameValue();
+});
 </script>
