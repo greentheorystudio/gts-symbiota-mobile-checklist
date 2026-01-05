@@ -36,8 +36,10 @@
                 </div>
             </template>
         </q-header>
-        <q-drawer v-if="keyDataExists" v-model="leftDrawerOpen" behavior="desktop" overlay bordered elevated>
-            <div>Panel</div>
+        <q-drawer v-if="keyDataExists" v-model="leftDrawerOpen" :width="400" behavior="desktop" class="hide-scrollbar" overlay bordered elevated>
+            <div class="q-py-md q-pl-md q-pr-lg">
+                <identificationKeyModule></identificationKeyModule>
+            </div>
             <div class="q-mini-drawer-hide absolute" style="top: calc(50% - 30px); right: 0" @click="toggleLeftDrawer">
                 <q-btn square padding="25px 0" color="primary" icon="arrow_left"></q-btn>
             </div>
@@ -69,6 +71,8 @@ import { computed, provide, ref } from 'vue';
 import { useChecklistStore } from 'src/stores/checklist';
 
 import selectorInputElement from 'src/components/input-elements/selectorInputElement.vue';
+
+import identificationKeyModule from 'src/components/layout/identificationKeyModule.vue';
 
 import appInformationPopup from 'src/components/popups/appInformationPopup.vue';
 import appManagementPopup from 'src/components/popups/appManagementPopup.vue';
