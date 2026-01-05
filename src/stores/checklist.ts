@@ -11,9 +11,6 @@ import ChecklistImages from 'src/models/ChecklistImages';
 import Checklists from './../models/Checklists';
 import ChecklistTaxa from 'src/models/ChecklistTaxa';
 
-import { CharacterHeadingInterface } from 'src/interfaces/CharacterHeadingInterface';
-import { CharacterStateInterface } from 'src/interfaces/CharacterStateInterface';
-import { CharacterInterface } from 'src/interfaces/CharacterInterface';
 import { ChecklistImageInterface } from 'src/interfaces/ChecklistImageInterface';
 import { ChecklistInterface } from 'src/interfaces/ChecklistInterface';
 import { ChecklistTaxonInterface } from 'src/interfaces/ChecklistTaxonInterface';
@@ -138,6 +135,41 @@ export const useChecklistStore = defineStore('checklist', () => {
         return checklistCharacterData.value.length > 0 && checklistCharacterHeadingData.value.length > 0 && checklistCharacterStateData.value.length > 0;
     });
     const getChecklistId = computed(() => checklistId.value);
+    const getCountData = computed(() => {
+        const returnData: any = {};
+        const totalArr: any[] = [];
+        const speciesArr: string[] = [];
+        const generaArr: any[] = [];
+        const familyArr: any[] = [];
+        getActiveTaxaArr.value.forEach(taxon => {
+            if(!totalArr.includes(taxon['sciname'])){
+                totalArr.push(taxon['sciname']);
+            }
+            if(taxon['family'] && taxon['family'] !== '[Incertae Sedis]' && !familyArr.includes(taxon['family'])){
+                familyArr.push(taxon['family']);
+            }
+            if(Number(taxon['rankid']) === 180 && !generaArr.includes(taxon['sciname'])){
+                generaArr.push(taxon['sciname']);
+            }
+            else if(Number(taxon['rankid']) >= 220){
+                const unitNameArr = taxon['sciname'].split(' ');
+                if(!generaArr.includes(unitNameArr[0])){
+                    generaArr.push(unitNameArr[0]);
+                }
+                if(Number(taxon['rankid']) === 220 && !speciesArr.includes(taxon['sciname'])){
+                    speciesArr.push(taxon['sciname']);
+                }
+                else if(!speciesArr.includes((unitNameArr[0] + ' ' + unitNameArr[1]))){
+                    speciesArr.push((unitNameArr[0] + ' ' + unitNameArr[1]));
+                }
+            }
+        });
+        returnData['families'] = familyArr.length;
+        returnData['genera'] = generaArr.length;
+        returnData['species'] = speciesArr.length;
+        returnData['total'] = totalArr.length;
+        return returnData;
+    });
     const getPaginatedTaxaArr = computed(() => {
         let returnArr;
         if(getActiveTaxaArr.value.length > taxaPerPage){
@@ -517,6 +549,7 @@ export const useChecklistStore = defineStore('checklist', () => {
         getChecklistImageData,
         getChecklistKeyDataArr,
         getChecklistTaxaArr,
+        getCountData,
         getDisplayAuthors,
         getDisplayImages,
         getDisplaySortVal,
