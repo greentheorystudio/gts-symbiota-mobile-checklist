@@ -100,8 +100,7 @@ export async function extractZipFile(zipFilePath: string, destinationDirectory: 
                         return Filesystem.writeFile({
                             path: `${destinationDirectory}/${relativePath}`,
                             directory: Directory.Data,
-                            data: content,
-                            recursive: true
+                            data: content
                         });
                     });
                 })();
@@ -147,6 +146,14 @@ export async function getFolderContents(path: string) {
 
 export function hideWorking() {
     Loading.hide();
+}
+
+export async function getImageBase64UriStr(imagePath: string) {
+    const fileContent =  await Filesystem.readFile({
+        path: imagePath,
+        directory: Directory.Data
+    });
+    return (fileContent && fileContent.data) ? ('data:image/jpeg;base64,' + fileContent.data) : '';
 }
 
 export async function moveFile(sourcePath: string, targetPath: string) {

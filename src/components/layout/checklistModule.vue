@@ -85,7 +85,7 @@ const checklistStore = useChecklistStore();
 const activeTaxaArr = computed(() => checklistStore.getActiveTaxaArr);
 const checklistData = computed(() => checklistStore.getChecklistData);
 const countData = computed(() => checklistStore.getCountData);
-const checklistImageData = computed(() => checklistStore.getChecklistImageData);
+const checklistImageData = computed(() => checklistStore.getImageContentData);
 const displayAuthorsVal = computed(() => checklistStore.getDisplayAuthors);
 const displayCommonNamesVal = computed(() => checklistStore.getDisplayVernaculars);
 const displayImagesVal = computed(() => checklistStore.getDisplayImages);

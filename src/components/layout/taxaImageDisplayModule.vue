@@ -10,8 +10,8 @@
                         <div class="full-width row q-gutter-sm">
                             <template v-for="taxon in family['taxa']">
                                 <q-card role="button" flat bordered class="cursor-pointer" @click="openTaxaProfilePopup(taxon['tid']);" :style="cardStyle">
-                                    <template v-if="imageData.hasOwnProperty(taxon['tidaccepted']) && imageData[taxon['tidaccepted']].length > 0">
-                                        <q-img class="rounded-borders" :height="imageHeight" :src="imageData[taxon['tidaccepted']][0]['filePath']" fit="scale-down" :alt="(imageData[taxon['tidaccepted']][0]['alttext'] ? imageData[taxon['tidaccepted']][0]['alttext'] : taxon['sciname'])"></q-img>
+                                    <template v-if="imageData.hasOwnProperty(taxon['tid']) && imageData[taxon['tid']].length > 0">
+                                        <q-img class="rounded-borders" :height="imageHeight" :src="imageData[taxon['tid']][0]['contentData']" fit="scale-down" :alt="(imageData[taxon['tid']][0]['alttext'] ? imageData[taxon['tid']][0]['alttext'] : taxon['sciname'])"></q-img>
                                     </template>
                                     <template v-else>
                                         <div class="column justify-center" :style="('height: ' + imageHeight + ';')">
@@ -45,8 +45,8 @@
             <div class="full-width row q-gutter-sm">
                 <template v-for="taxon in taxaArr">
                     <q-card role="button" flat bordered class="cursor-pointer" @click="openTaxaProfilePopup(taxon['tid']);" :style="cardStyle">
-                        <template v-if="imageData.hasOwnProperty(taxon['tidaccepted']) && imageData[taxon['tidaccepted']].length > 0">
-                            <q-img class="rounded-borders" :height="imageHeight" :src="imageData[taxon['tidaccepted']][0]['filePath']" fit="scale-down" :alt="(imageData[taxon['tidaccepted']][0]['alttext'] ? imageData[taxon['tidaccepted']][0]['alttext'] : taxon['sciname'])"></q-img>
+                        <template v-if="imageData.hasOwnProperty(taxon['tid']) && imageData[taxon['tid']].length > 0">
+                            <q-img class="rounded-borders" :height="imageHeight" :src="imageData[taxon['tid']][0]['contentData']" fit="scale-down" :alt="(imageData[taxon['tid']][0]['alttext'] ? imageData[taxon['tid']][0]['alttext'] : taxon['sciname'])"></q-img>
                         </template>
                         <template v-else>
                             <div class="column justify-center" :style="('height: ' + imageHeight + ';')">

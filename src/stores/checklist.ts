@@ -1,8 +1,8 @@
 import { capSQLiteChanges } from '@capacitor-community/sqlite';
 import { defineStore } from 'pinia';
-import { Ref, ref, computed } from 'vue';
+import { computed, ref, Ref } from 'vue';
 
-import { deleteChecklistImageDirectory } from 'src/hooks/core';
+import { deleteChecklistImageDirectory, getImageBase64UriStr } from 'src/hooks/core';
 
 import CharacterHeadings from 'src/models/CharacterHeadings';
 import CharacterStates from 'src/models/CharacterStates';
@@ -34,6 +34,7 @@ export const useChecklistStore = defineStore('checklist', () => {
     const checklistCharacterStateData: Ref<any> = ref([]);
     const checklistData: Ref<ChecklistInterface | null> = ref(null);
     const checklistFlashcardTaxaArr: Ref<any[]> = ref([]);
+    const checklistFlashcardTidArr: Ref<any[]> = ref([]);
     const checklistId: Ref<number> = ref(0);
     const checklistImageData: Ref<any> = ref({});
     const checklistKeyDataArr: Ref<any[]> = ref([]);
@@ -45,6 +46,7 @@ export const useChecklistStore = defineStore('checklist', () => {
     const displaySynonyms: Ref<boolean> = ref(false);
     const displayTaxonFilterVal: Ref<any | null> = ref(null);
     const displayVernaculars: Ref<boolean> = ref(false);
+    const imageContentData: Ref<any> = ref({});
     const paginationPage: Ref<number> = ref(1);
     const selectedStateArr: Ref<any[]> = ref([]);
     const taxaFilterOptions: Ref<any[]> = ref([]);
@@ -129,7 +131,7 @@ export const useChecklistStore = defineStore('checklist', () => {
     const getDisplaySortVal = computed(() => displaySortVal.value);
     const getDisplaySynonyms = computed(() => displaySynonyms.value);
     const getDisplayTaxonFilterVal = computed(() => displayTaxonFilterVal.value);
-    const getDisplayVernaculars = computed(() => displayVernaculars.value);
+    const getImageContentData = computed(() => imageContentData.value);
     const getKeyDataExists = computed(() => {
         return checklistCharacterData.value.length > 0 && checklistCharacterHeadingData.value.length > 0 && checklistCharacterStateData.value.length > 0;
     });
@@ -169,8 +171,10 @@ export const useChecklistStore = defineStore('checklist', () => {
         returnData['total'] = totalArr.length;
         return returnData;
     });
+    const getDisplayVernaculars = computed(() => displayVernaculars.value);
     const getPaginatedTaxaArr = computed(() => {
-        let returnArr;
+        imageContentData.value = Object.assign({}, {});
+        let returnArr = [];
         if(getActiveTaxaArr.value.length > taxaPerPage){
             let endIndex = getActiveTaxaArr.value.length;
             const index = (paginationPage.value - 1) * taxaPerPage;
@@ -182,6 +186,13 @@ export const useChecklistStore = defineStore('checklist', () => {
         else{
             returnArr = getActiveTaxaArr.value.slice();
         }
+        return returnArr;
+    });
+    const getPaginatedTidArr = computed(() => {
+        const returnArr: any[] = [];
+        getPaginatedTaxaArr.value.forEach(taxon => {
+            returnArr.push(taxon.tid);
+        });
         return returnArr;
     });
     const getPaginationLastPageNumber = computed(() => {
@@ -259,6 +270,7 @@ export const useChecklistStore = defineStore('checklist', () => {
                 });
             }
         }
+        setImageContentData();
         return newDataArr.slice();
     });
     const getTaxaFilterOptions = computed(() => taxaFilterOptions.value);
@@ -277,6 +289,7 @@ export const useChecklistStore = defineStore('checklist', () => {
         characterDependencyDataArr.value.length = 0;
         taxaFilterOptions.value.length = 0;
         checklistFlashcardTaxaArr.value.length = 0;
+        checklistFlashcardTidArr.value.length = 0;
     }
 
     async function createChecklist(checklist: ChecklistInterface, checklistImages: ChecklistImageInterface[], checklistTaxa: ChecklistTaxonInterface[], keyData: any): Promise<boolean> {
@@ -379,6 +392,7 @@ export const useChecklistStore = defineStore('checklist', () => {
         checklistTaxaArr.value.forEach(taxon => {
             if(Number(taxon['rankid']) >= 220 && !checklistFlashcardTaxaArr.value.includes(Number(taxon['tid']))){
                 checklistFlashcardTaxaArr.value.push(taxon);
+                checklistFlashcardTidArr.value.push(taxon['tid']);
             }
             if(!taxaFilterOptions.value.find(taxonObj => taxonObj['sciname'] === taxon['sciname'])){
                 taxaFilterOptions.value.push({sciname: taxon['sciname'], label: taxon['sciname'], rankid: taxon['rankid']});
@@ -543,6 +557,22 @@ export const useChecklistStore = defineStore('checklist', () => {
         paginationPage.value = value;
     }
 
+    async function setImageContentData(): Promise<void> {
+        for(const index in getPaginatedTidArr.value){
+            const tid = getPaginatedTidArr.value[index];
+            if(checklistImageData.value.hasOwnProperty(tid)){
+                if(!imageContentData.value.hasOwnProperty(tid)){
+                    imageContentData.value[tid] = [];
+                }
+                for(const index in checklistImageData.value[tid]){
+                    const imagedata: any = checklistImageData.value[tid][index];
+                    imagedata['contentData'] = await getImageBase64UriStr(imagedata['filePath']);
+                    imageContentData.value[tid].push(imagedata);
+                }
+            }
+        }
+    }
+
     return {
         getActiveChidArr,
         getActiveCidArr,
@@ -562,6 +592,7 @@ export const useChecklistStore = defineStore('checklist', () => {
         getDisplaySynonyms,
         getDisplayTaxonFilterVal,
         getDisplayVernaculars,
+        getImageContentData,
         getKeyDataExists,
         getPaginatedTaxaArr,
         getPaginationLastPageNumber,
