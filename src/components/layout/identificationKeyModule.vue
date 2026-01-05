@@ -1,9 +1,9 @@
 <template>
-    <div class="fit column q-col-gutter-sm no-wrap">
+    <div class="fit column q-col-gutter-lg no-wrap">
         <template v-for="heading in keyDataArr">
             <template v-if="activeChidArr.includes(Number(heading.chid))">
                 <div class="full-width">
-                    <q-card flat bordered>
+                    <q-card>
                         <q-card-section class="column q-gutter-sm">
                             <div class="text-h6 text-bold">
                                 {{ heading.headingname }}
