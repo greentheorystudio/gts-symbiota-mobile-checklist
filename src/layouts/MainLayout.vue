@@ -36,7 +36,7 @@
                 </div>
             </template>
         </q-header>
-        <q-drawer v-model="leftDrawerOpen" behavior="desktop" overlay bordered elevated>
+        <q-drawer v-if="keyDataExists" v-model="leftDrawerOpen" behavior="desktop" overlay bordered elevated>
             <div>Panel</div>
             <div class="q-mini-drawer-hide absolute" style="top: calc(50% - 30px); right: 0" @click="toggleLeftDrawer">
                 <q-btn square padding="25px 0" color="primary" icon="arrow_left"></q-btn>
@@ -79,6 +79,11 @@ const checklistStore = useChecklistStore();
 
 const checklistArr = computed(() => checklistStore.getChecklistArr);
 const checklistId = computed(() => checklistStore.getChecklistId);
+const displaySortByOptions: any[] = [
+    {value: 'family', label: 'Family/Scientific Name'},
+    {value: 'sciname', label: 'Scientific Name'}
+];
+const keyDataExists = computed(() => checklistStore.getKeyDataExists);
 const leftDrawerOpen = ref(false);
 const showDownloadPopup = ref(false);
 const showInformationPopup = ref(false);

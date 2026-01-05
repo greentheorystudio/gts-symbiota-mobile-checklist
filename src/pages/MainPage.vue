@@ -2,10 +2,10 @@
     <q-page>
         <template v-if="Number(checklistId) > 0">
             <div class="fit">
-                <q-page-sticky position="left" :offset="[-5, 0]" @click="toggleLeftDrawer">
+                <q-page-sticky v-if="keyDataExists" position="left" :offset="[-5, 0]" @click="toggleLeftDrawer">
                     <q-btn square padding="25px 0" color="primary" icon="arrow_right"></q-btn>
                 </q-page-sticky>
-                <div>
+                <div class="fit">
 
                 </div>
             </div>
@@ -38,6 +38,7 @@ const checklistRemoteStore = useChecklistRemoteStore();
 
 const checklistArr = computed(() => checklistStore.getChecklistArr);
 const checklistId = computed(() => checklistStore.getChecklistId);
+const keyDataExists = computed(() => checklistStore.getKeyDataExists);
 const remoteChecklistArr = computed(() => checklistRemoteStore.getChecklistArr);
 const remoteConnectionEstablished = computed(() => checklistRemoteStore.getRemoteConnectionEstablished);
 
