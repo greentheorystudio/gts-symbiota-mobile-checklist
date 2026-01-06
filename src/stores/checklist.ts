@@ -67,42 +67,43 @@ export const useChecklistStore = defineStore('checklist', () => {
         checklistTaxaArr.value.forEach(taxon => {
             const cidArr: any[] = [];
             let includeTaxon = false;
-            if(displayTaxonFilterVal.value){
-                if(Number(displayTaxonFilterVal.value['rankid']) === 140 && taxon['family'] === displayTaxonFilterVal.value['sciname']){
-                    includeTaxon = true;
-                }
-                else if(Number(displayTaxonFilterVal.value['rankid']) > 140 && (taxon['sciname'] === displayTaxonFilterVal.value['sciname'] || taxon['sciname'].startsWith((displayTaxonFilterVal.value['sciname'] + ' ')))){
-                    includeTaxon = true;
-                }
+            let keyIncludeTaxon = false;
+            const keyData: any = (taxon.hasOwnProperty('keyJson') && taxon['keyJson']) ? JSON.parse(taxon['keyJson']) : null;
+            if(keyData){
+                Object.keys(keyData).forEach(cid => {
+                    if(!keyIncludeTaxon){
+                        keyData[cid].forEach((char: { [x: string]: any; }) => {
+                            if(!keyIncludeTaxon && (getSelectedCidArr.value.length === 0 || (getSelectedCidArr.value.includes(Number(char['cid'])) && getSelectedCsidArr.value.includes(Number(char['csid']))))){
+                                keyIncludeTaxon = true;
+                            }
+                            if(keyIncludeTaxon && !cidArr.includes(Number(char['cid']))){
+                                cidArr.push(Number(char['cid']));
+                            }
+                        });
+                    }
+                });
             }
             else{
-                includeTaxon = true;
+                keyIncludeTaxon = true;
             }
-            if(includeTaxon){
-                const keyData: any = (taxon.hasOwnProperty('keyJson') && taxon['keyJson']) ? JSON.parse(taxon['keyJson']) : null;
-                if(keyData){
-                    Object.keys(keyData).forEach(cid => {
-                        if(!includeTaxon){
-                            keyData[cid].forEach((char: { [x: string]: any; }) => {
-                                if(!includeTaxon && (getSelectedCidArr.value.length === 0 || (getSelectedCidArr.value.includes(Number(char['cid'])) && getSelectedCsidArr.value.includes(Number(char['csid']))))){
-                                    includeTaxon = true;
-                                }
-                                if(includeTaxon && !cidArr.includes(Number(char['cid']))){
-                                    cidArr.push(Number(char['cid']));
-                                }
-                            });
-                        }
-                    });
+            getSelectedCidArr.value.forEach(cid => {
+                if(!cidArr.includes(Number(cid))){
+                    keyIncludeTaxon = false;
+                }
+            });
+            if(keyIncludeTaxon){
+                if(displayTaxonFilterVal.value){
+                    if(Number(displayTaxonFilterVal.value['rankid']) === 140 && taxon['family'] === displayTaxonFilterVal.value['sciname']){
+                        includeTaxon = true;
+                    }
+                    else if(Number(displayTaxonFilterVal.value['rankid']) > 140 && (taxon['sciname'] === displayTaxonFilterVal.value['sciname'] || taxon['sciname'].startsWith((displayTaxonFilterVal.value['sciname'] + ' ')))){
+                        includeTaxon = true;
+                    }
                 }
                 else{
                     includeTaxon = true;
                 }
             }
-            getSelectedCidArr.value.forEach(cid => {
-                if(!cidArr.includes(Number(cid))){
-                    includeTaxon = false;
-                }
-            });
             if(includeTaxon){
                 returnArr.push(taxon);
             }
