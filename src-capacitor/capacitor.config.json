@@ -1,5 +1,31 @@
 {
   "appId": "com.greentheorystudio.symbiota.mobile.checklist",
-  "appName": "Green Theory Studio's Symbiota Mobile Checklist",
-  "webDir": "www"
+  "appName": "Green Theory Studios Symbiota Mobile Checklist",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https",
+    "url": "http://192.168.5.153:9500",
+    "cleartext": true
+  },
+  "plugins": {
+    "CapacitorSQLite": {
+      "iosDatabaseLocation": "Library/CapacitorDatabase",
+      "iosIsEncryption": true,
+      "iosKeychainPrefix": "symbiota.mobile.checklist",
+      "iosBiometric": {
+        "biometricAuth": false,
+        "biometricTitle": "Biometric login for capacitor sqlite"
+      },
+      "androidIsEncryption": true,
+      "androidBiometric": {
+        "biometricAuth": false,
+        "biometricTitle": "Biometric login for capacitor sqlite",
+        "biometricSubTitle": "Log in using your biometric"
+      },
+      "electronIsEncryption": true,
+      "electronWindowsLocation": "C:\\ProgramData\\CapacitorDatabases",
+      "electronMacLocation": "/Volumes/Development_Lacie/Development/Databases",
+      "electronLinuxLocation": "Databases"
+    }
+  }
 }
