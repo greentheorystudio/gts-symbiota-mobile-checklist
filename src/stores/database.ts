@@ -29,11 +29,21 @@ export const useDatabaseStore = defineStore('database', () => {
     const getDatabaseConnection: ComputedRef<SQLiteDBConnection | undefined> = computed(() => {
         return databaseConnection.value;
     });
+    const getRuntimeEnvironment = computed(() => runtimeEnvironment.value);
+
+    async function closeDatabaseConnection(): Promise<void> {
+        const isConnected = (await sqliteConnection.isConnection('mobileChecklistDb', false)).result;
+        if(isConnected){
+            await CapacitorSQLite.closeConnection({ database: 'mobileChecklistDb' });
+        }
+        return;
+    }
 
     async function createDatabaseConnection(): Promise<boolean> {
         let connectionEstablished = false;
         const databaseJsonStr = await getFileContents('mobile-checklist/database/database.json');
         if(databaseJsonStr.data && typeof databaseJsonStr.data === 'string'){
+            await closeDatabaseConnection();
             await sqliteConnection.importFromJson(databaseJsonStr.data);
             await setDatabaseConnection();
             if(databaseConnection.value){
@@ -81,13 +91,21 @@ export const useDatabaseStore = defineStore('database', () => {
     }
 
     async function openDatabase(): Promise<SQLiteDBConnection | undefined> {
-        const db = await sqliteConnection.createConnection(
-            'mobileChecklistDb',
-            false,
-            'no-encryption',
-            newestDbVersion.value,
-            false
-        );
+        let db: any;
+        const ret = await sqliteConnection.checkConnectionsConsistency();
+        const isConn = (await sqliteConnection.isConnection('mobileChecklistDb', false)).result;
+        if(ret.result && isConn){
+            db = await sqliteConnection.retrieveConnection('mobileChecklistDb', false);
+        }
+        else{
+            db = await sqliteConnection.createConnection(
+                'mobileChecklistDb',
+                false,
+                'no-encryption',
+                newestDbVersion.value,
+                false
+            );
+        }
         await db.open();
         return db;
     }
@@ -145,8 +163,9 @@ export const useDatabaseStore = defineStore('database', () => {
     return {
         createDatabaseConnection,
         createDatabaseJsonFile,
-        deleteDatabase,
         getDatabaseConnection,
+        getRuntimeEnvironment,
+        deleteDatabase,
         initializeDatabase,
         initWebStore,
         processDatabaseChange,

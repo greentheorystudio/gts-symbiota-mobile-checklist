@@ -62,6 +62,7 @@ import { RemoteChecklistInterface } from 'src/interfaces/RemoteChecklistInterfac
 
 import { useChecklistStore } from 'src/stores/checklist';
 import { useChecklistRemoteStore } from 'src/stores/checklist-remote';
+import { useDatabaseStore } from 'stores/database';
 
 const props = defineProps({
     showPopup: {
@@ -74,6 +75,7 @@ const emit = defineEmits(['close:popup']);
 
 const checklistStore = useChecklistStore();
 const checklistRemoteStore = useChecklistRemoteStore();
+const databaseStore = useDatabaseStore();
 
 const checklistArr = computed(() => checklistStore.getChecklistArr);
 const checklistDownloadOptionArr = computed(() => {
@@ -95,6 +97,7 @@ const newChecklistData: Ref<RemoteChecklistInterface | null> = ref(null);
 const newChecklistImageData: Ref<ChecklistImageInterface[]> = ref([]);
 const newChecklistKeyData: Ref<any> = ref({});
 const newChecklistTaxaData: Ref<ChecklistTaxonInterface[]> = ref([]);
+const platform = computed(() => databaseStore.getRuntimeEnvironment);
 const propsRefs = toRefs(props);
 const remoteChecklistArr = computed(() => checklistRemoteStore.getChecklistArr);
 
@@ -124,7 +127,10 @@ async function loadArchiveData() {
     if(await fileFolderExists('mobile-checklist/download/extract/data.json')){
         const dataJsonStr = await getFileContents('mobile-checklist/download/extract/data.json');
         if(dataJsonStr.data && typeof dataJsonStr.data === 'string'){
-            const decodedString = atob(dataJsonStr.data);
+            let decodedString = dataJsonStr.data;
+            if(platform.value && platform.value === 'web'){
+                decodedString = atob(dataJsonStr.data);
+            }
             dataArchiveData.value = Object.assign({}, JSON.parse(decodedString));
             if(dataArchiveData.value.hasOwnProperty('taxa') && dataArchiveData.value['taxa'].length > 0){
                 await processImageFiles();
