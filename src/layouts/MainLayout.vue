@@ -82,6 +82,14 @@
                 :show-popup="showDownloadPopup"
                 @close:popup="showDownloadPopup = false"
             ></checklistDownloadPopup>
+            <checklistFlashcardsPopup
+                :show-popup="showFlashcardPopup"
+                @close:popup="showFlashcardPopup = false"
+            ></checklistFlashcardsPopup>
+            <checklistInformationPopup
+                :show-popup="showChecklistInfoPopup"
+                @close:popup="showChecklistInfoPopup = false"
+            ></checklistInformationPopup>
             <taxonProfilePopup
                 :show-popup="showTaxonProfilePopup"
                 @close:popup="showTaxonProfilePopup = false"
@@ -90,10 +98,9 @@
     </q-layout>
 </template>
 <script setup lang="ts">
-import { computed, onMounted, provide, ref, watch } from 'vue';
+import { computed, provide, ref, watch } from 'vue';
 
 import { useChecklistStore } from 'src/stores/checklist';
-import { useChecklistRemoteStore } from 'src/stores/checklist-remote';
 
 import checkboxInputElement from 'src/components/input-elements/checkboxInputElement.vue';
 import selectorInputElement from 'src/components/input-elements/selectorInputElement.vue';
@@ -104,10 +111,11 @@ import identificationKeyModule from 'src/components/layout/identificationKeyModu
 import appInformationPopup from 'src/components/popups/appInformationPopup.vue';
 import appManagementPopup from 'src/components/popups/appManagementPopup.vue';
 import checklistDownloadPopup from 'src/components/popups/checklistDownloadPopup.vue';
+import checklistFlashcardsPopup from 'src/components/popups/checklistFlashcardsPopup.vue';
+import checklistInformationPopup from 'src/components/popups/checklistInformationPopup.vue';
 import taxonProfilePopup from 'src/components/popups/taxonProfilePopup.vue';
 
 const checklistStore = useChecklistStore();
-const checklistRemoteStore = useChecklistRemoteStore();
 
 const checklistArr = computed(() => checklistStore.getChecklistArr);
 const checklistId = computed(() => checklistStore.getChecklistId);
@@ -121,9 +129,10 @@ const displaySortByOptions: any[] = [
 const displaySynonymsVal = computed(() => checklistStore.getDisplaySynonyms);
 const keyDataExists = computed(() => checklistStore.getKeyDataExists);
 const leftDrawerOpen = ref(false);
-const remoteChecklistArr = computed(() => checklistRemoteStore.getChecklistArr);
 const selectedSortByOption = computed(() => checklistStore.getDisplaySortVal);
+const showChecklistInfoPopup = ref(false);
 const showDownloadPopup = ref(false);
+const showFlashcardPopup = ref(false);
 const showInformationPopup = ref(false);
 const showManagementPopup = ref(false);
 const showTaxonProfilePopup = ref(false);
