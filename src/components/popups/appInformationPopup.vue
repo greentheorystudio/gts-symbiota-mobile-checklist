@@ -1,9 +1,9 @@
 <template>
     <q-dialog v-model="displayPopup" full-width full-height>
         <q-card>
-            <q-card-section class="q-pa-sm row justify-between q-gutter-sm">
-                <div class="q-pl-sm text-h4 text-bold">Information</div>
-                <q-btn class="text-bold" glossy color="negative" label="Close" @click="closePopup();"></q-btn>
+            <q-card-section class="q-pa-none row justify-between q-gutter-sm no-wrap">
+                <div class="q-py-sm q-pl-sm text-h5 text-bold">Help</div>
+                <q-btn square glossy padding="0 10px" color="negative" icon="close" @click="closePopup();"></q-btn>
             </q-card-section>
             <q-card-section class="scroll">
                 <div class="q-pa-md">

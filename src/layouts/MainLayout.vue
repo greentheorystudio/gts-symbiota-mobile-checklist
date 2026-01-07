@@ -2,50 +2,50 @@
     <q-layout view="hHh lpR fFf">
         <q-header elevated>
             <q-toolbar>
-                <q-toolbar-title>
-                    <div class="cursor-pointer">
-                        Symbiota Mobile Checklist
-                    </div>
+                <q-toolbar-title class="text-bold">
+                    Symbiota Mobile Checklist
                 </q-toolbar-title>
-                <div class="row q-gutter-sm">
+                <div class="row">
                     <q-btn flat dense round icon="download_for_offline" aria-label="Download" @click="showDownloadPopup = true" />
                     <q-btn flat dense round icon="settings" aria-label="Management" @click="showManagementPopup = true" />
-                    <q-btn flat dense round icon="info" aria-label="Help" @click="showInformationPopup = true" />
+                    <q-btn flat dense round icon="help" aria-label="Help" @click="showInformationPopup = true" />
                 </div>
             </q-toolbar>
             <template v-if="checklistArr.length > 0">
                 <div v-touch-swipe.mouse="handleTopSwipe">
-                    <div class="q-px-sm">
-                        <selectorInputElement label="Select Checklist" :options="checklistArr" option-label="name" option-value="clid" :value="Number(checklistId) > 0 ? checklistId.toString() : ''" @update:value="processChecklistSelection"></selectorInputElement>
-                    </div>
-                    <div class="q-mt-sm q-pl-sm">
-                        <q-slide-transition class="q-px-sm q-pt-sm">
-                            <div v-show="showTopOptions" class="q-px-sm q-pt-sm">
+                    <div>
+                        <q-slide-transition class="q-px-sm q-pt-xs">
+                            <div v-show="showTopOptions">
                                 <q-card>
-                                    <q-card-section class="bg-white q-pa-sm column q-gutter-sm">
-                                        <div class="q-px-sm">
-                                            <selectorInputElement label="Sort Taxa" :options="displaySortByOptions" :value="selectedSortByOption" @update:value="processSortByChange"></selectorInputElement>
+                                    <q-card-section class="bg-white q-pl-none q-pr-xs q-pt-xs q-pb-sm column q-col-gutter-xs">
+                                        <div>
+                                            <selectorInputElement label="Select Checklist" :options="checklistArr" option-label="name" option-value="clid" :value="Number(checklistId) > 0 ? checklistId.toString() : ''" @update:value="processChecklistSelection"></selectorInputElement>
                                         </div>
-                                        <div class="q-px-sm">
-                                            <singleScientificCommonNameAutoComplete :sciname="(taxonFilterVal ? taxonFilterVal.sciname : null)" :options="taxaFilterOptions" label="Taxon Filter" :limit-to-options="true" @update:sciname="processTaxonFilterValChange"></singleScientificCommonNameAutoComplete>
-                                        </div>
-                                        <div class="row q-gutter-sm">
-                                            <div class="text-black q-mr-md text-body1 text-bold">
-                                                Display:
+                                        <template v-if="Number(checklistId) > 0">
+                                            <div class="q-px-xs">
+                                                <selectorInputElement label="Sort Taxa" :options="displaySortByOptions" :value="selectedSortByOption" @update:value="processSortByChange"></selectorInputElement>
                                             </div>
-                                            <div class="text-black text-bold">
-                                                <checkboxInputElement label="Synonyms" :value="Number(displaySynonymsVal).toString()" @update:value="processDisplaySynonymsChange"></checkboxInputElement>
+                                            <div class="q-px-xs">
+                                                <singleScientificCommonNameAutoComplete :sciname="(taxonFilterVal ? taxonFilterVal.sciname : null)" :options="taxaFilterOptions" label="Taxon Filter" :limit-to-options="true" @update:sciname="processTaxonFilterValChange"></singleScientificCommonNameAutoComplete>
                                             </div>
-                                            <div class="text-black text-bold">
-                                                <checkboxInputElement label="Common Names" :value="Number(displayCommonNamesVal).toString()" @update:value="processDisplayCommonNameChange"></checkboxInputElement>
+                                            <div class="row q-gutter-xs">
+                                                <div class="text-black q-mr-sm text-body1 text-bold">
+                                                    Display:
+                                                </div>
+                                                <div class="text-black text-bold">
+                                                    <checkboxInputElement label="Synonyms" :value="Number(displaySynonymsVal).toString()" @update:value="processDisplaySynonymsChange"></checkboxInputElement>
+                                                </div>
+                                                <div class="text-black text-bold">
+                                                    <checkboxInputElement label="Common Names" :value="Number(displayCommonNamesVal).toString()" @update:value="processDisplayCommonNameChange"></checkboxInputElement>
+                                                </div>
+                                                <div class="text-black text-bold">
+                                                    <checkboxInputElement label="Images" :value="Number(displayImagesVal).toString()" @update:value="processDisplayImagesChange"></checkboxInputElement>
+                                                </div>
+                                                <div class="text-black text-bold">
+                                                    <checkboxInputElement label="Taxon Authors" :value="Number(displayAuthorsVal).toString()" @update:value="processDisplayAuthorsChange"></checkboxInputElement>
+                                                </div>
                                             </div>
-                                            <div class="text-black text-bold">
-                                                <checkboxInputElement label="Images" :value="Number(displayImagesVal).toString()" @update:value="processDisplayImagesChange"></checkboxInputElement>
-                                            </div>
-                                            <div class="text-black text-bold">
-                                                <checkboxInputElement label="Taxon Authors" :value="Number(displayAuthorsVal).toString()" @update:value="processDisplayAuthorsChange"></checkboxInputElement>
-                                            </div>
-                                        </div>
+                                        </template>
                                     </q-card-section>
                                 </q-card>
                             </div>
@@ -60,7 +60,7 @@
                 </div>
             </template>
         </q-header>
-        <q-drawer v-if="keyDataExists" v-model="leftDrawerOpen" :width="400" behavior="desktop" class="hide-scrollbar" overlay bordered elevated>
+        <q-drawer v-if="keyDataExists" v-model="leftDrawerOpen" :width="325" behavior="desktop" class="q-py-md hide-scrollbar" overlay bordered elevated>
             <div class="q-py-md q-pl-md q-pr-lg">
                 <identificationKeyModule></identificationKeyModule>
             </div>
@@ -90,9 +90,10 @@
     </q-layout>
 </template>
 <script setup lang="ts">
-import { computed, provide, ref } from 'vue';
+import { computed, onMounted, provide, ref, watch } from 'vue';
 
 import { useChecklistStore } from 'src/stores/checklist';
+import { useChecklistRemoteStore } from 'src/stores/checklist-remote';
 
 import checkboxInputElement from 'src/components/input-elements/checkboxInputElement.vue';
 import selectorInputElement from 'src/components/input-elements/selectorInputElement.vue';
@@ -106,6 +107,7 @@ import checklistDownloadPopup from 'src/components/popups/checklistDownloadPopup
 import taxonProfilePopup from 'src/components/popups/taxonProfilePopup.vue';
 
 const checklistStore = useChecklistStore();
+const checklistRemoteStore = useChecklistRemoteStore();
 
 const checklistArr = computed(() => checklistStore.getChecklistArr);
 const checklistId = computed(() => checklistStore.getChecklistId);
@@ -119,6 +121,7 @@ const displaySortByOptions: any[] = [
 const displaySynonymsVal = computed(() => checklistStore.getDisplaySynonyms);
 const keyDataExists = computed(() => checklistStore.getKeyDataExists);
 const leftDrawerOpen = ref(false);
+const remoteChecklistArr = computed(() => checklistRemoteStore.getChecklistArr);
 const selectedSortByOption = computed(() => checklistStore.getDisplaySortVal);
 const showDownloadPopup = ref(false);
 const showInformationPopup = ref(false);
@@ -127,6 +130,15 @@ const showTaxonProfilePopup = ref(false);
 const showTopOptions = ref(false);
 const taxaFilterOptions = computed(() => checklistStore.getTaxaFilterOptions);
 const taxonFilterVal = computed(() => checklistStore.getDisplayTaxonFilterVal);
+
+watch(checklistArr, () => {
+    if(checklistArr.value.length > 0){
+        showTopOptions.value = true;
+    }
+    else if(checklistArr.value.length > 0){
+        showDownloadPopup.value = true;
+    }
+});
 
 function handleTopSwipe ({ evt, ...newInfo }: any) {
     if(newInfo && newInfo.hasOwnProperty('direction')){

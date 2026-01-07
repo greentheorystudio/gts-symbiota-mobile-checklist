@@ -1,32 +1,29 @@
 <template>
-    <div class="fit q-pa-md column">
-        <div class="q-mb-md full-width row justify-between q-gutter-sm items-center">
+    <div class="fit column">
+        <div class="q-pa-xs row justify-between q-gutter-sm items-center">
             <div>
-                <div class="text-h3 text-bold">{{ checklistData ? checklistData['name'] : '' }}</div>
+                <div class="text-h5 text-bold">{{ checklistData ? checklistData['name'] : '' }}</div>
             </div>
             <div class="row justify-end items-center">
-                <q-btn text-color="black" size="sm" icon="fas fa-gamepad" dense unelevated :ripple="false" aria-label="Open Flashcard Game" tabindex="0">
-                    <q-tooltip anchor="top middle" self="bottom middle" class="text-body2" :delay="1000" :offset="[10, 10]">
-                        Open Flashcard Game
-                    </q-tooltip>
-                </q-btn>
+                <q-btn flat dense round icon="style" @click=""></q-btn>
+                <q-btn flat dense round icon="info" @click=""></q-btn>
             </div>
         </div>
         <div class="q-mb-sm full-width">
             <q-separator></q-separator>
         </div>
-        <div class="q-mb-xs full-width row justify-start q-gutter-sm">
+        <div class="q-mb-xs full-width row justify-start q-gutter-xs">
             <div class="text-body1">
-                <span class="text-bold q-mr-sm">Families: </span>{{ countData['families'] }}
+                <span class="text-bold">Families: </span>{{ countData['families'] }}
             </div>
             <div class="text-body1">
-                <span class="text-bold q-mr-sm">Genera: </span>{{ countData['genera'] }}
+                <span class="text-bold">Genera: </span>{{ countData['genera'] }}
             </div>
             <div class="text-body1">
-                <span class="text-bold q-mr-sm">Species: </span>{{ countData['species'] }}
+                <span class="text-bold">Species: </span>{{ countData['species'] }}
             </div>
             <div class="text-body1">
-                <span class="text-bold q-mr-sm">Total Taxa: </span>{{ countData['total'] }}
+                <span class="text-bold">Taxa: </span>{{ countData['total'] }}
             </div>
         </div>
         <div class="q-mb-sm full-width">
@@ -40,38 +37,40 @@
                 <q-separator></q-separator>
             </div>
         </template>
-        <div class="q-pl-md">
-            <template v-if="displayImagesVal">
-                <taxaImageDisplayModule
-                    :display-authors="displayAuthorsVal"
-                    :display-common-names="displayCommonNamesVal"
-                    :display-synonyms="displaySynonymsVal"
-                    :image-data="checklistImageData"
-                    :sort-by="selectedSortByOption"
-                    :taxa-arr="taxaDisplayDataArr"
-                ></taxaImageDisplayModule>
-            </template>
-            <template v-else>
-                <taxaListDisplayModule
-                    :display-authors="displayAuthorsVal"
-                    :display-common-names="displayCommonNamesVal"
-                    :display-synonyms="displaySynonymsVal"
-                    :sort-by="selectedSortByOption"
-                    :taxa-arr="taxaDisplayDataArr"
-                ></taxaListDisplayModule>
+        <div class="q-pa-md column">
+            <div class="q-pl-md">
+                <template v-if="displayImagesVal">
+                    <taxaImageDisplayModule
+                        :display-authors="displayAuthorsVal"
+                        :display-common-names="displayCommonNamesVal"
+                        :display-synonyms="displaySynonymsVal"
+                        :image-data="checklistImageData"
+                        :sort-by="selectedSortByOption"
+                        :taxa-arr="taxaDisplayDataArr"
+                    ></taxaImageDisplayModule>
+                </template>
+                <template v-else>
+                    <taxaListDisplayModule
+                        :display-authors="displayAuthorsVal"
+                        :display-common-names="displayCommonNamesVal"
+                        :display-synonyms="displaySynonymsVal"
+                        :sort-by="selectedSortByOption"
+                        :taxa-arr="taxaDisplayDataArr"
+                    ></taxaListDisplayModule>
+                </template>
+            </div>
+            <template v-if="activeTaxaArr.length > taxaPerPage">
+                <div class="q-mb-sm full-width">
+                    <q-separator></q-separator>
+                </div>
+                <div class="q-mb-sm q-px-md full-width row justify-end">
+                    <q-pagination v-model="paginationPageValue" :max="paginationLastPageNumber" direction-links flat color="grey" active-color="primary" max-pages="10" aria-label="Checklist page navigation"></q-pagination>
+                </div>
+                <div class="q-mb-sm full-width">
+                    <q-separator></q-separator>
+                </div>
             </template>
         </div>
-        <template v-if="activeTaxaArr.length > taxaPerPage">
-            <div class="q-mb-sm full-width">
-                <q-separator></q-separator>
-            </div>
-            <div class="q-mb-sm q-px-md full-width row justify-end">
-                <q-pagination v-model="paginationPageValue" :max="paginationLastPageNumber" direction-links flat color="grey" active-color="primary" max-pages="10" aria-label="Checklist page navigation"></q-pagination>
-            </div>
-            <div class="q-mb-sm full-width">
-                <q-separator></q-separator>
-            </div>
-        </template>
     </div>
 </template>
 <script setup lang="ts">
