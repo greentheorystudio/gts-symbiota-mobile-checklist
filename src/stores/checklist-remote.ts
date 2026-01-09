@@ -199,6 +199,7 @@ export const useChecklistRemoteStore = defineStore('checklist-remote', () => {
         const clidVal = newChecklistData.value ? newChecklistData.value['clid'].toString() : null;
         if(clidVal){
             dataArchiveData.value['taxa'].forEach((taxon: any) => {
+                console.log(taxon);
                 newChecklistTaxaData.value.push({
                     clid: Number(clidVal),
                     tid: taxon['tid'],
@@ -206,6 +207,9 @@ export const useChecklistRemoteStore = defineStore('checklist-remote', () => {
                     sciname: taxon['sciname'],
                     author: taxon['author'],
                     family: taxon['family'],
+                    habitat: taxon['habitat'],
+                    notes: taxon['notes'],
+                    abundance: taxon['abundance'],
                     descriptionJson: taxon.hasOwnProperty('descData') ? JSON.stringify(taxon['descData']) : '',
                     keyJson: taxon.hasOwnProperty('keyData') ? JSON.stringify(taxon['keyData']) : '',
                     synonymyJson: taxon.hasOwnProperty('synonymyData') ? JSON.stringify(taxon['synonymyData']) : '',

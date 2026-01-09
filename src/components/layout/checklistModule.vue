@@ -74,7 +74,7 @@
     </div>
 </template>
 <script setup lang="ts">
-import {computed, inject, Ref, ref, watch} from 'vue';
+import { computed, inject, Ref, ref, watch } from 'vue';
 
 import { useChecklistStore } from 'src/stores/checklist';
 

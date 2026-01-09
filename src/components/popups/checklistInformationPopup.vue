@@ -30,7 +30,7 @@
     </q-dialog>
 </template>
 <script setup lang="ts">
-import {onMounted, defineEmits, ref, toRefs, watch, computed} from 'vue';
+import { computed, onMounted, ref, toRefs, watch } from 'vue';
 
 const props = defineProps({
     checklist: {

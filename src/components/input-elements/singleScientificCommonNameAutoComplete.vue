@@ -10,7 +10,7 @@
     </q-select>
 </template>
 <script setup>
-import {defineEmits, onMounted, ref, toRefs, watch} from 'vue';
+import { onMounted, ref, toRefs, watch } from 'vue';
 
 import { showNotification } from 'src/hooks/core.js';
 

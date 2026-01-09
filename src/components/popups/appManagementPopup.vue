@@ -37,7 +37,7 @@
     <confirmationPopup ref="confirmationPopupRef"></confirmationPopup>
 </template>
 <script setup lang="ts">
-import {onMounted, defineEmits, ref, toRefs, watch, computed} from 'vue';
+import {onMounted, ref, toRefs, watch, computed} from 'vue';
 
 import {
     hideWorking,

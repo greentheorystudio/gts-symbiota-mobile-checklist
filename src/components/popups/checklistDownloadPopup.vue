@@ -39,7 +39,7 @@
     </q-dialog>
 </template>
 <script setup lang="ts">
-import {computed, onMounted, defineEmits, ref, toRefs, watch, inject} from 'vue';
+import { computed, inject, onMounted, ref, toRefs, watch } from 'vue';
 
 import {
     hideWorking,

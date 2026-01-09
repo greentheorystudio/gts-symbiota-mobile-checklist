@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, defineEmits, ref, toRefs, watch } from 'vue';
+import { onMounted, ref, toRefs, watch } from 'vue';
 
 const props = defineProps({
     showPopup: {
