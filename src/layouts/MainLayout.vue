@@ -1,6 +1,6 @@
 <template>
     <q-layout view="hHh lpR fFf">
-        <q-header elevated>
+        <q-header elevated :class="checklistArr.length === 0 ? 'q-pb-sm' : ''">
             <q-toolbar>
                 <q-toolbar-title class="text-bold">
                     Symbiota Mobile Checklist
