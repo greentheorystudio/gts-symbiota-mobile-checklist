@@ -199,7 +199,6 @@ export const useChecklistRemoteStore = defineStore('checklist-remote', () => {
         const clidVal = newChecklistData.value ? newChecklistData.value['clid'].toString() : null;
         if(clidVal){
             dataArchiveData.value['taxa'].forEach((taxon: any) => {
-                console.log(taxon);
                 newChecklistTaxaData.value.push({
                     clid: Number(clidVal),
                     tid: taxon['tid'],

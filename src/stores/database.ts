@@ -72,9 +72,9 @@ export const useDatabaseStore = defineStore('database', () => {
         return;
     }
 
-    async function initializeDatabase(): Promise<boolean> {
+    async function initializeDatabase(reset: boolean): Promise<boolean> {
         await setNewestDbVersionNumber();
-        const databaseValidated = await validateDatabaseFile();
+        const databaseValidated = await validateDatabaseFile(reset);
         if(databaseValidated){
             const databaseConnectionValidated = await createDatabaseConnection();
             if(databaseConnectionValidated){
@@ -150,9 +150,9 @@ export const useDatabaseStore = defineStore('database', () => {
         runtimeEnvironment.value = env;
     }
 
-    async function validateDatabaseFile(): Promise<boolean> {
+    async function validateDatabaseFile(reset: boolean): Promise<boolean> {
         let validated = await fileFolderExists('mobile-checklist/database/database.json');
-        if(!validated){
+        if(!validated || reset){
             await createDatabaseJsonFile();
             validated = await fileFolderExists('mobile-checklist/database/database.json');
         }

@@ -11,6 +11,16 @@ export async function clearDownloadDirectory() {
     return;
 }
 
+export async function clearImageDirectory() {
+    const imageDirContents = await getFolderContents('mobile-checklist/images');
+    if(imageDirContents.files.length > 0){
+        for(const folder of imageDirContents.files) {
+            await deleteDirectory('mobile-checklist/images/' + folder.name);
+        }
+    }
+    return;
+}
+
 export async function createDirectory(path: string) {
     await Filesystem.mkdir({
         path: path,

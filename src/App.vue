@@ -2,7 +2,7 @@
     <router-view />
 </template>
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import {ref, onMounted, provide} from 'vue';
 import { Capacitor } from '@capacitor/core';
 import { JeepSqlite } from 'jeep-sqlite/dist/components/jeep-sqlite';
 
@@ -45,10 +45,10 @@ async function getSubDirectoryExists(directoryName: string): Promise<boolean> {
     return exists;
 }
 
-async function initializeApp(platform: string): Promise<boolean> {
+async function initializeApp(platform: string, databaseReset: boolean = false): Promise<boolean> {
     let initialized = false;
     databaseStore.setRuntimeEnvironment(platform);
-    if(platform === 'web'){
+    if(platform === 'web' && !databaseReset){
         await setJeepSQLiteElement();
         await databaseStore.initWebStore();
     }
@@ -56,7 +56,7 @@ async function initializeApp(platform: string): Promise<boolean> {
     if(rootValidated){
         const subDirectoriesValidated = await validateSubDirectories();
         if(subDirectoriesValidated){
-            initialized = await databaseStore.initializeDatabase();
+            initialized = await databaseStore.initializeDatabase(databaseReset);
         }
     }
     return initialized;
@@ -96,6 +96,8 @@ async function validateSubDirectories(): Promise<boolean> {
     }
     return validated;
 }
+
+provide('initializeApp', initializeApp);
 
 onMounted(async () => {
     appInitialized.value = await initializeApp(appPlatform);

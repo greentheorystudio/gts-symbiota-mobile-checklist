@@ -37,9 +37,10 @@
     <confirmationPopup ref="confirmationPopupRef"></confirmationPopup>
 </template>
 <script setup lang="ts">
-import {onMounted, ref, toRefs, watch, computed} from 'vue';
+import { computed, inject, onMounted, ref, toRefs, watch } from 'vue';
 
 import {
+    clearImageDirectory,
     hideWorking,
     showNotification,
     showWorking
@@ -47,11 +48,13 @@ import {
 
 import { useChecklistStore } from 'src/stores/checklist';
 import { useChecklistRemoteStore } from 'src/stores/checklist-remote';
+import { useDatabaseStore } from 'stores/database';
 
 import confirmationPopup from 'src/components/input-elements/confirmationPopup.vue';
 
 const checklistStore = useChecklistStore();
 const checklistRemoteStore = useChecklistRemoteStore();
+const databaseStore = useDatabaseStore();
 
 const props = defineProps({
     showPopup: {
@@ -66,8 +69,11 @@ const checklistArr = computed(() => checklistStore.getChecklistArr);
 const checklistId = computed(() => checklistStore.getChecklistId);
 const confirmationPopupRef: any = ref(null);
 const displayPopup = ref(false);
+const platform = computed(() => databaseStore.getRuntimeEnvironment);
 const propsRefs = toRefs(props);
 const remoteChecklistArr = computed(() => checklistRemoteStore.getChecklistArr);
+
+const initializeApp: any = inject('initializeApp');
 
 watch(propsRefs.showPopup, () => {
     setDisplayValue();
@@ -107,14 +113,23 @@ async function processDelete(clid: number) {
     }
 }
 
+async function processReset() {
+    showWorking();
+    await clearImageDirectory();
+    await initializeApp(platform.value, true);
+    await checklistStore.setChecklistArr();
+    hideWorking();
+    closePopup();
+}
+
 function resetApp() {
     const confirmText = 'This will delete all data that has been downloaded and cannot be undone. Are you sure you want to delete this checklist?';
     if(confirmationPopupRef.value){
         confirmationPopupRef.value.openPopup(confirmText, {cancel: true, falseText: 'Cancel', trueText: 'Yes', callback: (val: boolean) => {
-                if(val){
-
-                }
-            }});
+            if(val){
+                processReset();
+            }
+        }});
     }
 }
 
