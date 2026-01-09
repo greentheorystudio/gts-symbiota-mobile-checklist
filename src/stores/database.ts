@@ -17,7 +17,6 @@ import { DatabaseSchemaStatements } from 'src/updates/database.schema';
 import { DatabaseUpdateStatements } from '../updates/database.statements';
 
 export const useDatabaseStore = defineStore('database', () => {
-
     const databaseConnection: Ref<SQLiteDBConnection | undefined> = ref(undefined);
     const newestDbVersion = ref(0);
     const runtimeEnvironment: Ref<string | null> = ref(null);

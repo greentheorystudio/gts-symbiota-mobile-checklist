@@ -5,10 +5,10 @@
                 <q-toolbar-title class="text-bold">
                     Symbiota Mobile Checklist
                 </q-toolbar-title>
-                <div class="row">
-                    <q-btn flat dense round icon="download_for_offline" aria-label="Download" @click="showDownloadPopup = true" />
-                    <q-btn flat dense round icon="settings" aria-label="Management" @click="showManagementPopup = true" />
-                    <q-btn flat dense round icon="help" aria-label="Help" @click="showInformationPopup = true" />
+                <div class="row q-gutter-sm">
+                    <q-btn dense round icon="download_for_offline" aria-label="Download" @click="showDownloadPopup = true" />
+                    <q-btn dense round icon="settings" aria-label="Management" @click="showManagementPopup = true" />
+                    <q-btn dense round icon="help" aria-label="Help" @click="showInformationPopup = true" />
                 </div>
             </q-toolbar>
             <template v-if="checklistArr.length > 0">
@@ -87,8 +87,9 @@
                 @close:popup="showFlashcardPopup = false"
             ></checklistFlashcardsPopup>
             <checklistInformationPopup
+                :checklist="checklistInfoData"
                 :show-popup="showChecklistInfoPopup"
-                @close:popup="showChecklistInfoPopup = false"
+                @close:popup="closeChecklistInfoPopup()"
             ></checklistInformationPopup>
             <taxonProfilePopup
                 :show-popup="showTaxonProfilePopup"
@@ -119,6 +120,7 @@ const checklistStore = useChecklistStore();
 
 const checklistArr = computed(() => checklistStore.getChecklistArr);
 const checklistId = computed(() => checklistStore.getChecklistId);
+const checklistInfoData: any = ref(null);
 const displayAuthorsVal = computed(() => checklistStore.getDisplayAuthors);
 const displayCommonNamesVal = computed(() => checklistStore.getDisplayVernaculars);
 const displayImagesVal = computed(() => checklistStore.getDisplayImages);
@@ -149,6 +151,11 @@ watch(checklistArr, () => {
     }
 });
 
+function closeChecklistInfoPopup() {
+    checklistInfoData.value = null;
+    showChecklistInfoPopup.value = false;
+}
+
 function handleTopSwipe ({ evt, ...newInfo }: any) {
     if(newInfo && newInfo.hasOwnProperty('direction')){
         if(newInfo.direction === 'down'){
@@ -158,6 +165,11 @@ function handleTopSwipe ({ evt, ...newInfo }: any) {
             showTopOptions.value = false;
         }
     }
+}
+
+function openChecklistInfoPopup(checklist: object) {
+    checklistInfoData.value = checklist;
+    showChecklistInfoPopup.value = true;
 }
 
 function processChecklistSelection(clid: number) {
@@ -194,5 +206,6 @@ function toggleLeftDrawer() {
     leftDrawerOpen.value = !leftDrawerOpen.value;
 }
 
+provide('openChecklistInfoPopup', openChecklistInfoPopup);
 provide('toggleLeftDrawer', toggleLeftDrawer);
 </script>

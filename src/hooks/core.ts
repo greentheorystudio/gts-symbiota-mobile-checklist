@@ -193,11 +193,11 @@ export function showWorking(text: string | null = null) {
     Loading.show({
         spinner: QSpinnerHourglass,
         spinnerColor: 'primary',
-        spinnerSize: 140,
+        spinnerSize: 70,
         backgroundColor: 'grey',
         message: (text ? text : ''),
         messageColor: 'primary',
-        customClass: 'text-h4'
+        customClass: 'text-h6'
     })
 }
 

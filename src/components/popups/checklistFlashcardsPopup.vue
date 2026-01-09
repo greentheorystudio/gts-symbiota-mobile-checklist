@@ -3,7 +3,9 @@
         <q-card>
             <q-card-section class="q-pa-none row justify-between q-gutter-sm no-wrap">
                 <div class="q-py-sm q-pl-sm text-h5 text-bold">Help</div>
-                <q-btn square glossy padding="0 10px" color="negative" icon="close" @click="closePopup();"></q-btn>
+                <div>
+                    <q-btn square glossy padding="5px 10px" color="negative" icon="close" @click="closePopup();"></q-btn>
+                </div>
             </q-card-section>
             <q-card-section class="scroll">
                 <div class="q-pa-md">

@@ -4,9 +4,9 @@
             <div>
                 <div class="text-h5 text-bold">{{ checklistData ? checklistData['name'] : '' }}</div>
             </div>
-            <div class="row justify-end items-center">
-                <q-btn flat dense round icon="style" @click=""></q-btn>
-                <q-btn flat dense round icon="info" @click=""></q-btn>
+            <div class="row justify-end items-center q-gutter-sm">
+                <q-btn dense round icon="style" @click=""></q-btn>
+                <q-btn dense round icon="info" @click="openChecklistInfoPopup(checklistData)"></q-btn>
             </div>
         </div>
         <div class="q-mb-sm full-width">
@@ -74,7 +74,7 @@
     </div>
 </template>
 <script setup lang="ts">
-import {computed, Ref, ref, watch} from 'vue';
+import {computed, inject, Ref, ref, watch} from 'vue';
 
 import { useChecklistStore } from 'src/stores/checklist';
 
@@ -96,6 +96,8 @@ const paginationPageValue: Ref<number> = ref(1);
 const selectedSortByOption = computed(() => checklistStore.getDisplaySortVal);
 const taxaDisplayDataArr = computed(() => checklistStore.getTaxaDisplayDataArr);
 const taxaPerPage = computed(() => checklistStore.getTaxaPerPage);
+
+const openChecklistInfoPopup: any = inject('openChecklistInfoPopup');
 
 watch(paginationPageValue, () => {
     checklistStore.setPaginationPage(paginationPageValue.value);

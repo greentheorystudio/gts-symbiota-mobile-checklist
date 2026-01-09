@@ -18,6 +18,7 @@ import { ChecklistTaxonInterface } from 'src/interfaces/ChecklistTaxonInterface'
 import { useDatabaseStore } from 'stores/database';
 
 export const useChecklistStore = defineStore('checklist', () => {
+    const databaseStore = useDatabaseStore();
 
     const characterModel = new Characters;
     const characterHeadingModel = new CharacterHeadings;
@@ -39,7 +40,6 @@ export const useChecklistStore = defineStore('checklist', () => {
     const checklistImageData: Ref<any> = ref({});
     const checklistKeyDataArr: Ref<any[]> = ref([]);
     const checklistTaxaArr: Ref<ChecklistTaxonInterface[]> = ref([]);
-    const databaseStore = useDatabaseStore();
     const displayAuthors: Ref<boolean> = ref(false);
     const displayImages: Ref<boolean> = ref(false);
     const displaySortVal: Ref<string> = ref('family');
@@ -124,19 +124,10 @@ export const useChecklistStore = defineStore('checklist', () => {
     const getChecklistArr = computed(() => checklistArr.value);
     const getChecklistData = computed(() => checklistData.value);
     const getChecklistFlashcardTaxaArr = computed(() => checklistFlashcardTaxaArr.value);
+    const getChecklistId = computed(() => checklistId.value);
     const getChecklistImageData = computed(() => checklistImageData.value);
     const getChecklistKeyDataArr = computed(() => checklistKeyDataArr.value);
     const getChecklistTaxaArr = computed(() => checklistTaxaArr.value);
-    const getDisplayAuthors = computed(() => displayAuthors.value);
-    const getDisplayImages = computed(() => displayImages.value);
-    const getDisplaySortVal = computed(() => displaySortVal.value);
-    const getDisplaySynonyms = computed(() => displaySynonyms.value);
-    const getDisplayTaxonFilterVal = computed(() => displayTaxonFilterVal.value);
-    const getImageContentData = computed(() => imageContentData.value);
-    const getKeyDataExists = computed(() => {
-        return checklistCharacterData.value.length > 0 && checklistCharacterHeadingData.value.length > 0 && checklistCharacterStateData.value.length > 0;
-    });
-    const getChecklistId = computed(() => checklistId.value);
     const getCountData = computed(() => {
         const returnData: any = {};
         const totalArr: any[] = [];
@@ -172,7 +163,16 @@ export const useChecklistStore = defineStore('checklist', () => {
         returnData['total'] = totalArr.length;
         return returnData;
     });
+    const getDisplayAuthors = computed(() => displayAuthors.value);
+    const getDisplayImages = computed(() => displayImages.value);
+    const getDisplaySortVal = computed(() => displaySortVal.value);
+    const getDisplaySynonyms = computed(() => displaySynonyms.value);
+    const getDisplayTaxonFilterVal = computed(() => displayTaxonFilterVal.value);
     const getDisplayVernaculars = computed(() => displayVernaculars.value);
+    const getImageContentData = computed(() => imageContentData.value);
+    const getKeyDataExists = computed(() => {
+        return checklistCharacterData.value.length > 0 && checklistCharacterHeadingData.value.length > 0 && checklistCharacterStateData.value.length > 0;
+    });
     const getPaginatedTaxaArr = computed(() => {
         imageContentData.value = Object.assign({}, {});
         let returnArr: any[];
