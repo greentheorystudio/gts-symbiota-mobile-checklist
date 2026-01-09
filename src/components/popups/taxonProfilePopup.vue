@@ -15,7 +15,6 @@
         </q-card>
     </q-dialog>
 </template>
-
 <script setup lang="ts">
 import { onMounted, ref, toRefs, watch } from 'vue';
 
