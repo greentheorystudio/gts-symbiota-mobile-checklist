@@ -2,12 +2,12 @@
     <div class="q-pa-md column q-gutter-sm no-wrap">
         <template v-if="sortBy === 'family'">
             <template v-for="family in taxaArr">
-                <div class="full-width column no-wrap" @click="openTaxonProfilePopup(taxon)">
+                <div class="full-width column no-wrap">
                     <div class="full-width text-h6 text-bold">
                         {{ family['familyName'] }}
                     </div>
                     <template v-for="taxon in family['taxa']">
-                        <div class="q-pl-sm q-mb-xs full-width column">
+                        <div class="q-pl-sm q-mb-xs full-width column" @click="openTaxonProfilePopup(taxon)">
                             <div class="text-body1">
                                 <div class="text-black">
                                     <span class="text-bold text-italic">

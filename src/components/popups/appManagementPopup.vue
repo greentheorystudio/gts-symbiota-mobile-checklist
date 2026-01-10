@@ -36,7 +36,7 @@
     </q-dialog>
     <confirmationPopup ref="confirmationPopupRef"></confirmationPopup>
 </template>
-<script setup lang="ts">
+<script setup>
 import { computed, inject, onMounted, ref, toRefs, watch } from 'vue';
 
 import {
@@ -67,13 +67,13 @@ const emit = defineEmits(['close:popup']);
 
 const checklistArr = computed(() => checklistStore.getChecklistArr);
 const checklistId = computed(() => checklistStore.getChecklistId);
-const confirmationPopupRef: any = ref(null);
+const confirmationPopupRef = ref(null);
 const displayPopup = ref(false);
 const platform = computed(() => databaseStore.getRuntimeEnvironment);
 const propsRefs = toRefs(props);
 const remoteChecklistArr = computed(() => checklistRemoteStore.getChecklistArr);
 
-const initializeApp: any = inject('initializeApp');
+const initializeApp = inject('initializeApp');
 
 watch(propsRefs.showPopup, () => {
     setDisplayValue();
@@ -83,10 +83,10 @@ function closePopup() {
     emit('close:popup');
 }
 
-function deleteChecklist(clid: number) {
+function deleteChecklist(clid) {
     const confirmText = 'Are you sure you want to delete this checklist?';
-    if(confirmationPopupRef.value){
-        confirmationPopupRef.value.openPopup(confirmText, {cancel: true, falseText: 'Cancel', trueText: 'Yes', callback: (val: boolean) => {
+    if(confirmationPopupRef['value']){
+        confirmationPopupRef['value'].openPopup(confirmText, {cancel: true, falseText: 'Cancel', trueText: 'Yes', callback: (val) => {
             if(val){
                 processDelete(clid);
             }
@@ -94,7 +94,7 @@ function deleteChecklist(clid: number) {
     }
 }
 
-function getUpdateAvailable(checklist: any) {
+function getUpdateAvailable(checklist) {
     let returnVal = false;
     const remoteObj = remoteChecklistArr.value.find(rchecklist => Number(rchecklist.clid) === Number(checklist.clid));
     if(remoteObj && Number(remoteObj.appconfigjson.datePublished) > Number(checklist.publishtimestamp)){
@@ -103,8 +103,10 @@ function getUpdateAvailable(checklist: any) {
     return returnVal;
 }
 
-async function processDelete(clid: number) {
-    const res: any = await checklistStore.deleteChecklist(clid);
+async function processDelete(clid) {
+    showWorking();
+    const res = await checklistStore.deleteChecklist(clid);
+    hideWorking();
     if(res.hasOwnProperty('changes') && res.changes.hasOwnProperty('changes') && Number(res.changes.changes) === 1) {
         showNotification('positive','Checklist deleted');
     }
@@ -124,8 +126,8 @@ async function processReset() {
 
 function resetApp() {
     const confirmText = 'This will delete all data that has been downloaded and cannot be undone. Are you sure you want to delete this checklist?';
-    if(confirmationPopupRef.value){
-        confirmationPopupRef.value.openPopup(confirmText, {cancel: true, falseText: 'Cancel', trueText: 'Yes', callback: (val: boolean) => {
+    if(confirmationPopupRef['value']){
+        confirmationPopupRef['value'].openPopup(confirmText, {cancel: true, falseText: 'Cancel', trueText: 'Yes', callback: (val) => {
             if(val){
                 processReset();
             }
@@ -137,12 +139,12 @@ function setDisplayValue() {
     displayPopup.value = props.showPopup;
 }
 
-async function updateChecklist(checklist: any) {
+async function updateChecklist(checklist) {
     const setCurrent = Number(checklistId.value) === Number(checklist.clid);
     const remoteObj = remoteChecklistArr.value.find(rchecklist => Number(rchecklist.clid) === Number(checklist.clid));
     if(remoteObj){
         showWorking('Updating checklist');
-        await checklistRemoteStore.installChecklist(remoteObj, (res: string) => {
+        await checklistRemoteStore.installChecklist(remoteObj, (res) => {
             hideWorking();
             if(Number(res) === 1){
                 if(setCurrent){

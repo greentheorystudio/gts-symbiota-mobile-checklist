@@ -155,26 +155,22 @@ function getVernacularStrFromArr(vernacularJson) {
     return nameArr.length > 0 ? nameArr.join(', ') : '';
 }
 
-function openTaxaProfilePopup(tid) {
-
-}
-
 function setContentStyle() {
     cardStyle.value = null;
     imageHeight.value = null;
-    if(containerRef.value){
+    if(containerRef['value']){
         let cardDim;
-        if(containerRef.value.clientWidth > 900){
-            cardDim = (containerRef.value.clientWidth / 4) - 30;
+        if(containerRef['value'].clientWidth > 900){
+            cardDim = (containerRef['value'].clientWidth / 4) - 30;
         }
-        else if(containerRef.value.clientWidth > 600){
-            cardDim = (containerRef.value.clientWidth / 3) - 30;
+        else if(containerRef['value'].clientWidth > 600){
+            cardDim = (containerRef['value'].clientWidth / 3) - 30;
         }
-        else if(containerRef.value.clientWidth > 400){
-            cardDim = (containerRef.value.clientWidth / 2) - 30;
+        else if(containerRef['value'].clientWidth > 400){
+            cardDim = (containerRef['value'].clientWidth / 2) - 30;
         }
         else{
-            cardDim = containerRef.value.clientWidth - 30;
+            cardDim = containerRef['value'].clientWidth - 30;
         }
         cardStyle.value = 'width: ' + cardDim + 'px;';
         imageHeight.value = cardDim + 'px';
@@ -183,6 +179,5 @@ function setContentStyle() {
 
 onMounted(() => {
     setContentStyle();
-    window.addEventListener('resize', setContentStyle);
 });
 </script>

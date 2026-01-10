@@ -9,27 +9,27 @@
             <q-card-section class="scroll">
                 <div v-if="checklist" class="q-pa-md column q-gutter-sm">
                     <div class="text-h5 text-bold">
-                        {{ checklist.name }}
+                        {{ checklist['name'] }}
                     </div>
-                    <div v-if="checklist.authors">
-                        <span class="text-bold">Authors: </span>{{ checklist.authors }}
+                    <div v-if="checklist['authors']">
+                        <span class="text-bold">Authors: </span>{{ checklist['authors'] }}
                     </div>
-                    <div v-if="checklist.publication">
-                        <span class="text-bold">Publication: </span>{{ checklist.publication }}
+                    <div v-if="checklist['publication']">
+                        <span class="text-bold">Publication: </span>{{ checklist['publication'] }}
                     </div>
                     <div v-if="checklistLocalityText">
                         <span class="text-bold">Locality: </span>{{ checklistLocalityText }}
                     </div>
-                    <div v-if="checklist.abstract" v-html="checklist.abstract"></div>
-                    <div v-if="checklist.notes">
-                        <span class="text-bold">Notes: </span>{{ checklist.notes }}
+                    <div v-if="checklist['abstract']" v-html="checklist['abstract']"></div>
+                    <div v-if="checklist['notes']">
+                        <span class="text-bold">Notes: </span>{{ checklist['notes'] }}
                     </div>
                 </div>
             </q-card-section>
         </q-card>
     </q-dialog>
 </template>
-<script setup lang="ts">
+<script setup>
 import { computed, onMounted, ref, toRefs, watch } from 'vue';
 
 const props = defineProps({

@@ -75,8 +75,8 @@
         </div>
     </div>
 </template>
-<script setup lang="ts">
-import { computed, inject, Ref, ref, watch } from 'vue';
+<script setup>
+import { computed, inject, ref, watch } from 'vue';
 
 import { useChecklistStore } from 'src/stores/checklist';
 
@@ -95,12 +95,12 @@ const displayImagesVal = computed(() => checklistStore.getDisplayImages);
 const displayNotesVal = computed(() => checklistStore.getDisplayNotes);
 const displaySynonymsVal = computed(() => checklistStore.getDisplaySynonyms);
 const paginationLastPageNumber = computed(() => checklistStore.getPaginationLastPageNumber);
-const paginationPageValue: Ref<number> = ref(1);
+const paginationPageValue = ref(1);
 const selectedSortByOption = computed(() => checklistStore.getDisplaySortVal);
 const taxaDisplayDataArr = computed(() => checklistStore.getTaxaDisplayDataArr);
 const taxaPerPage = computed(() => checklistStore.getTaxaPerPage);
 
-const openChecklistInfoPopup: any = inject('openChecklistInfoPopup');
+const openChecklistInfoPopup = inject('openChecklistInfoPopup');
 
 watch(paginationPageValue, () => {
     checklistStore.setPaginationPage(paginationPageValue.value);

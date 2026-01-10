@@ -15,7 +15,7 @@
         </q-card>
     </q-dialog>
 </template>
-<script setup lang="ts">
+<script setup>
 import { onMounted, ref, toRefs, watch } from 'vue';
 
 const props = defineProps({

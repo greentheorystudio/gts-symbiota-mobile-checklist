@@ -68,7 +68,7 @@ watch(propsRefs.options, () => {
     setSelectedOption();
 });
 
-function checkFilter(input, proceed, abort) {
+function checkFilter(_, proceed, abort) {
     if(clearing.value){
         abort();
     }

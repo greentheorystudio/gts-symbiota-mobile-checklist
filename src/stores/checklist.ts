@@ -273,7 +273,6 @@ export const useChecklistStore = defineStore('checklist', () => {
                 });
             }
         }
-        setImageContentData();
         return newDataArr.slice();
     });
     const getTaxaFilterOptions = computed(() => taxaFilterOptions.value);
@@ -532,6 +531,7 @@ export const useChecklistStore = defineStore('checklist', () => {
             if(checklistCharacterData.value.length > 0 && checklistCharacterHeadingData.value.length > 0 && checklistCharacterStateData.value.length > 0){
                 processKeyData();
             }
+            await setImageContentData();
         }
     }
 
@@ -568,6 +568,7 @@ export const useChecklistStore = defineStore('checklist', () => {
     }
 
     async function setImageContentData(): Promise<void> {
+        console.log(imageContentData.value);
         for(const index in getPaginatedTidArr.value){
             const tid = getPaginatedTidArr.value[index];
             if(checklistImageData.value.hasOwnProperty(tid)){
@@ -576,8 +577,11 @@ export const useChecklistStore = defineStore('checklist', () => {
                 }
                 for(const index in checklistImageData.value[tid]){
                     const imagedata: any = checklistImageData.value[tid][index];
-                    imagedata['contentData'] = await getImageBase64UriStr(imagedata['filePath']);
-                    imageContentData.value[tid].push(imagedata);
+                    const existingContent = imageContentData.value[tid].find((image: { [x: string]: any; }) => image['filePath'] === imagedata['filePath']);
+                    if(!existingContent){
+                        imagedata['contentData'] = await getImageBase64UriStr(imagedata['filePath']);
+                        imageContentData.value[tid].push(imagedata);
+                    }
                 }
             }
         }

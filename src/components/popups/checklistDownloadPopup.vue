@@ -38,7 +38,7 @@
         </q-card>
     </q-dialog>
 </template>
-<script setup lang="ts">
+<script setup>
 import { computed, inject, onMounted, ref, toRefs, watch } from 'vue';
 
 import {
@@ -46,8 +46,6 @@ import {
     showNotification,
     showWorking
 } from 'src/hooks/core';
-
-import { RemoteChecklistInterface } from 'src/interfaces/RemoteChecklistInterface';
 
 import { useChecklistStore } from 'src/stores/checklist';
 import { useChecklistRemoteStore } from 'src/stores/checklist-remote';
@@ -66,7 +64,7 @@ const checklistRemoteStore = useChecklistRemoteStore();
 
 const checklistArr = computed(() => checklistStore.getChecklistArr);
 const checklistDownloadOptionArr = computed(() => {
-    const returnArr: any[] = [];
+    const returnArr = [];
     remoteChecklistArr.value.forEach((checklist) => {
         const existingChecklist = checklistArr.value.find(eChecklist => Number(eChecklist['clid']) === Number(checklist['clid']));
         if(!existingChecklist){
@@ -79,7 +77,7 @@ const displayPopup = ref(false);
 const propsRefs = toRefs(props);
 const remoteChecklistArr = computed(() => checklistRemoteStore.getChecklistArr);
 
-const openChecklistInfoPopup: any = inject('openChecklistInfoPopup');
+const openChecklistInfoPopup = inject('openChecklistInfoPopup');
 
 watch(propsRefs.showPopup, () => {
     setDisplayValue();
@@ -89,9 +87,9 @@ function closePopup() {
     emit('close:popup');
 }
 
-async function installChecklist(checklist: RemoteChecklistInterface) {
+async function installChecklist(checklist) {
     showWorking('Initializing download');
-    await checklistRemoteStore.installChecklist(checklist, (res: string) => {
+    await checklistRemoteStore.installChecklist(checklist, (res) => {
         hideWorking();
         if(Number(res) === 1){
             showNotification('positive','Checklist downloaded');
