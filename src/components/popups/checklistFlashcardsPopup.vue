@@ -4,7 +4,7 @@
             <q-resize-observer @resize="setCardSize" />
             <q-card-section class="q-pa-none row justify-between q-gutter-sm no-wrap">
                 <q-resize-observer @resize="setHeaderSize" />
-                <div class="q-py-sm q-pl-sm text-h5 text-bold">Help</div>
+                <div class="q-py-sm q-pl-sm text-h5 text-bold">Flash Cards</div>
                 <div>
                     <q-btn square glossy padding="5px 10px" color="negative" icon="close" @click="closePopup();"></q-btn>
                 </div>

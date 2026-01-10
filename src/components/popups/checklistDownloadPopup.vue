@@ -4,7 +4,9 @@
             <q-resize-observer @resize="setCardSize" />
             <q-card-section class="q-pa-none row justify-between q-gutter-sm no-wrap">
                 <q-resize-observer @resize="setHeaderSize" />
-                <div class="q-py-sm q-pl-sm text-h5 text-bold">Download Checklists</div>
+                <div class="q-py-sm q-pl-sm text-h5 text-bold">
+                    Download Checklists <span class="q-ml-sm"><q-btn dense round size="sm" icon="refresh" @click="refreshList()"></q-btn></span>
+                </div>
                 <div>
                     <q-btn square glossy padding="5px 10px" color="negative" icon="close" @click="closePopup();"></q-btn>
                 </div>
@@ -106,6 +108,10 @@ async function installChecklist(checklist) {
             showNotification('negative', res);
         }
     });
+}
+
+function refreshList() {
+    checklistRemoteStore.setChecklistArr();
 }
 
 function setCardSize(cardSize) {

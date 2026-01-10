@@ -82,7 +82,7 @@
     </div>
 </template>
 <script setup>
-import {inject, onMounted, ref, watch} from 'vue';
+import { computed, inject, ref } from 'vue';
 
 defineProps({
     displayAuthors: {
@@ -115,15 +115,42 @@ defineProps({
     }
 });
 
-const cardStyle = ref(null);
+const cardDimensions = computed(() => {
+    let returnVal = 0;
+    if(windowWidth.value > 0){
+        if(windowWidth.value > 1440){
+            returnVal = (windowWidth.value / 4) - 110;
+        }
+        else if(windowWidth.value > 1024){
+            returnVal = (windowWidth.value / 3) - 110;
+        }
+        else if(windowWidth.value > 600){
+            returnVal = (windowWidth.value / 2) - 110;
+        }
+        else{
+            returnVal = windowWidth.value - 110;
+        }
+    }
+    return returnVal;
+});
+const cardStyle = computed(() => {
+    let returnVal = null;
+    if(cardDimensions.value > 0){
+        returnVal = 'width: ' + cardDimensions.value + 'px;';
+    }
+    return returnVal;
+});
 const containerRef = ref(null);
-const imageHeight = ref(null);
+const imageHeight = computed(() => {
+    let returnVal = null;
+    if(cardDimensions.value > 0){
+        returnVal = cardDimensions.value + 'px';
+    }
+    return returnVal;
+});
 
 const openTaxonProfilePopup = inject('openTaxonProfilePopup');
-
-watch(containerRef, () => {
-    setContentStyle();
-});
+const windowWidth = inject('windowWidth');
 
 function getSynonymStrFromArr(synonymJson) {
     const nameArr = [];
@@ -154,30 +181,4 @@ function getVernacularStrFromArr(vernacularJson) {
     }
     return nameArr.length > 0 ? nameArr.join(', ') : '';
 }
-
-function setContentStyle() {
-    cardStyle.value = null;
-    imageHeight.value = null;
-    if(containerRef['value']){
-        let cardDim;
-        if(containerRef['value'].clientWidth > 900){
-            cardDim = (containerRef['value'].clientWidth / 4) - 30;
-        }
-        else if(containerRef['value'].clientWidth > 600){
-            cardDim = (containerRef['value'].clientWidth / 3) - 30;
-        }
-        else if(containerRef['value'].clientWidth > 400){
-            cardDim = (containerRef['value'].clientWidth / 2) - 30;
-        }
-        else{
-            cardDim = containerRef['value'].clientWidth - 30;
-        }
-        cardStyle.value = 'width: ' + cardDim + 'px;';
-        imageHeight.value = cardDim + 'px';
-    }
-}
-
-onMounted(() => {
-    setContentStyle();
-});
 </script>

@@ -7,7 +7,7 @@
                     <div class="text-h5 text-bold">{{ checklistData ? checklistData['name'] : '' }}</div>
                 </div>
                 <div class="row justify-end items-center q-gutter-sm">
-                    <q-btn dense round icon="style" @click=""></q-btn>
+                    <q-btn dense round icon="style" @click="openChecklistFlashcardPopup()"></q-btn>
                     <q-btn dense round icon="info" @click="openChecklistInfoPopup(checklistData)"></q-btn>
                 </div>
             </div>
@@ -100,6 +100,7 @@ const taxaDisplayDataArr = computed(() => checklistStore.getTaxaDisplayDataArr);
 const taxaPerPage = computed(() => checklistStore.getTaxaPerPage);
 
 const headerHeight = inject('headerHeight');
+const openChecklistFlashcardPopup = inject('openChecklistFlashcardPopup');
 const openChecklistInfoPopup = inject('openChecklistInfoPopup');
 const windowHeight = inject('windowHeight');
 const windowWidth = inject('windowWidth');

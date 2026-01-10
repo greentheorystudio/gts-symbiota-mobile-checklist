@@ -8,7 +8,7 @@
                     Symbiota Mobile Checklist
                 </q-toolbar-title>
                 <div class="row q-gutter-sm">
-                    <q-btn dense round icon="download_for_offline" aria-label="Download" @click="showDownloadPopup = true" />
+                    <q-btn v-if="remoteConnectionEstablished" dense round icon="download_for_offline" aria-label="Download" @click="showDownloadPopup = true" />
                     <q-btn dense round icon="settings" aria-label="Management" @click="showManagementPopup = true" />
                     <q-btn dense round icon="help" aria-label="Help" @click="showInformationPopup = true" />
                 </div>
@@ -83,13 +83,15 @@
                 :show-popup="showManagementPopup"
                 @close:popup="showManagementPopup = false"
             ></appManagementPopup>
-            <checklistDownloadPopup
-                :show-popup="showDownloadPopup"
-                @close:popup="showDownloadPopup = false"
-            ></checklistDownloadPopup>
+            <template v-if="remoteConnectionEstablished">
+                <checklistDownloadPopup
+                    :show-popup="showDownloadPopup"
+                    @close:popup="showDownloadPopup = false"
+                ></checklistDownloadPopup>
+            </template>
             <checklistFlashcardsPopup
                 :show-popup="showFlashcardPopup"
-                @close:popup="showFlashcardPopup = false"
+                @close:popup="closeChecklistFlashcardPopup()"
             ></checklistFlashcardsPopup>
             <checklistInformationPopup
                 :checklist="checklistInfoData"
@@ -108,6 +110,7 @@
 import { computed, provide, ref, watch } from 'vue';
 
 import { useChecklistStore } from 'src/stores/checklist';
+import { useChecklistRemoteStore } from 'src/stores/checklist-remote';
 
 import checkboxInputElement from 'src/components/input-elements/checkboxInputElement.vue';
 import selectorInputElement from 'src/components/input-elements/selectorInputElement.vue';
@@ -123,6 +126,7 @@ import checklistInformationPopup from 'src/components/popups/checklistInformatio
 import taxonProfilePopup from 'src/components/popups/taxonProfilePopup.vue';
 
 const checklistStore = useChecklistStore();
+const checklistRemoteStore = useChecklistRemoteStore();
 
 const checklistArr = computed(() => checklistStore.getChecklistArr);
 const checklistId = computed(() => checklistStore.getChecklistId);
@@ -139,6 +143,7 @@ const displaySynonymsVal = computed(() => checklistStore.getDisplaySynonyms);
 const headerHeight = ref(0);
 const keyDataExists = computed(() => checklistStore.getKeyDataExists);
 const leftDrawerOpen = ref(false);
+const remoteConnectionEstablished = computed(() => checklistRemoteStore.getRemoteConnectionEstablished);
 const selectedSortByOption = computed(() => checklistStore.getDisplaySortVal);
 const showChecklistInfoPopup = ref(false);
 const showDownloadPopup = ref(false);
@@ -162,6 +167,10 @@ watch(checklistArr, () => {
     }
 });
 
+function closeChecklistFlashcardPopup() {
+    showFlashcardPopup.value = false;
+}
+
 function closeChecklistInfoPopup() {
     checklistInfoData.value = null;
     showChecklistInfoPopup.value = false;
@@ -181,6 +190,10 @@ function handleTopSwipe ({ evt, ...newInfo }) {
             showTopOptions.value = false;
         }
     }
+}
+
+function openChecklistFlashcardPopup() {
+    showFlashcardPopup.value = true;
 }
 
 function openChecklistInfoPopup(checklist) {
@@ -241,6 +254,7 @@ function toggleLeftDrawer() {
 }
 
 provide('headerHeight', headerHeight);
+provide('openChecklistFlashcardPopup', openChecklistFlashcardPopup);
 provide('openChecklistInfoPopup', openChecklistInfoPopup);
 provide('openTaxonProfilePopup', openTaxonProfilePopup);
 provide('toggleLeftDrawer', toggleLeftDrawer);
