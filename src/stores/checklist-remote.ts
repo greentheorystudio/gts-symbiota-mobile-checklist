@@ -136,7 +136,6 @@ export const useChecklistRemoteStore = defineStore('checklist-remote', () => {
             const clidVal = newChecklistData.value ? newChecklistData.value['clid'].toString() : null;
             if(clidVal){
                 await createDirectory('mobile-checklist/images/' + clidVal);
-                console.log(dataArchiveData.value['images']);
                 for(const image of dataArchiveData.value['images']) {
                     const fullPath = 'mobile-checklist/download/extract/' + image['filename'];
                     const targetPath = 'mobile-checklist/images/' + clidVal + '/' + image['filename'];

@@ -135,11 +135,6 @@ function setHeaderSize(headerSize) {
     headerHeight.value = headerSize.height;
 }
 
-const onResize = (size) => {
-    //elementWidth.value = size.width;
-    console.log('Element width:', size.width);
-}
-
 onMounted(() => {
     setDisplayValue();
 });

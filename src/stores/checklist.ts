@@ -568,7 +568,6 @@ export const useChecklistStore = defineStore('checklist', () => {
     }
 
     async function setImageContentData(): Promise<void> {
-        console.log(imageContentData.value);
         for(const index in getPaginatedTidArr.value){
             const tid = getPaginatedTidArr.value[index];
             if(checklistImageData.value.hasOwnProperty(tid)){
