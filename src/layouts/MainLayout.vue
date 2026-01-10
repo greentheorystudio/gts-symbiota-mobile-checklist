@@ -44,6 +44,9 @@
                                                 <div class="text-black text-bold">
                                                     <checkboxInputElement label="Taxon Authors" :value="Number(displayAuthorsVal).toString()" @update:value="processDisplayAuthorsChange"></checkboxInputElement>
                                                 </div>
+                                                <div class="text-black text-bold">
+                                                    <checkboxInputElement label="Notes" :value="Number(displayNotesVal).toString()" @update:value="processDisplayNotesChange"></checkboxInputElement>
+                                                </div>
                                             </div>
                                         </template>
                                     </q-card-section>
@@ -92,8 +95,9 @@
                 @close:popup="closeChecklistInfoPopup()"
             ></checklistInformationPopup>
             <taxonProfilePopup
+                :taxon="taxonProfileData"
                 :show-popup="showTaxonProfilePopup"
-                @close:popup="showTaxonProfilePopup = false"
+                @close:popup="closeTaxonProfilePopup()"
             ></taxonProfilePopup>
         </q-page-container>
     </q-layout>
@@ -124,6 +128,7 @@ const checklistInfoData: any = ref(null);
 const displayAuthorsVal = computed(() => checklistStore.getDisplayAuthors);
 const displayCommonNamesVal = computed(() => checklistStore.getDisplayVernaculars);
 const displayImagesVal = computed(() => checklistStore.getDisplayImages);
+const displayNotesVal = computed(() => checklistStore.getDisplayNotes);
 const displaySortByOptions: any[] = [
     {value: 'family', label: 'Family/Scientific Name'},
     {value: 'sciname', label: 'Scientific Name'}
@@ -141,6 +146,7 @@ const showTaxonProfilePopup = ref(false);
 const showTopOptions = ref(false);
 const taxaFilterOptions = computed(() => checklistStore.getTaxaFilterOptions);
 const taxonFilterVal = computed(() => checklistStore.getDisplayTaxonFilterVal);
+const taxonProfileData: any = ref(null);
 
 watch(checklistArr, () => {
     if(checklistArr.value.length > 0){
@@ -154,6 +160,11 @@ watch(checklistArr, () => {
 function closeChecklistInfoPopup() {
     checklistInfoData.value = null;
     showChecklistInfoPopup.value = false;
+}
+
+function closeTaxonProfilePopup() {
+    taxonProfileData.value = null;
+    showTaxonProfilePopup.value = false;
 }
 
 function handleTopSwipe ({ evt, ...newInfo }: any) {
@@ -172,6 +183,11 @@ function openChecklistInfoPopup(checklist: object) {
     showChecklistInfoPopup.value = true;
 }
 
+function openTaxonProfilePopup(taxon: object) {
+    taxonProfileData.value = taxon;
+    showTaxonProfilePopup.value = true;
+}
+
 function processChecklistSelection(clid: number) {
     checklistStore.setCurrentChecklist(clid);
 }
@@ -186,6 +202,10 @@ function processDisplayCommonNameChange(value: boolean) {
 
 function processDisplayImagesChange(value: boolean) {
     checklistStore.setDisplayImages(Number(value) === 1);
+}
+
+function processDisplayNotesChange(value: boolean) {
+    checklistStore.setDisplayNotes(Number(value) === 1);
 }
 
 function processDisplaySynonymsChange(value: boolean) {
@@ -207,5 +227,6 @@ function toggleLeftDrawer() {
 }
 
 provide('openChecklistInfoPopup', openChecklistInfoPopup);
+provide('openTaxonProfilePopup', openTaxonProfilePopup);
 provide('toggleLeftDrawer', toggleLeftDrawer);
 </script>

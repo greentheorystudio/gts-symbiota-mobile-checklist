@@ -9,7 +9,7 @@
                         </div>
                         <div class="full-width row q-gutter-sm">
                             <template v-for="taxon in family['taxa']">
-                                <q-card role="button" flat bordered class="cursor-pointer" @click="openTaxaProfilePopup(taxon['tid']);" :style="cardStyle">
+                                <q-card bordered @click="openTaxonProfilePopup(taxon)" :style="cardStyle">
                                     <template v-if="imageData.hasOwnProperty(taxon['tid']) && imageData[taxon['tid']].length > 0">
                                         <q-img class="rounded-borders" :height="imageHeight" :src="imageData[taxon['tid']][0]['contentData']" fit="scale-down" :alt="(imageData[taxon['tid']][0]['alttext'] ? imageData[taxon['tid']][0]['alttext'] : taxon['sciname'])"></q-img>
                                     </template>
@@ -33,6 +33,9 @@
                                         <div v-if="displaySynonyms && taxon['synonymyJson']" class="text-italic">
                                             {{ getSynonymStrFromArr(taxon['synonymyJson']) }}
                                         </div>
+                                        <div v-if="displayNotes && taxon['notes']" class="text-italic">
+                                            {{ taxon['notes'] }}
+                                        </div>
                                     </q-card-section>
                                 </q-card>
                             </template>
@@ -44,7 +47,7 @@
         <template v-else>
             <div class="full-width row q-gutter-sm">
                 <template v-for="taxon in taxaArr">
-                    <q-card role="button" flat bordered class="cursor-pointer" @click="openTaxaProfilePopup(taxon['tid']);" :style="cardStyle">
+                    <q-card bordered @click="openTaxonProfilePopup(taxon)" :style="cardStyle">
                         <template v-if="imageData.hasOwnProperty(taxon['tid']) && imageData[taxon['tid']].length > 0">
                             <q-img class="rounded-borders" :height="imageHeight" :src="imageData[taxon['tid']][0]['contentData']" fit="scale-down" :alt="(imageData[taxon['tid']][0]['alttext'] ? imageData[taxon['tid']][0]['alttext'] : taxon['sciname'])"></q-img>
                         </template>
@@ -68,6 +71,9 @@
                             <div v-if="displaySynonyms && taxon['synonymyJson']" class="text-italic">
                                 {{ getSynonymStrFromArr(taxon['synonymyJson']) }}
                             </div>
+                            <div v-if="displayNotes && taxon['notes']" class="text-italic">
+                                {{ taxon['notes'] }}
+                            </div>
                         </q-card-section>
                     </q-card>
                 </template>
@@ -76,7 +82,7 @@
     </div>
 </template>
 <script setup>
-import { onMounted, ref, watch } from 'vue';
+import {inject, onMounted, ref, watch} from 'vue';
 
 defineProps({
     displayAuthors: {
@@ -84,6 +90,10 @@ defineProps({
         default: false
     },
     displayCommonNames: {
+        type: Boolean,
+        default: false
+    },
+    displayNotes: {
         type: Boolean,
         default: false
     },
@@ -108,6 +118,8 @@ defineProps({
 const cardStyle = ref(null);
 const containerRef = ref(null);
 const imageHeight = ref(null);
+
+const openTaxonProfilePopup = inject('openTaxonProfilePopup');
 
 watch(containerRef, () => {
     setContentStyle();

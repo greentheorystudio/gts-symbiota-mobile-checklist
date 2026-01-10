@@ -22,6 +22,10 @@ const props = defineProps({
     showPopup: {
         type: Boolean,
         default: false
+    },
+    taxon: {
+        type: Object,
+        default: null
     }
 });
 

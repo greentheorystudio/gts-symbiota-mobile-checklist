@@ -42,6 +42,7 @@ export const useChecklistStore = defineStore('checklist', () => {
     const checklistTaxaArr: Ref<ChecklistTaxonInterface[]> = ref([]);
     const displayAuthors: Ref<boolean> = ref(false);
     const displayImages: Ref<boolean> = ref(false);
+    const displayNotes: Ref<boolean> = ref(false);
     const displaySortVal: Ref<string> = ref('family');
     const displaySynonyms: Ref<boolean> = ref(false);
     const displayTaxonFilterVal: Ref<any | null> = ref(null);
@@ -165,6 +166,7 @@ export const useChecklistStore = defineStore('checklist', () => {
     });
     const getDisplayAuthors = computed(() => displayAuthors.value);
     const getDisplayImages = computed(() => displayImages.value);
+    const getDisplayNotes = computed(() => displayNotes.value);
     const getDisplaySortVal = computed(() => displaySortVal.value);
     const getDisplaySynonyms = computed(() => displaySynonyms.value);
     const getDisplayTaxonFilterVal = computed(() => displayTaxonFilterVal.value);
@@ -355,6 +357,9 @@ export const useChecklistStore = defineStore('checklist', () => {
         if(settings.hasOwnProperty('dimages') && Number(settings['dimages']) === 1){
             displayImages.value = true;
         }
+        if(settings.hasOwnProperty('dvouchers') && Number(settings['dvouchers']) === 1){
+            displayNotes.value = true;
+        }
         if(settings.hasOwnProperty('dauthors') && Number(settings['dauthors']) === 1){
             displayAuthors.value = true;
         }
@@ -538,6 +543,10 @@ export const useChecklistStore = defineStore('checklist', () => {
         displayImages.value = value;
     }
 
+    function setDisplayNotes(value: boolean): void {
+        displayNotes.value = value;
+    }
+
     function setDisplaySortVal(value: string): void {
         displaySortVal.value = value;
     }
@@ -589,6 +598,7 @@ export const useChecklistStore = defineStore('checklist', () => {
         getCountData,
         getDisplayAuthors,
         getDisplayImages,
+        getDisplayNotes,
         getDisplaySortVal,
         getDisplaySynonyms,
         getDisplayTaxonFilterVal,
@@ -611,6 +621,7 @@ export const useChecklistStore = defineStore('checklist', () => {
         setCurrentChecklist,
         setDisplayAuthors,
         setDisplayImages,
+        setDisplayNotes,
         setDisplaySortVal,
         setDisplaySynonyms,
         setDisplayTaxonFilterVal,

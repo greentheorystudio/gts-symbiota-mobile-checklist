@@ -43,6 +43,7 @@
                     <taxaImageDisplayModule
                         :display-authors="displayAuthorsVal"
                         :display-common-names="displayCommonNamesVal"
+                        :display-notes="displayNotesVal"
                         :display-synonyms="displaySynonymsVal"
                         :image-data="checklistImageData"
                         :sort-by="selectedSortByOption"
@@ -53,6 +54,7 @@
                     <taxaListDisplayModule
                         :display-authors="displayAuthorsVal"
                         :display-common-names="displayCommonNamesVal"
+                        :display-notes="displayNotesVal"
                         :display-synonyms="displaySynonymsVal"
                         :sort-by="selectedSortByOption"
                         :taxa-arr="taxaDisplayDataArr"
@@ -90,6 +92,7 @@ const checklistImageData = computed(() => checklistStore.getImageContentData);
 const displayAuthorsVal = computed(() => checklistStore.getDisplayAuthors);
 const displayCommonNamesVal = computed(() => checklistStore.getDisplayVernaculars);
 const displayImagesVal = computed(() => checklistStore.getDisplayImages);
+const displayNotesVal = computed(() => checklistStore.getDisplayNotes);
 const displaySynonymsVal = computed(() => checklistStore.getDisplaySynonyms);
 const paginationLastPageNumber = computed(() => checklistStore.getPaginationLastPageNumber);
 const paginationPageValue: Ref<number> = ref(1);
