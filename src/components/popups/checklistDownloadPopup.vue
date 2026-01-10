@@ -1,15 +1,17 @@
 <template>
     <q-dialog v-model="displayPopup" full-width full-height>
-        <q-card>
+        <q-card class="overflow-hidden">
+            <q-resize-observer @resize="setCardSize" />
             <q-card-section class="q-pa-none row justify-between q-gutter-sm no-wrap">
+                <q-resize-observer @resize="setHeaderSize" />
                 <div class="q-py-sm q-pl-sm text-h5 text-bold">Download Checklists</div>
                 <div>
                     <q-btn square glossy padding="5px 10px" color="negative" icon="close" @click="closePopup();"></q-btn>
                 </div>
             </q-card-section>
-            <q-card-section class="scroll">
-                <template v-if="checklistDownloadOptionArr.length > 0">
-                    <div class="q-pa-md">
+            <q-card-section>
+                <q-scroll-area :style="scrollerStyle">
+                    <template v-if="checklistDownloadOptionArr.length > 0">
                         <q-list bordered separator>
                             <template v-for="checklist in checklistDownloadOptionArr">
                                 <q-item tag="label">
@@ -25,15 +27,15 @@
                                 </q-item>
                             </template>
                         </q-list>
-                    </div>
-                </template>
-                <template v-else>
-                    <div class="fit relative-position">
-                        <div class="absolute-center text-bold">
-                            There are no more checklists available to download from the portal
+                    </template>
+                    <template v-else>
+                        <div class="fit relative-position">
+                            <div class="absolute-center text-bold">
+                                There are no more checklists available to download from the portal
+                            </div>
                         </div>
-                    </div>
-                </template>
+                    </template>
+                </q-scroll-area>
             </q-card-section>
         </q-card>
     </q-dialog>
@@ -62,6 +64,8 @@ const emit = defineEmits(['close:popup']);
 const checklistStore = useChecklistStore();
 const checklistRemoteStore = useChecklistRemoteStore();
 
+const cardHeight = ref(0);
+const cardWidth = ref(0);
 const checklistArr = computed(() => checklistStore.getChecklistArr);
 const checklistDownloadOptionArr = computed(() => {
     const returnArr = [];
@@ -74,8 +78,12 @@ const checklistDownloadOptionArr = computed(() => {
     return returnArr;
 });
 const displayPopup = ref(false);
+const headerHeight = ref(0);
 const propsRefs = toRefs(props);
 const remoteChecklistArr = computed(() => checklistRemoteStore.getChecklistArr);
+const scrollerStyle = computed(() => {
+    return 'width: ' + (cardWidth.value - 30) + 'px;height: ' + (cardHeight.value - headerHeight.value) + 'px;';
+});
 
 const openChecklistInfoPopup = inject('openChecklistInfoPopup');
 
@@ -99,8 +107,18 @@ async function installChecklist(checklist) {
         }
     });
 }
+
+function setCardSize(cardSize) {
+    cardHeight.value = cardSize.height;
+    cardWidth.value = cardSize.width;
+}
+
 function setDisplayValue() {
     displayPopup.value = props.showPopup;
+}
+
+function setHeaderSize(headerSize) {
+    headerHeight.value = headerSize.height;
 }
 
 onMounted(() => {

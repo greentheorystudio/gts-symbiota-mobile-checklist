@@ -1,36 +1,40 @@
 <template>
     <q-dialog v-model="displayPopup" full-width full-height>
-        <q-card>
+        <q-card class="overflow-hidden">
+            <q-resize-observer @resize="setCardSize" />
             <q-card-section class="q-pa-none row justify-between q-gutter-sm no-wrap">
+                <q-resize-observer @resize="setHeaderSize" />
                 <div class="q-py-sm q-pl-md text-h5 text-bold">Management</div>
                 <div>
                     <q-btn square glossy padding="5px 10px" color="negative" icon="close" @click="closePopup();"></q-btn>
                 </div>
             </q-card-section>
-            <q-card-section class="scroll">
-                <div class="q-mt-md column q-gutter-md">
-                    <template v-if="checklistArr.length > 0">
-                        <q-list bordered separator>
-                            <template v-for="checklist in checklistArr">
-                                <q-item tag="label">
-                                    <q-item-section>
-                                        <q-item-label class="text-bold">{{ checklist.name }}</q-item-label>
-                                        <q-item-label v-if="getUpdateAvailable(checklist)" caption class="text-red">Update available</q-item-label>
-                                    </q-item-section>
-                                    <q-item-section side top>
-                                        <div class="row q-gutter-sm">
-                                            <q-btn v-if="getUpdateAvailable(checklist)" dense round icon="update" aria-label="Update" @click="updateChecklist(checklist)" />
-                                            <q-btn dense round icon="delete" aria-label="Delete" @click="deleteChecklist(checklist.clid)" />
-                                        </div>
-                                    </q-item-section>
-                                </q-item>
-                            </template>
-                        </q-list>
-                    </template>
-                    <div class="row justify-end">
-                        <q-btn color="negative" glossy @click="resetApp()" label="Reset App" />
+            <q-card-section>
+                <q-scroll-area :style="scrollerStyle">
+                    <div class="q-mt-md column q-gutter-md">
+                        <template v-if="checklistArr.length > 0">
+                            <q-list bordered separator>
+                                <template v-for="checklist in checklistArr">
+                                    <q-item tag="label">
+                                        <q-item-section>
+                                            <q-item-label class="text-bold">{{ checklist.name }}</q-item-label>
+                                            <q-item-label v-if="getUpdateAvailable(checklist)" caption class="text-red">Update available</q-item-label>
+                                        </q-item-section>
+                                        <q-item-section side top>
+                                            <div class="row q-gutter-sm">
+                                                <q-btn v-if="getUpdateAvailable(checklist)" dense round icon="update" aria-label="Update" @click="updateChecklist(checklist)" />
+                                                <q-btn dense round icon="delete" aria-label="Delete" @click="deleteChecklist(checklist.clid)" />
+                                            </div>
+                                        </q-item-section>
+                                    </q-item>
+                                </template>
+                            </q-list>
+                        </template>
+                        <div class="row justify-end">
+                            <q-btn color="negative" glossy @click="resetApp()" label="Reset App" />
+                        </div>
                     </div>
-                </div>
+                </q-scroll-area>
             </q-card-section>
         </q-card>
     </q-dialog>
@@ -65,13 +69,19 @@ const props = defineProps({
 
 const emit = defineEmits(['close:popup']);
 
+const cardHeight = ref(0);
+const cardWidth = ref(0);
 const checklistArr = computed(() => checklistStore.getChecklistArr);
 const checklistId = computed(() => checklistStore.getChecklistId);
 const confirmationPopupRef = ref(null);
 const displayPopup = ref(false);
+const headerHeight = ref(0);
 const platform = computed(() => databaseStore.getRuntimeEnvironment);
 const propsRefs = toRefs(props);
 const remoteChecklistArr = computed(() => checklistRemoteStore.getChecklistArr);
+const scrollerStyle = computed(() => {
+    return 'width: ' + (cardWidth.value - 30) + 'px;height: ' + (cardHeight.value - headerHeight.value) + 'px;';
+});
 
 const initializeApp = inject('initializeApp');
 
@@ -135,8 +145,17 @@ function resetApp() {
     }
 }
 
+function setCardSize(cardSize) {
+    cardHeight.value = cardSize.height;
+    cardWidth.value = cardSize.width;
+}
+
 function setDisplayValue() {
     displayPopup.value = props.showPopup;
+}
+
+function setHeaderSize(headerSize) {
+    headerHeight.value = headerSize.height;
 }
 
 async function updateChecklist(checklist) {

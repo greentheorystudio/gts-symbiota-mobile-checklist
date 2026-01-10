@@ -14,7 +14,7 @@
             <template v-if="checklistArr.length > 0">
                 <div v-touch-swipe.mouse="handleTopSwipe">
                     <div>
-                        <q-slide-transition class="q-px-sm q-pt-xs">
+                        <q-slide-transition class="q-pl-sm q-pr-xs q-pt-xs">
                             <div v-show="showTopOptions">
                                 <q-card>
                                     <q-card-section class="bg-white q-pl-none q-pr-xs q-pt-xs q-pb-sm column q-col-gutter-xs">

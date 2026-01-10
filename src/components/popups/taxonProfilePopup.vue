@@ -36,10 +36,10 @@
                             </template>
                         </div>
                     </div>
-                    <div v-if="taxonImageArr.length > 0" class="column q-col-gutter-xs">
+                    <div v-if="taxonImageArr.length > 0" class="q-mt-sm column q-col-gutter-sm">
                         <template v-for="image in taxonImageArr">
                             <div>
-                                <q-img class="rounded-borders" height="700px" :width="imageWidth" :src="image['contentData']" fit="scale-down" :alt="(image['alttext'] ? image['alttext'] : taxon['sciname'])"></q-img>
+                                <q-img class="rounded-borders" :width="imageWidth" :src="image['contentData']" fit="scale-down" :alt="(image['alttext'] ? image['alttext'] : taxon['sciname'])"></q-img>
                             </div>
                         </template>
                     </div>
@@ -74,7 +74,7 @@ const checklistImageData = computed(() => checklistStore.getImageContentData);
 const displayPopup = ref(false);
 const headerHeight = ref(0);
 const imageWidth = computed(() => {
-    return cardWidth.value + 'px';
+    return (cardWidth.value - 30) + 'px';
 });
 const propsRefs = toRefs(props);
 const scrollerStyle = computed(() => {
