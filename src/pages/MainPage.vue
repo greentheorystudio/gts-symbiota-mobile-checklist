@@ -1,5 +1,5 @@
 <template>
-    <q-page>
+    <q-page class="q-pa-none">
         <template v-if="Number(checklistId) > 0">
             <div class="fit">
                 <div class="fit">
@@ -11,24 +11,24 @@
             </div>
         </template>
         <template v-else>
-            <div class="fit flex flex-center">
-                <div class="text-h6 text-bold">
+            <div :style="textBoxStyle" class="flex flex-center">
+                <div class="full-width text-center text-h6 text-bold text-grey-8">
                     <template v-if="checklistArr.length > 0">
-                        <div>Select a checklist from the dropdown above to view</div>
+                        Select a checklist from the dropdown above to view
                     </template>
                     <template v-else-if="remoteChecklistArr.length > 0">
-                        <div>Tap the Download button in the top right corner to download checklists to your device</div>
+                        Tap the Download button in the top right corner to download checklists to your device
                     </template>
                     <template v-else-if="!remoteConnectionEstablished">
-                        <div>Out of internet connection</div>
+                        Out of internet connection
                     </template>
                 </div>
             </div>
         </template>
     </q-page>
 </template>
-<script setup lang="ts">
-import { computed, inject } from 'vue';
+<script setup>
+import {computed, inject, ref} from 'vue';
 
 import { useChecklistStore } from 'src/stores/checklist';
 import { useChecklistRemoteStore } from 'src/stores/checklist-remote';
@@ -43,6 +43,12 @@ const checklistId = computed(() => checklistStore.getChecklistId);
 const keyDataExists = computed(() => checklistStore.getKeyDataExists);
 const remoteChecklistArr = computed(() => checklistRemoteStore.getChecklistArr);
 const remoteConnectionEstablished = computed(() => checklistRemoteStore.getRemoteConnectionEstablished);
+const textBoxStyle = computed(() => {
+    return 'width: ' + windowWidth.value + 'px;height: ' + (windowHeight.value - headerHeight.value - 50) + 'px;';
+});
 
-const toggleLeftDrawer: any = inject('toggleLeftDrawer');
+const headerHeight = inject('headerHeight');
+const toggleLeftDrawer = inject('toggleLeftDrawer');
+const windowHeight = inject('windowHeight');
+const windowWidth = inject('windowWidth');
 </script>

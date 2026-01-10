@@ -1,6 +1,8 @@
 <template>
     <q-layout view="hHh lpR fFf">
+        <q-resize-observer @resize="setWindowSize" />
         <q-header elevated :class="checklistArr.length === 0 ? 'q-pb-sm' : ''">
+            <q-resize-observer @resize="setHeaderSize" />
             <q-toolbar>
                 <q-toolbar-title class="text-bold">
                     Symbiota Mobile Checklist
@@ -102,7 +104,7 @@
         </q-page-container>
     </q-layout>
 </template>
-<script setup lang="ts">
+<script setup>
 import { computed, provide, ref, watch } from 'vue';
 
 import { useChecklistStore } from 'src/stores/checklist';
@@ -124,16 +126,17 @@ const checklistStore = useChecklistStore();
 
 const checklistArr = computed(() => checklistStore.getChecklistArr);
 const checklistId = computed(() => checklistStore.getChecklistId);
-const checklistInfoData: any = ref(null);
+const checklistInfoData = ref(null);
 const displayAuthorsVal = computed(() => checklistStore.getDisplayAuthors);
 const displayCommonNamesVal = computed(() => checklistStore.getDisplayVernaculars);
 const displayImagesVal = computed(() => checklistStore.getDisplayImages);
 const displayNotesVal = computed(() => checklistStore.getDisplayNotes);
-const displaySortByOptions: any[] = [
+const displaySortByOptions = [
     {value: 'family', label: 'Family/Scientific Name'},
     {value: 'sciname', label: 'Scientific Name'}
 ];
 const displaySynonymsVal = computed(() => checklistStore.getDisplaySynonyms);
+const headerHeight = ref(0);
 const keyDataExists = computed(() => checklistStore.getKeyDataExists);
 const leftDrawerOpen = ref(false);
 const selectedSortByOption = computed(() => checklistStore.getDisplaySortVal);
@@ -146,7 +149,9 @@ const showTaxonProfilePopup = ref(false);
 const showTopOptions = ref(false);
 const taxaFilterOptions = computed(() => checklistStore.getTaxaFilterOptions);
 const taxonFilterVal = computed(() => checklistStore.getDisplayTaxonFilterVal);
-const taxonProfileData: any = ref(null);
+const taxonProfileData = ref(null);
+const windowHeight = ref(0);
+const windowWidth = ref(0);
 
 watch(checklistArr, () => {
     if(checklistArr.value.length > 0){
@@ -167,7 +172,7 @@ function closeTaxonProfilePopup() {
     showTaxonProfilePopup.value = false;
 }
 
-function handleTopSwipe ({ evt, ...newInfo }: any) {
+function handleTopSwipe ({ evt, ...newInfo }) {
     if(newInfo && newInfo.hasOwnProperty('direction')){
         if(newInfo.direction === 'down'){
             showTopOptions.value = true;
@@ -178,55 +183,67 @@ function handleTopSwipe ({ evt, ...newInfo }: any) {
     }
 }
 
-function openChecklistInfoPopup(checklist: object) {
+function openChecklistInfoPopup(checklist) {
     checklistInfoData.value = checklist;
     showChecklistInfoPopup.value = true;
 }
 
-function openTaxonProfilePopup(taxon: object) {
+function openTaxonProfilePopup(taxon) {
     taxonProfileData.value = taxon;
     showTaxonProfilePopup.value = true;
 }
 
-function processChecklistSelection(clid: number) {
+function processChecklistSelection(clid) {
     checklistStore.setCurrentChecklist(clid);
 }
 
-function processDisplayAuthorsChange(value: boolean) {
+function processDisplayAuthorsChange(value) {
     checklistStore.setDisplayAuthors(Number(value) === 1);
 }
 
-function processDisplayCommonNameChange(value: boolean) {
+function processDisplayCommonNameChange(value) {
     checklistStore.setDisplayVernaculars(Number(value) === 1);
 }
 
-function processDisplayImagesChange(value: boolean) {
+function processDisplayImagesChange(value) {
     checklistStore.setDisplayImages(Number(value) === 1);
 }
 
-function processDisplayNotesChange(value: boolean) {
+function processDisplayNotesChange(value) {
     checklistStore.setDisplayNotes(Number(value) === 1);
 }
 
-function processDisplaySynonymsChange(value: boolean) {
+function processDisplaySynonymsChange(value) {
     checklistStore.setDisplaySynonyms(Number(value) === 1);
 }
 
-function processSortByChange(value: string) {
+function processSortByChange(value) {
     checklistStore.setDisplaySortVal(value);
     checklistStore.setPaginationPage(1);
 }
 
-function processTaxonFilterValChange(taxon: any) {
+function processTaxonFilterValChange(taxon) {
     checklistStore.setDisplayTaxonFilterVal(taxon);
     checklistStore.setPaginationPage(1);
+}
+
+function setHeaderSize(headerSize) {
+    headerHeight.value = headerSize.height;
+}
+
+function setWindowSize(windowSize) {
+    windowHeight.value = windowSize.height;
+    windowWidth.value = windowSize.width;
 }
 
 function toggleLeftDrawer() {
     leftDrawerOpen.value = !leftDrawerOpen.value;
 }
 
+provide('headerHeight', headerHeight);
 provide('openChecklistInfoPopup', openChecklistInfoPopup);
 provide('openTaxonProfilePopup', openTaxonProfilePopup);
 provide('toggleLeftDrawer', toggleLeftDrawer);
+provide('windowHeight', windowHeight);
+provide('windowWidth', windowWidth);
 </script>

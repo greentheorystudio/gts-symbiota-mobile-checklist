@@ -31,7 +31,7 @@
                 </template>
                 <template v-else>
                     <div :style="scrollerStyle" class="flex flex-center">
-                        <div class="text-center text-subtitle1 text-bold text-grey-8">
+                        <div class="text-center text-h6 text-bold text-grey-8">
                             There are no more checklists available to download from the portal
                         </div>
                     </div>

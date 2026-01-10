@@ -629,6 +629,7 @@ export const useChecklistStore = defineStore('checklist', () => {
         setDisplaySynonyms,
         setDisplayTaxonFilterVal,
         setDisplayVernaculars,
+        setImageContentData,
         setPaginationPage
     };
 });
