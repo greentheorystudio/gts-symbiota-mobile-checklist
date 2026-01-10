@@ -10,8 +10,8 @@
                 </div>
             </q-card-section>
             <q-card-section>
-                <q-scroll-area :style="scrollerStyle">
-                    <template v-if="checklistDownloadOptionArr.length > 0">
+                <template v-if="checklistDownloadOptionArr.length > 0">
+                    <q-scroll-area :style="scrollerStyle">
                         <q-list bordered separator>
                             <template v-for="checklist in checklistDownloadOptionArr">
                                 <q-item tag="label">
@@ -27,15 +27,15 @@
                                 </q-item>
                             </template>
                         </q-list>
-                    </template>
-                    <template v-else>
-                        <div class="fit relative-position">
-                            <div class="absolute-center text-bold">
-                                There are no more checklists available to download from the portal
-                            </div>
+                    </q-scroll-area>
+                </template>
+                <template v-else>
+                    <div :style="scrollerStyle" class="flex flex-center">
+                        <div class="text-center text-subtitle1 text-bold text-grey-8">
+                            There are no more checklists available to download from the portal
                         </div>
-                    </template>
-                </q-scroll-area>
+                    </div>
+                </template>
             </q-card-section>
         </q-card>
     </q-dialog>
