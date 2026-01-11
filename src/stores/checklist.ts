@@ -48,6 +48,7 @@ export const useChecklistStore = defineStore('checklist', () => {
     const displayTaxonFilterVal: Ref<any | null> = ref(null);
     const displayVernaculars: Ref<boolean> = ref(false);
     const imageContentData: Ref<any> = ref({});
+    const flashcardImageContentData: Ref<any> = ref({});
     const paginationPage: Ref<number> = ref(1);
     const selectedStateArr: Ref<any[]> = ref([]);
     const taxaFilterOptions: Ref<any[]> = ref([]);
@@ -172,6 +173,7 @@ export const useChecklistStore = defineStore('checklist', () => {
     const getDisplayTaxonFilterVal = computed(() => displayTaxonFilterVal.value);
     const getDisplayVernaculars = computed(() => displayVernaculars.value);
     const getImageContentData = computed(() => imageContentData.value);
+    const getFlashcardImageContentData = computed(() => flashcardImageContentData.value);
     const getKeyDataExists = computed(() => {
         return checklistCharacterData.value.length > 0 && checklistCharacterHeadingData.value.length > 0 && checklistCharacterStateData.value.length > 0;
     });
@@ -395,7 +397,7 @@ export const useChecklistStore = defineStore('checklist', () => {
 
     function processTaxa() {
         checklistTaxaArr.value.forEach(taxon => {
-            if(Number(taxon['rankid']) >= 220 && !checklistFlashcardTaxaArr.value.includes(Number(taxon['tid']))){
+            if(Number(taxon['rankid']) >= 220 && checklistImageData.value.hasOwnProperty(taxon['tid']) && !checklistFlashcardTaxaArr.value.includes(Number(taxon['tid']))){
                 checklistFlashcardTaxaArr.value.push(taxon);
                 checklistFlashcardTidArr.value.push(taxon['tid']);
             }
@@ -525,8 +527,8 @@ export const useChecklistStore = defineStore('checklist', () => {
         if(Number(clid) > 0){
             checklistId.value = Number(clid);
             await setChecklistData(clid);
-            await setChecklistTaxa(clid);
             await setChecklistImageData(clid);
+            await setChecklistTaxa(clid);
             await setChecklistKeyDataArr(clid);
             if(checklistCharacterData.value.length > 0 && checklistCharacterHeadingData.value.length > 0 && checklistCharacterStateData.value.length > 0){
                 processKeyData();
@@ -565,6 +567,25 @@ export const useChecklistStore = defineStore('checklist', () => {
 
     function setPaginationPage(value: number): void {
         paginationPage.value = value;
+    }
+
+    async function setFlashcardImageContentData(): Promise<void> {
+        for(const index in checklistFlashcardTidArr.value){
+            const tid = checklistFlashcardTidArr.value[index];
+            if(checklistImageData.value.hasOwnProperty(tid)){
+                if(!flashcardImageContentData.value.hasOwnProperty(tid)){
+                    flashcardImageContentData.value[tid] = [];
+                }
+                for(const index in checklistImageData.value[tid]){
+                    const imagedata: any = checklistImageData.value[tid][index];
+                    const existingContent = flashcardImageContentData.value[tid].find((image: { [x: string]: any; }) => image['filePath'] === imagedata['filePath']);
+                    if(!existingContent){
+                        imagedata['contentData'] = await getImageBase64UriStr(imagedata['filePath']);
+                        flashcardImageContentData.value[tid].push(imagedata);
+                    }
+                }
+            }
+        }
     }
 
     async function setImageContentData(): Promise<void> {
@@ -607,6 +628,7 @@ export const useChecklistStore = defineStore('checklist', () => {
         getDisplayTaxonFilterVal,
         getDisplayVernaculars,
         getImageContentData,
+        getFlashcardImageContentData,
         getKeyDataExists,
         getPaginatedTaxaArr,
         getPaginationLastPageNumber,
@@ -629,6 +651,7 @@ export const useChecklistStore = defineStore('checklist', () => {
         setDisplaySynonyms,
         setDisplayTaxonFilterVal,
         setDisplayVernaculars,
+        setFlashcardImageContentData,
         setImageContentData,
         setPaginationPage
     };

@@ -56,6 +56,10 @@ import { useChecklistStore } from 'src/stores/checklist';
 const checklistStore = useChecklistStore();
 
 const props = defineProps({
+    flashcard: {
+        type: Boolean,
+        default: false
+    },
     showPopup: {
         type: Boolean,
         default: false
@@ -70,7 +74,14 @@ const emit = defineEmits(['close:popup']);
 
 const cardHeight = ref(0);
 const cardWidth = ref(0);
-const checklistImageData = computed(() => checklistStore.getImageContentData);
+const checklistImageData = computed(() => {
+    if(props.flashcard){
+        return checklistStore.getFlashcardImageContentData;
+    }
+    else{
+        return checklistStore.getImageContentData;
+    }
+});
 const displayPopup = ref(false);
 const headerHeight = ref(0);
 const imageWidth = computed(() => {

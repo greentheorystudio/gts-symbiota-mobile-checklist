@@ -99,6 +99,7 @@
                 @close:popup="closeChecklistInfoPopup()"
             ></checklistInformationPopup>
             <taxonProfilePopup
+                :flashcard="flashcardTaxonProfile"
                 :taxon="taxonProfileData"
                 :show-popup="showTaxonProfilePopup"
                 @close:popup="closeTaxonProfilePopup()"
@@ -140,6 +141,7 @@ const displaySortByOptions = [
     {value: 'sciname', label: 'Scientific Name'}
 ];
 const displaySynonymsVal = computed(() => checklistStore.getDisplaySynonyms);
+const flashcardTaxonProfile = ref(false);
 const headerHeight = ref(0);
 const keyDataExists = computed(() => checklistStore.getKeyDataExists);
 const leftDrawerOpen = ref(false);
@@ -201,7 +203,8 @@ function openChecklistInfoPopup(checklist) {
     showChecklistInfoPopup.value = true;
 }
 
-function openTaxonProfilePopup(taxon) {
+function openTaxonProfilePopup(taxon, flashcard = false) {
+    flashcardTaxonProfile.value = flashcard;
     taxonProfileData.value = taxon;
     showTaxonProfilePopup.value = true;
 }
