@@ -66,6 +66,8 @@ export const useChecklistStore = defineStore('checklist', () => {
     const getActiveCidArr = computed(() => activeCidArr.value);
     const getActiveTaxaArr = computed(() => {
         const returnArr: any[] = [];
+        checklistFlashcardTaxaArr.value.length = 0;
+        checklistFlashcardTidArr.value.length = 0;
         checklistTaxaArr.value.forEach(taxon => {
             const cidArr: any[] = [];
             let includeTaxon = false;
@@ -108,6 +110,10 @@ export const useChecklistStore = defineStore('checklist', () => {
             }
             if(includeTaxon){
                 returnArr.push(taxon);
+                if(Number(taxon['rankid']) >= 220 && checklistImageData.value.hasOwnProperty(taxon['tid']) && !checklistFlashcardTaxaArr.value.includes(Number(taxon['tid']))){
+                    checklistFlashcardTaxaArr.value.push(taxon);
+                    checklistFlashcardTidArr.value.push(taxon['tid']);
+                }
             }
         });
         if(displaySortVal.value === 'family'){
@@ -398,10 +404,6 @@ export const useChecklistStore = defineStore('checklist', () => {
 
     function processTaxa() {
         checklistTaxaArr.value.forEach(taxon => {
-            if(Number(taxon['rankid']) >= 220 && checklistImageData.value.hasOwnProperty(taxon['tid']) && !checklistFlashcardTaxaArr.value.includes(Number(taxon['tid']))){
-                checklistFlashcardTaxaArr.value.push(taxon);
-                checklistFlashcardTidArr.value.push(taxon['tid']);
-            }
             if(!taxaFilterOptions.value.find(taxonObj => taxonObj['sciname'] === taxon['sciname'])){
                 taxaFilterOptions.value.push({sciname: taxon['sciname'], label: taxon['sciname'], rankid: taxon['rankid']});
             }
