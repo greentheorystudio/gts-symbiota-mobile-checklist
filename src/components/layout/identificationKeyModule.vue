@@ -43,7 +43,8 @@ const activeCidArr = computed(() => checklistStore.getActiveCidArr);
 const keyDataArr = computed(() => checklistStore.getChecklistKeyDataArr);
 const selectedCsidArr = computed(() => checklistStore.getSelectedCsidArr);
 
-function processCharacterStateSelectionChange(state, value) {
+async function processCharacterStateSelectionChange(state, value) {
     checklistStore.processCharacterStateSelectionChange(state, value);
+    await checklistStore.setImageContentData();
 }
 </script>

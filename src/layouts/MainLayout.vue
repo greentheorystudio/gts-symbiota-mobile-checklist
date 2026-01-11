@@ -233,14 +233,16 @@ function processDisplaySynonymsChange(value) {
     checklistStore.setDisplaySynonyms(Number(value) === 1);
 }
 
-function processSortByChange(value) {
+async function processSortByChange(value) {
     checklistStore.setDisplaySortVal(value);
     checklistStore.setPaginationPage(1);
+    await checklistStore.setImageContentData();
 }
 
-function processTaxonFilterValChange(taxon) {
+async function processTaxonFilterValChange(taxon) {
     checklistStore.setDisplayTaxonFilterVal(taxon);
     checklistStore.setPaginationPage(1);
+    await checklistStore.setImageContentData();
 }
 
 function setHeaderSize(headerSize) {

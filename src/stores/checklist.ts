@@ -178,7 +178,6 @@ export const useChecklistStore = defineStore('checklist', () => {
         return checklistCharacterData.value.length > 0 && checklistCharacterHeadingData.value.length > 0 && checklistCharacterStateData.value.length > 0;
     });
     const getPaginatedTaxaArr = computed(() => {
-        imageContentData.value = Object.assign({}, {});
         let returnArr: any[];
         if(getActiveTaxaArr.value.length > taxaPerPage){
             let endIndex = getActiveTaxaArr.value.length;
@@ -294,6 +293,8 @@ export const useChecklistStore = defineStore('checklist', () => {
         taxaFilterOptions.value.length = 0;
         checklistFlashcardTaxaArr.value.length = 0;
         checklistFlashcardTidArr.value.length = 0;
+        imageContentData.value = Object.assign({}, {});
+        flashcardImageContentData.value = Object.assign({}, {});
     }
 
     async function createChecklist(checklist: ChecklistInterface, checklistImages: ChecklistImageInterface[], checklistTaxa: ChecklistTaxonInterface[], keyData: any): Promise<boolean> {
@@ -589,6 +590,7 @@ export const useChecklistStore = defineStore('checklist', () => {
     }
 
     async function setImageContentData(): Promise<void> {
+        imageContentData.value = Object.assign({}, {});
         for(const index in getPaginatedTidArr.value){
             const tid = getPaginatedTidArr.value[index];
             if(checklistImageData.value.hasOwnProperty(tid)){
