@@ -105,12 +105,9 @@ const openChecklistInfoPopup = inject('openChecklistInfoPopup');
 const windowHeight = inject('windowHeight');
 const windowWidth = inject('windowWidth');
 
-watch(taxaDisplayDataArr, async () => {
-    await checklistStore.setImageContentData();
-});
-
-watch(paginationPageValue, () => {
+watch(paginationPageValue, async () => {
     checklistStore.setPaginationPage(paginationPageValue.value);
+    await checklistStore.setImageContentData();
     scrollerRef.value.setScrollPosition('vertical', 0, 300)
 });
 
