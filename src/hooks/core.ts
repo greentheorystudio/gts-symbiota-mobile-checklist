@@ -163,7 +163,7 @@ export async function getImageBase64UriStr(imagePath: string) {
         path: imagePath,
         directory: Directory.Data
     });
-    return (fileContent && fileContent.data) ? ('data:image/jpeg;base64,' + fileContent.data) : '';
+    return (fileContent && fileContent.data) ? ('data:image/' + (imagePath.endsWith('.png') ? 'png' : 'jpeg') + ';base64,' + fileContent.data) : '';
 }
 
 export async function moveFile(sourcePath: string, targetPath: string) {
