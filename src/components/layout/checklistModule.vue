@@ -93,7 +93,7 @@ const paginationLastPageNumber = computed(() => checklistStore.getPaginationLast
 const paginationPageValue = ref(1);
 const scrollerRef = ref(null);
 const scrollerStyle = computed(() => {
-    return 'width: ' + (windowWidth.value - 30) + 'px;height: ' + (windowHeight.value - headerHeight.value - checklistHeaderHeight.value - 50) + 'px;';
+    return 'width: ' + (windowWidth.value - 30) + 'px;height: ' + (windowHeight.value - headerHeight.value - checklistHeaderHeight.value - 20) + 'px;';
 });
 const selectedSortByOption = computed(() => checklistStore.getDisplaySortVal);
 const taxaDisplayDataArr = computed(() => checklistStore.getTaxaDisplayDataArr);
