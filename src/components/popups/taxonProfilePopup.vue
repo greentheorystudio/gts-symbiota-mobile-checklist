@@ -39,7 +39,7 @@
                     <div v-if="taxonImageArr.length > 0" class="q-mt-sm column q-col-gutter-sm">
                         <template v-for="image in taxonImageArr">
                             <div>
-                                <q-img class="rounded-borders" :width="imageWidth" :src="image['contentData']" fit="scale-down" :alt="(image['alttext'] ? image['alttext'] : taxon['sciname'])"></q-img>
+                                <q-img class="rounded-borders" :width="imageWidth" :src="image['contentData']" fit="contain" :alt="(image['alttext'] ? image['alttext'] : taxon['sciname'])"></q-img>
                             </div>
                         </template>
                     </div>

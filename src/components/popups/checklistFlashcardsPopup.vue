@@ -37,7 +37,7 @@
                     </div>
                     <div class="q-my-lg full-width row justify-center">
                         <q-card v-if="currentImage" :style="cardStyle">
-                            <q-img class="rounded-borders" :height="cardImageHeight" :src="currentImage['contentData']" fit="scale-down" :no-native-menu="true"></q-img>
+                            <q-img class="rounded-borders" :height="cardImageHeight" :src="currentImage['contentData']" fit="contain" :no-native-menu="true"></q-img>
                             <q-card-section class="q-pa-sm column q-gutter-sm">
                                 <div class="row justify-between">
                                     <div>
@@ -130,7 +130,7 @@ const $q = useQuasar();
 const cardDimensions = computed(() => {
     let returnVal = 0;
     if(cardWidth.value > 0){
-        if(cardWidth.value > 900){
+        /*if(cardWidth.value > 900){
             returnVal = (cardWidth.value * 0.5);
         }
         else if(cardWidth.value > 600){
@@ -141,7 +141,8 @@ const cardDimensions = computed(() => {
         }
         else{
             returnVal = cardWidth.value * 0.8;
-        }
+        }*/
+        returnVal = cardWidth.value * 0.9;
     }
     return returnVal;
 });
