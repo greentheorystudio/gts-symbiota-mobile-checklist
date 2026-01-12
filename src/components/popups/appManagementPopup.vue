@@ -127,6 +127,7 @@ async function processDelete(clid) {
 
 async function processReset() {
     showWorking();
+    await checklistStore.setCurrentChecklist(0);
     await clearImageDirectory();
     await initializeApp(platform.value, true);
     await checklistStore.setChecklistArr();
