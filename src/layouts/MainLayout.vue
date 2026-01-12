@@ -4,7 +4,7 @@
         <q-header elevated :class="checklistArr.length === 0 ? 'q-pb-sm' : ''">
             <q-resize-observer @resize="setHeaderSize" />
             <q-toolbar>
-                <q-toolbar-title class="text-bold">
+                <q-toolbar-title class="text-h6 text-bold">
                     Symbiota Mobile Checklist
                 </q-toolbar-title>
                 <div class="row q-gutter-sm">
