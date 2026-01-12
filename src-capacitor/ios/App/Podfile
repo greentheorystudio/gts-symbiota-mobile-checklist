@@ -15,6 +15,7 @@ def capacitor_pods
   pod 'CapacitorApp', :path => '../../node_modules/@capacitor/app'
   pod 'CapacitorFileTransfer', :path => '../../node_modules/@capacitor/file-transfer'
   pod 'CapacitorFilesystem', :path => '../../node_modules/@capacitor/filesystem'
+  pod 'CapacitorSplashScreen', :path => '../../node_modules/@capacitor/splash-screen'
   pod 'CapacitorToast', :path => '../../node_modules/@capacitor/toast'
 end
 
