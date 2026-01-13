@@ -5,7 +5,7 @@
             <q-resize-observer @resize="setHeaderSize" />
             <q-toolbar>
                 <q-toolbar-title class="text-h6 text-bold">
-                    Symbiota Mobile Checklist
+                    Channel Islands Flora
                 </q-toolbar-title>
                 <div class="row q-gutter-sm">
                     <q-btn v-if="remoteConnectionEstablished" dense round icon="download_for_offline" aria-label="Download" @click="showDownloadPopup = true" />
