@@ -108,7 +108,7 @@
     </q-layout>
 </template>
 <script setup>
-import {computed, onMounted, provide, ref, watch} from 'vue';
+import { computed, onMounted, provide, ref, watch } from 'vue';
 
 import { useChecklistStore } from 'src/stores/checklist';
 import { useChecklistRemoteStore } from 'src/stores/checklist-remote';
@@ -159,6 +159,12 @@ const taxonFilterVal = computed(() => checklistStore.getDisplayTaxonFilterVal);
 const taxonProfileData = ref(null);
 const windowHeight = ref(0);
 const windowWidth = ref(0);
+
+watch(checklistArr, () => {
+    if(Number(checklistId.value) === 0){
+        showTopOptions.value = checklistArr.value.length > 0;
+    }
+});
 
 function closeChecklistFlashcardPopup() {
     showFlashcardPopup.value = false;
