@@ -188,14 +188,14 @@ export async function moveFile(sourcePath: string, targetPath: string) {
     }
 }
 
-export function showNotification(type: string, text: string, duration = 5000) {
+export function showNotification(type: string, text: string) {
     Notify.create({
         type: type,
         icon: '',
         message: text,
         multiLine: true,
         position: 'top',
-        timeout: duration
+        timeout: 2000
     });
 }
 
