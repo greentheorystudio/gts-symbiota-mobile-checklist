@@ -27,8 +27,8 @@
                                                 <span class="q-ml-sm text-bold">{{ taxon['author'] }}</span>
                                             </template>
                                         </div>
-                                        <template v-if="displayCommonNames && taxon['vernacularJson']">
-                                            <div class="text-body1">{{ getVernacularStrFromArr(taxon['vernacularJson']) }}</div>
+                                        <template v-if="displayCommonNames && taxon['vernacularJson'] && getVernacularStrFromArr(taxon['vernacularJson'], taxon['tid'])">
+                                            <div class="text-body1">{{ getVernacularStrFromArr(taxon['vernacularJson'], taxon['tid']) }}</div>
                                         </template>
                                         <div v-if="displaySynonyms && taxon['synonymyJson']" class="text-italic">
                                             {{ getSynonymStrFromArr(taxon['synonymyJson']) }}
@@ -65,8 +65,8 @@
                                     <span class="q-ml-sm text-bold">{{ taxon['author'] }}</span>
                                 </template>
                             </div>
-                            <template v-if="displayCommonNames && taxon['vernacularJson']">
-                                <div class="text-body1">{{ getVernacularStrFromArr(taxon['vernacularJson']) }}</div>
+                            <template v-if="displayCommonNames && taxon['vernacularJson'] && getVernacularStrFromArr(taxon['vernacularJson'], taxon['tid'])">
+                                <div class="text-body1">{{ getVernacularStrFromArr(taxon['vernacularJson'], taxon['tid']) }}</div>
                             </template>
                             <div v-if="displaySynonyms && taxon['synonymyJson']" class="text-italic">
                                 {{ getSynonymStrFromArr(taxon['synonymyJson']) }}
@@ -167,18 +167,18 @@ function getSynonymStrFromArr(synonymJson) {
     return nameArr.length > 0 ? ('[' + nameArr.join(', ') + ']') : '';
 }
 
-function getVernacularStrFromArr(vernacularJson) {
+function getVernacularStrFromArr(vernacularJson, tid) {
     const nameArr = [];
     if(vernacularJson){
         const vernacularArr = JSON.parse(vernacularJson);
         if(vernacularArr && vernacularArr.length > 0){
             vernacularArr.forEach(vernacular => {
-                if(vernacular['vernacularname']){
+                if(vernacular['vernacularname'] && Number(tid) === Number(vernacular['vernaculartid'])){
                     nameArr.push(vernacular['vernacularname']);
                 }
             });
         }
     }
-    return nameArr.length > 0 ? nameArr.join(', ') : '';
+    return nameArr.length > 0 ? nameArr.join(', ') : null;
 }
 </script>

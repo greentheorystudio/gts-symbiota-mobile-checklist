@@ -16,8 +16,8 @@
                                     <template v-if="displayAuthors && taxon['author']">
                                         <span class="q-ml-sm text-bold">{{ taxon['author'] }}</span>
                                     </template>
-                                    <template v-if="displayCommonNames && taxon['vernacularJson']">
-                                        <span>{{ getVernacularStrFromArr(taxon['vernacularJson']) }}</span>
+                                    <template v-if="displayCommonNames && taxon['vernacularJson'] && getVernacularStrFromArr(taxon['vernacularJson'], taxon['tid'])">
+                                        <span>{{ getVernacularStrFromArr(taxon['vernacularJson'], taxon['tid']) }}</span>
                                     </template>
                                 </div>
                             </div>
@@ -45,8 +45,8 @@
                             <template v-if="displayAuthors && taxon['author']">
                                 <span class="q-ml-sm text-bold">{{ taxon['author'] }}</span>
                             </template>
-                            <template v-if="displayCommonNames && taxon['vernacularJson']">
-                                <span>{{ getVernacularStrFromArr(taxon['vernacularJson']) }}</span>
+                            <template v-if="displayCommonNames && taxon['vernacularJson'] && getVernacularStrFromArr(taxon['vernacularJson'], taxon['tid'])">
+                                <span>{{ getVernacularStrFromArr(taxon['vernacularJson'], taxon['tid']) }}</span>
                             </template>
                         </div>
                     </div>
@@ -110,18 +110,18 @@ function getSynonymStrFromArr(synonymJson) {
     return nameArr.length > 0 ? ('[' + nameArr.join(', ') + ']') : '';
 }
 
-function getVernacularStrFromArr(vernacularJson) {
+function getVernacularStrFromArr(vernacularJson, tid) {
     const nameArr = [];
     if(vernacularJson){
         const vernacularArr = JSON.parse(vernacularJson);
         if(vernacularArr && vernacularArr.length > 0){
             vernacularArr.forEach(vernacular => {
-                if(vernacular['vernacularname']){
+                if(vernacular['vernacularname'] && Number(tid) === Number(vernacular['vernaculartid'])){
                     nameArr.push(vernacular['vernacularname']);
                 }
             });
         }
     }
-    return nameArr.length > 0 ? (' - ' + nameArr.join(', ')) : '';
+    return nameArr.length > 0 ? (' - ' + nameArr.join(', ')) : null;
 }
 </script>

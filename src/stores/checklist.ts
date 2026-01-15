@@ -97,11 +97,19 @@ export const useChecklistStore = defineStore('checklist', () => {
             });
             if(keyIncludeTaxon){
                 if(displayTaxonFilterVal.value){
-                    if(Number(displayTaxonFilterVal.value['rankid']) === 140 && taxon['family'] === displayTaxonFilterVal.value['sciname']){
-                        includeTaxon = true;
+                    if(Number(displayTaxonFilterVal.value['rankid']) > 0){
+                        if(Number(displayTaxonFilterVal.value['rankid']) === 140 && taxon['family'] === displayTaxonFilterVal.value['sciname']){
+                            includeTaxon = true;
+                        }
+                        else if(Number(displayTaxonFilterVal.value['rankid']) > 140 && (taxon['sciname'] === displayTaxonFilterVal.value['sciname'] || taxon['sciname'].startsWith((displayTaxonFilterVal.value['sciname'] + ' ')))){
+                            includeTaxon = true;
+                        }
                     }
-                    else if(Number(displayTaxonFilterVal.value['rankid']) > 140 && (taxon['sciname'] === displayTaxonFilterVal.value['sciname'] || taxon['sciname'].startsWith((displayTaxonFilterVal.value['sciname'] + ' ')))){
-                        includeTaxon = true;
+                    else if(taxon.hasOwnProperty('vernacularJson') && taxon['vernacularJson'] && Array.isArray(taxon['vernacularJson'])){
+                        const vernacularMatch = taxon['vernacularJson'].find((vernacular: { [x: string]: any; }) => vernacular['vernacularname'] === displayTaxonFilterVal.value['sciname']);
+                        if(vernacularMatch){
+                            includeTaxon = true;
+                        }
                     }
                 }
                 else{
@@ -411,6 +419,13 @@ export const useChecklistStore = defineStore('checklist', () => {
                 if(!taxaFilterOptions.value.find(taxonObj => taxonObj['sciname'] === taxon['family'])){
                     taxaFilterOptions.value.push({sciname: taxon['family'], label: taxon['family'], rankid: 140});
                 }
+            }
+            if(taxon.hasOwnProperty('vernacularJson') && taxon['vernacularJson'] && Array.isArray(taxon['vernacularJson'])){
+                taxon['vernacularJson'].forEach((vernacular: { [x: string]: any; }) => {
+                    if(!taxaFilterOptions.value.find((taxonObj: { [x: string]: any; }) => taxonObj['sciname'] === vernacular['vernacularname'])){
+                        taxaFilterOptions.value.push({sciname: vernacular['vernacularname'], label: vernacular['vernacularname'], rankid: 0});
+                    }
+                });
             }
             if(Number(taxon['rankid']) >= 220){
                 const unitNameArr = taxon['sciname'].split(' ');

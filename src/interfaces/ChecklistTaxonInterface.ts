@@ -11,5 +11,5 @@ export interface ChecklistTaxonInterface {
     descriptionJson: string | null;
     keyJson: string | null;
     synonymyJson: string | null;
-    vernacularJson: string | null;
+    vernacularJson: string | any[] | null;
 }
