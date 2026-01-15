@@ -422,7 +422,7 @@ export const useChecklistStore = defineStore('checklist', () => {
             }
             if(taxon.hasOwnProperty('vernacularJson') && taxon['vernacularJson'] && Array.isArray(taxon['vernacularJson'])){
                 taxon['vernacularJson'].forEach((vernacular: { [x: string]: any; }) => {
-                    if(!taxaFilterOptions.value.find((taxonObj: { [x: string]: any; }) => taxonObj['sciname'] === vernacular['vernacularname'])){
+                    if(!taxaFilterOptions.value.find((taxonObj: { [x: string]: any; }) => taxonObj['sciname'].toLowerCase() === vernacular['vernacularname'].toLowerCase())){
                         taxaFilterOptions.value.push({sciname: vernacular['vernacularname'], label: vernacular['vernacularname'], rankid: 0});
                     }
                 });
