@@ -412,11 +412,12 @@ export const useChecklistStore = defineStore('checklist', () => {
 
     function processTaxa() {
         checklistTaxaArr.value.forEach(taxon => {
-            if(!taxaFilterOptions.value.find(taxonObj => taxonObj['sciname'] === taxon['sciname'])){
+            const familyVal = taxon['family'] ? taxon['family'] : '';
+            if(!taxaFilterOptions.value.find(taxonObj => taxonObj['sciname'].toLowerCase() === taxon['sciname'].toLowerCase())){
                 taxaFilterOptions.value.push({sciname: taxon['sciname'], label: taxon['sciname'], rankid: taxon['rankid']});
             }
-            if(taxon['family'] && taxon['family'] !== '[Incertae Sedis]'){
-                if(!taxaFilterOptions.value.find(taxonObj => taxonObj['sciname'] === taxon['family'])){
+            if(familyVal !== '' && familyVal !== '[Incertae Sedis]'){
+                if(!taxaFilterOptions.value.find(taxonObj => taxonObj['sciname'].toLowerCase() === familyVal.toLowerCase())){
                     taxaFilterOptions.value.push({sciname: taxon['family'], label: taxon['family'], rankid: 140});
                 }
             }
@@ -429,10 +430,12 @@ export const useChecklistStore = defineStore('checklist', () => {
             }
             if(Number(taxon['rankid']) >= 220){
                 const unitNameArr = taxon['sciname'].split(' ');
-                if(!taxaFilterOptions.value.find(taxonObj => taxonObj['sciname'] === unitNameArr[0])){
+                const unitName1 = (unitNameArr.length > 0 && unitNameArr[0]) ? unitNameArr[0].toLowerCase() : '';
+                const unitName2 = (unitNameArr.length > 1 && unitNameArr[1]) ? unitNameArr[1].toLowerCase() : '';
+                if(unitName1 !== '' && !taxaFilterOptions.value.find(taxonObj => taxonObj['sciname'].toLowerCase() === unitName1)){
                     taxaFilterOptions.value.push({sciname: unitNameArr[0], label: unitNameArr[0], rankid: 180});
                 }
-                if(!taxaFilterOptions.value.find(taxonObj => taxonObj['sciname'] === (unitNameArr[0] + ' ' + unitNameArr[1]))){
+                if(unitName1 !== '' && unitName2 !== '' && !taxaFilterOptions.value.find(taxonObj => taxonObj['sciname'].toLowerCase() === (unitName1 + ' ' + unitName2))){
                     taxaFilterOptions.value.push({sciname: (unitNameArr[0] + ' ' + unitNameArr[1]), label: (unitNameArr[0] + ' ' + unitNameArr[1]), rankid: 220});
                 }
             }
