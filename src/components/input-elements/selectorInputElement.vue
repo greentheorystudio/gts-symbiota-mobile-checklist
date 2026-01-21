@@ -1,5 +1,5 @@
 <template>
-    <q-select ref="selectorRef" v-model="selectedOption" class="selector-input-spacer" outlined dense options-dense input-debounce="500" bg-color="white" popup-content-class="z-top" behavior="menu" input-class="z-top" :options="selectorOptions" option-value="value" option-label="label" @filter="checkFilter" @update:model-value="processValueChange" :label="label" :tabindex="tabindex">
+    <q-select ref="selectorRef" v-model="selectedOption" class="selector-input-spacer" outlined dense options-dense input-debounce="500" bg-color="white" popup-content-class="z-top" behavior="menu" input-class="z-top" :options="selectorOptions" option-value="value" option-label="label" @filter="checkFilter" @update:model-value="processValueChange" :label="label" autocomplete="off">
         <template v-if="clearable && value" v-slot:append>
             <q-icon role="button" v-if="clearable && value" name="cancel" class="cursor-pointer" @click="clearValue();" @keyup.enter="clearValue();" aria-label="Clear value" :tabindex="tabindex">
                 <q-tooltip anchor="top middle" self="bottom middle" class="text-body2" :delay="1000" :offset="[10, 10]">
