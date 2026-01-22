@@ -87,6 +87,7 @@ const headerHeight = ref(0);
 const imageWidth = computed(() => {
     return (cardWidth.value - 30) + 'px';
 });
+const mapImageContentData = ref(null);
 const propsRefs = toRefs(props);
 const scrollerStyle = computed(() => {
     return 'width: ' + cardWidth.value + 'px;height: ' + (cardHeight.value - headerHeight.value) + 'px;';
@@ -100,6 +101,7 @@ watch(propsRefs.showPopup, () => {
 });
 
 function closePopup() {
+    mapImageContentData.value = null;
     emit('close:popup');
 }
 
@@ -139,11 +141,18 @@ function setCardSize(cardSize) {
 }
 
 function setDisplayValue() {
+    if(props.showPopup){
+        setMapImageContentData();
+    }
     displayPopup.value = props.showPopup;
 }
 
 function setHeaderSize(headerSize) {
     headerHeight.value = headerSize.height;
+}
+
+async function setMapImageContentData() {
+    mapImageContentData.value = await checklistStore.getMapImageContentData(props.taxon['tid']);
 }
 
 onMounted(() => {

@@ -8,11 +8,13 @@ import CharacterHeadings from 'src/models/CharacterHeadings';
 import CharacterStates from 'src/models/CharacterStates';
 import Characters from 'src/models/Characters';
 import ChecklistImages from 'src/models/ChecklistImages';
+import ChecklistMapImages from 'src/models/ChecklistMapImages';
 import Checklists from './../models/Checklists';
 import ChecklistTaxa from 'src/models/ChecklistTaxa';
 
 import { ChecklistImageInterface } from 'src/interfaces/ChecklistImageInterface';
 import { ChecklistInterface } from 'src/interfaces/ChecklistInterface';
+import { ChecklistMapImageInterface } from 'src/interfaces/ChecklistMapImageInterface';
 import { ChecklistTaxonInterface } from 'src/interfaces/ChecklistTaxonInterface';
 
 import { useDatabaseStore } from 'stores/database';
@@ -24,6 +26,7 @@ export const useChecklistStore = defineStore('checklist', () => {
     const characterHeadingModel = new CharacterHeadings;
     const characterStateModel = new CharacterStates;
     const checklistImageModel = new ChecklistImages;
+    const checklistMapImageModel = new ChecklistMapImages;
     const checklistModel = new Checklists;
     const checklistTaxonModel = new ChecklistTaxa;
 
@@ -39,6 +42,7 @@ export const useChecklistStore = defineStore('checklist', () => {
     const checklistId: Ref<number> = ref(0);
     const checklistImageData: Ref<any> = ref({});
     const checklistKeyDataArr: Ref<any[]> = ref([]);
+    const checklistMapImageData: Ref<any> = ref({});
     const checklistTaxaArr: Ref<ChecklistTaxonInterface[]> = ref([]);
     const displayAuthors: Ref<boolean> = ref(false);
     const displayImages: Ref<boolean> = ref(false);
@@ -298,6 +302,7 @@ export const useChecklistStore = defineStore('checklist', () => {
         checklistId.value = 0;
         checklistData.value = null;
         checklistImageData.value = Object.assign({}, {});
+        checklistMapImageData.value = Object.assign({}, {});
         checklistCharacterData.value.length = 0;
         checklistCharacterHeadingData.value.length = 0;
         checklistCharacterStateData.value.length = 0;
@@ -311,12 +316,15 @@ export const useChecklistStore = defineStore('checklist', () => {
         flashcardImageContentData.value = Object.assign({}, {});
     }
 
-    async function createChecklist(checklist: ChecklistInterface, checklistImages: ChecklistImageInterface[], checklistTaxa: ChecklistTaxonInterface[], keyData: any): Promise<boolean> {
+    async function createChecklist(checklist: ChecklistInterface, checklistImages: ChecklistImageInterface[], checklistMapImages: ChecklistMapImageInterface[], checklistTaxa: ChecklistTaxonInterface[], keyData: any): Promise<boolean> {
         const res = await checklistModel.createChecklist(databaseStore.getDatabaseConnection, checklist);
         if(res && res.hasOwnProperty('changes') && Number(res.changes.changes) > 0){
             await checklistTaxonModel.batchCreateChecklistTaxa(databaseStore.getDatabaseConnection, checklistTaxa);
             if(checklistImages.length > 0){
                 await checklistImageModel.batchCreateChecklistImages(databaseStore.getDatabaseConnection, checklistImages);
+            }
+            if(checklistMapImages.length > 0){
+                await checklistMapImageModel.batchCreateChecklistMapImages(databaseStore.getDatabaseConnection, checklistMapImages);
             }
             if(keyData['character-headings']){
                 await characterHeadingModel.createCharacterHeading(databaseStore.getDatabaseConnection, {clid: checklist['clid'], data: keyData['character-headings']});
@@ -345,11 +353,23 @@ export const useChecklistStore = defineStore('checklist', () => {
         await characterModel.deleteCharacter(databaseStore.getDatabaseConnection, clid);
         await characterHeadingModel.deleteCharacterHeading(databaseStore.getDatabaseConnection, clid);
         await checklistImageModel.deleteChecklistImages(databaseStore.getDatabaseConnection, clid);
+        await checklistMapImageModel.deleteChecklistMapImages(databaseStore.getDatabaseConnection, clid);
         await checklistTaxonModel.deleteChecklistTaxa(databaseStore.getDatabaseConnection, clid);
         const res = await checklistModel.deleteChecklist(databaseStore.getDatabaseConnection, clid);
         await databaseStore.processDatabaseChange();
         await setChecklistArr();
         return res;
+    }
+
+    async function getMapImageContentData(tid: number): Promise<any> {
+        if(checklistMapImageData.value.hasOwnProperty(tid)){
+            const returnData = Object.assign({}, checklistMapImageData.value[tid]);
+            returnData['contentData'] = await getImageBase64UriStr(returnData['filePath']);
+            return returnData;
+        }
+        else{
+            return null;
+        }
     }
 
     function processCharacterStateSelectionChange(state: any, value: any) {
@@ -534,6 +554,16 @@ export const useChecklistStore = defineStore('checklist', () => {
         return;
     }
 
+    async function setChecklistMapImageData(clid: number): Promise<void> {
+        const queryRes = await checklistMapImageModel.getChecklistMapImagesById(databaseStore.getDatabaseConnection, clid);
+        if(queryRes && queryRes.hasOwnProperty('values')){
+            queryRes.values.forEach((image) => {
+                checklistMapImageData.value[image.tid] = Object.assign({}, image);
+            });
+        }
+        return;
+    }
+
     async function setChecklistTaxa(clid: number): Promise<void> {
         const queryRes = await checklistTaxonModel.getChecklistTaxaById(databaseStore.getDatabaseConnection, clid);
         if(queryRes && queryRes.hasOwnProperty('values')){
@@ -549,6 +579,7 @@ export const useChecklistStore = defineStore('checklist', () => {
             checklistId.value = Number(clid);
             await setChecklistData(clid);
             await setChecklistImageData(clid);
+            await setChecklistMapImageData(clid);
             await setChecklistTaxa(clid);
             await setChecklistKeyDataArr(clid);
             if(checklistCharacterData.value.length > 0 && checklistCharacterHeadingData.value.length > 0 && checklistCharacterStateData.value.length > 0){
@@ -652,6 +683,7 @@ export const useChecklistStore = defineStore('checklist', () => {
         getImageContentData,
         getFlashcardImageContentData,
         getKeyDataExists,
+        getMapImageContentData,
         getPaginatedTaxaArr,
         getPaginationLastPageNumber,
         getPaginationPage,

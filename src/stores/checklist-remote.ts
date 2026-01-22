@@ -19,6 +19,7 @@ import { useChecklistStore } from 'src/stores/checklist';
 import { useDatabaseStore } from 'stores/database';
 
 import { ChecklistImageInterface } from 'src/interfaces/ChecklistImageInterface';
+import { ChecklistMapImageInterface } from 'src/interfaces/ChecklistMapImageInterface';
 import { ChecklistTaxonInterface } from 'src/interfaces/ChecklistTaxonInterface';
 import { RemoteChecklistInterface } from 'src/interfaces/RemoteChecklistInterface';
 import { ChecklistInterface } from "src/interfaces/ChecklistInterface";
@@ -35,6 +36,7 @@ export const useChecklistRemoteStore = defineStore('checklist-remote', () => {
     const newChecklistData: Ref<RemoteChecklistInterface | null> = ref(null);
     const newChecklistImageData: Ref<ChecklistImageInterface[]> = ref([]);
     const newChecklistKeyData: Ref<any> = ref({});
+    const newChecklistMapImageData: Ref<ChecklistMapImageInterface[]> = ref([]);
     const newChecklistTaxaData: Ref<ChecklistTaxonInterface[]> = ref([]);
     const platform = computed(() => databaseStore.getRuntimeEnvironment);
     const remoteConnectionEstablished = ref(true);
@@ -55,6 +57,7 @@ export const useChecklistRemoteStore = defineStore('checklist-remote', () => {
     async function installChecklist(checklist: RemoteChecklistInterface, callback: any) {
         newChecklistData.value = Object.assign({}, checklist);
         newChecklistImageData.value.length = 0;
+        newChecklistMapImageData.value.length = 0;
         newChecklistKeyData.value = Object.assign({}, checklist);
         newChecklistTaxaData.value.length = 0;
         dataArchiveData.value = Object.assign({}, {});
@@ -149,11 +152,11 @@ export const useChecklistRemoteStore = defineStore('checklist-remote', () => {
                         });
                     }
                 }
-                await processTaxaData(callback);
+                await processMapImageFiles(callback);
             }
         }
         else{
-            await processTaxaData(callback);
+            await processMapImageFiles(callback);
         }
     }
 
@@ -172,7 +175,7 @@ export const useChecklistRemoteStore = defineStore('checklist-remote', () => {
                 defaultSettings: newChecklistData.value['defaultsettings'] ? JSON.stringify(newChecklistData.value['defaultsettings']) : null,
                 publishtimestamp: newChecklistData.value['appconfigjson']['datePublished']
             };
-            const res = await checklistStore.createChecklist(checklistData, newChecklistImageData.value, newChecklistTaxaData.value, newChecklistKeyData.value);
+            const res = await checklistStore.createChecklist(checklistData, newChecklistImageData.value, newChecklistMapImageData.value, newChecklistTaxaData.value, newChecklistKeyData.value);
             await clearDownloadDirectory();
             if(res){
                 callback('1');
@@ -192,6 +195,34 @@ export const useChecklistRemoteStore = defineStore('checklist-remote', () => {
             newChecklistKeyData.value['character-headings'] = (dataArchiveData.value.hasOwnProperty('character-headings') && dataArchiveData.value['character-headings']) ? JSON.stringify(dataArchiveData.value['character-headings']) : null;
         }
         await processImport(callback);
+    }
+
+    async function processMapImageFiles(callback: any) {
+        if(newChecklistData.value && dataArchiveFiles.value.length > 1 && dataArchiveData.value.hasOwnProperty('map-images') && dataArchiveData.value['map-images'].length > 0){
+            showWorking('Processing map image files');
+            const clidVal = newChecklistData.value ? newChecklistData.value['clid'].toString() : null;
+            if(clidVal){
+                if(!await fileFolderExists('mobile-checklist/images/' + clidVal)){
+                    await createDirectory('mobile-checklist/images/' + clidVal);
+                }
+                for(const image of dataArchiveData.value['map-images']) {
+                    const fullPath = 'mobile-checklist/download/extract/' + image['filename'];
+                    const targetPath = 'mobile-checklist/images/' + clidVal + '/' + image['filename'];
+                    if(await moveFile(fullPath, targetPath)){
+                        newChecklistMapImageData.value.push({
+                            clid: Number(clidVal),
+                            tid: image['tid'],
+                            title: image['title'],
+                            filePath: targetPath
+                        });
+                    }
+                }
+                await processTaxaData(callback);
+            }
+        }
+        else{
+            await processTaxaData(callback);
+        }
     }
 
     async function processTaxaData(callback: any) {

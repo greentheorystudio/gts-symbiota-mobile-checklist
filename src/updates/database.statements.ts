@@ -29,6 +29,12 @@ export const DatabaseUpdateStatements: Statement[] = [
                 owner TEXT(250),
                 filePath TEXT NOT NULL
             );`,
+            `CREATE TABLE IF NOT EXISTS checklistMapImages (
+                clid INTEGER NOT NULL,
+                tid INTEGER NOT NULL,
+                title TEXT(100),
+                filePath TEXT NOT NULL
+            );`,
             `CREATE TABLE IF NOT EXISTS checklistTaxa (
                 clid INTEGER NOT NULL,
                 tid INTEGER NOT NULL,

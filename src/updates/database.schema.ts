@@ -3,6 +3,7 @@ export const DatabaseSchemaStatements: string[] = [
     'DROP TABLE IF EXISTS characters;',
     'DROP TABLE IF EXISTS characterHeadings;',
     'DROP TABLE IF EXISTS checklistImages;',
+    'DROP TABLE IF EXISTS checklistMapImages;',
     'DROP TABLE IF EXISTS checklistTaxa;',
     'DROP TABLE IF EXISTS checklists;',
     `CREATE TABLE characterHeadings (
@@ -27,6 +28,12 @@ export const DatabaseSchemaStatements: string[] = [
         owner TEXT(250),
         filePath TEXT NOT NULL
     );`,
+    `CREATE TABLE checklistMapImages (
+        clid INTEGER NOT NULL,
+        tid INTEGER NOT NULL,
+        title TEXT(100),
+        filePath TEXT NOT NULL
+     );`,
     `CREATE TABLE checklistTaxa (
         clid INTEGER NOT NULL,
         tid INTEGER NOT NULL,
