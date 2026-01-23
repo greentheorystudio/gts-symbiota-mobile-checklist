@@ -4,8 +4,13 @@
             <q-resize-observer @resize="setCardSize" />
             <q-card-section class="q-pa-none row justify-between q-gutter-sm no-wrap">
                 <q-resize-observer @resize="setHeaderSize" />
-                <div class="q-py-sm q-pl-sm text-h5">
-                    <span class="text-bold text-italic">{{ taxon['sciname'] }}</span> {{ taxon['author'] }}
+                <div class="q-py-sm q-pl-sm column">
+                    <div class="text-h5">
+                        <span class="text-bold text-italic">{{ taxon['sciname'] }}</span> {{ taxon['author'] }}
+                    </div>
+                    <div v-if="taxon['family']" class="q-pl-md text-subtitle1">
+                        <span class="text-bold">Family: </span>{{ taxon['family'] }}
+                    </div>
                 </div>
                 <div>
                     <q-btn square glossy padding="5px 10px" color="negative" icon="close" @click="closePopup();"></q-btn>
@@ -14,7 +19,6 @@
             <q-card-section class="q-pl-md q-py-none">
                 <q-scroll-area :style="scrollerStyle">
                     <div class="q-pa-sm column q-gutter-xs">
-                        <div v-if="taxon['family']" class="text-subtitle1"><span class="text-bold">Family: </span>{{ taxon['family'] }}</div>
                         <div v-if="taxon['vernacularJson']" class="text-subtitle1">
                             {{ getVernacularStrFromArr(taxon['vernacularJson']) }}
                         </div>
@@ -94,7 +98,7 @@ const imageWidth = computed(() => {
 const mapImageContentData = ref(null);
 const propsRefs = toRefs(props);
 const scrollerStyle = computed(() => {
-    return 'width: ' + (cardWidth.value - 10) + 'px;height: ' + (cardHeight.value - headerHeight.value) + 'px;';
+    return 'width: ' + (cardWidth.value - 25) + 'px;height: ' + (cardHeight.value - headerHeight.value) + 'px;';
 });
 const taxonImageArr = computed(() => {
     return (checklistImageData['value'].hasOwnProperty(props.taxon['tid']) && checklistImageData['value'][props.taxon['tid']].length > 0) ? checklistImageData['value'][props.taxon['tid']] : [];
@@ -130,7 +134,7 @@ function getVernacularStrFromArr(vernacularJson) {
         const vernacularArr = JSON.parse(vernacularJson);
         if(vernacularArr && vernacularArr.length > 0){
             vernacularArr.forEach(vernacular => {
-                if(vernacular['vernacularname']){
+                if(vernacular['vernacularname'] && Number(props.taxon['tid']) === Number(vernacular['vernaculartid'])){
                     nameArr.push(vernacular['vernacularname']);
                 }
             });
