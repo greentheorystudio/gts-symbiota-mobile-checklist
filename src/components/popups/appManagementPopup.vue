@@ -136,7 +136,7 @@ async function processReset() {
 }
 
 function resetApp() {
-    const confirmText = 'This will delete all data that has been downloaded and cannot be undone. Are you sure you want to delete this checklist?';
+    const confirmText = 'This will delete all data that has been downloaded and cannot be undone. Are you sure you want to proceed?';
     if(confirmationPopupRef['value']){
         confirmationPopupRef['value'].openPopup(confirmText, {cancel: true, falseText: 'Cancel', trueText: 'Yes', callback: (val) => {
             if(val){
