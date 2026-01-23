@@ -56,7 +56,9 @@
                         </div>
                     </q-tab-panel>
                     <q-tab-panel v-if="mapImageContentData" name="map" :style="tabPanelStyle">
-
+                        <div class="q-mt-lg">
+                            <q-img class="rounded-borders" :width="imageWidth" :src="mapImageContentData['contentData']" fit="contain"></q-img>
+                        </div>
                     </q-tab-panel>
                 </q-tab-panels>
             </q-card-section>
