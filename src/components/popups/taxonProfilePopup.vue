@@ -16,35 +16,49 @@
                     <q-btn square glossy padding="5px 10px" color="negative" icon="close" @click="closePopup();"></q-btn>
                 </div>
             </q-card-section>
-            <q-card-section class="q-pl-md q-py-none">
-                <q-scroll-area :style="scrollerStyle">
-                    <div class="q-pa-sm column q-gutter-xs">
-                        <div v-if="taxon['vernacularJson']" class="text-subtitle1">
-                            {{ getVernacularStrFromArr(taxon['vernacularJson']) }}
-                        </div>
-                        <div v-if="taxon['synonymyJson']" class="text-subtitle1 text-italic">
-                            {{ getSynonymStrFromArr(taxon['synonymyJson']) }}
-                        </div>
-                        <div v-if="taxon['habitat']" class="text-subtitle1"><span class="text-bold">Habitat: </span>{{ taxon['habitat'] }}</div>
-                        <div v-if="taxon['abundance']" class="text-subtitle1"><span class="text-bold">Abundance: </span>{{ taxon['abundance'] }}</div>
-                        <div v-if="taxon['notes']" class="text-subtitle1"><span class="text-bold">Notes: </span>{{ taxon['notes'] }}</div>
-                        <template v-if="descriptionData && descriptionData['statements'].length > 0">
-                            <template v-for="statement in descriptionData['statements']">
-                                <div class="text-body1">
-                                    <span v-if="statement['heading'] && Number(statement['displayheader']) === 1" class="text-bold">{{ statement['heading'] + ': ' }}</span>
-                                    <span v-html="statement['statement']"></span>
-                                </div>
-                            </template>
-                        </template>
-                        <div v-if="taxonImageArr.length > 0" class="q-mt-sm column q-col-gutter-sm">
+            <q-card-section class="q-pa-none">
+                <q-tabs v-model="selectedTab" content-class="bg-grey-3" active-bg-color="grey-4" align="left">
+                    <q-resize-observer @resize="setTabSize" />
+                    <q-tab v-if="taxonImageArr.length > 0" class="bg-grey-3" label="Images" name="images" no-caps />
+                    <q-tab class="bg-grey-3" label="Details" name="details" no-caps />
+                    <q-tab v-if="mapImageContentData" class="bg-grey-3" label="Map" name="map" no-caps />
+                </q-tabs>
+                <q-separator></q-separator>
+                <q-tab-panels v-model="selectedTab" animated>
+                    <q-tab-panel v-if="taxonImageArr.length > 0" name="images" :style="tabPanelStyle">
+                        <div class="q-py-sm q-pl-xs column q-col-gutter-sm">
                             <template v-for="image in taxonImageArr">
                                 <div>
                                     <q-img class="rounded-borders" :width="imageWidth" :src="image['contentData']" fit="contain" :alt="(image['alttext'] ? image['alttext'] : taxon['sciname'])"></q-img>
                                 </div>
                             </template>
                         </div>
-                    </div>
-                </q-scroll-area>
+                    </q-tab-panel>
+                    <q-tab-panel name="details" :style="tabPanelStyle">
+                        <div class="q-pa-sm column q-gutter-xs">
+                            <div v-if="getVernacularStrFromArr(taxon['vernacularJson'])" class="text-subtitle1">
+                                <span class="text-bold">Common names: </span>{{ getVernacularStrFromArr(taxon['vernacularJson']) }}
+                            </div>
+                            <div v-if="getSynonymStrFromArr(taxon['synonymyJson'])" class="text-subtitle1 text-italic">
+                                <span class="text-bold">Synonyms: </span>{{ getSynonymStrFromArr(taxon['synonymyJson']) }}
+                            </div>
+                            <div v-if="taxon['habitat']" class="text-subtitle1"><span class="text-bold">Habitat: </span>{{ taxon['habitat'] }}</div>
+                            <div v-if="taxon['abundance']" class="text-subtitle1"><span class="text-bold">Abundance: </span>{{ taxon['abundance'] }}</div>
+                            <div v-if="taxon['notes']" class="text-subtitle1"><span class="text-bold">Notes: </span>{{ taxon['notes'] }}</div>
+                            <template v-if="descriptionData && descriptionData['statements'].length > 0">
+                                <template v-for="statement in descriptionData['statements']">
+                                    <div class="text-body1">
+                                        <span v-if="statement['heading'] && Number(statement['displayheader']) === 1" class="text-bold">{{ statement['heading'] + ': ' }}</span>
+                                        <span v-html="statement['statement']"></span>
+                                    </div>
+                                </template>
+                            </template>
+                        </div>
+                    </q-tab-panel>
+                    <q-tab-panel v-if="mapImageContentData" name="map" :style="tabPanelStyle">
+
+                    </q-tab-panel>
+                </q-tab-panels>
             </q-card-section>
         </q-card>
     </q-dialog>
@@ -97,9 +111,12 @@ const imageWidth = computed(() => {
 });
 const mapImageContentData = ref(null);
 const propsRefs = toRefs(props);
-const scrollerStyle = computed(() => {
-    return 'width: ' + (cardWidth.value - 25) + 'px;height: ' + (cardHeight.value - headerHeight.value) + 'px;';
+const selectedTab = ref('details');
+const tabHeight = ref(0);
+const tabPanelStyle = computed(() => {
+    return 'width: ' + cardWidth.value + 'px;height: ' + (cardHeight.value - headerHeight.value - tabHeight.value) + 'px;';
 });
+const tabWidth = ref(0);
 const taxonImageArr = computed(() => {
     return (checklistImageData['value'].hasOwnProperty(props.taxon['tid']) && checklistImageData['value'][props.taxon['tid']].length > 0) ? checklistImageData['value'][props.taxon['tid']] : [];
 });
@@ -110,6 +127,7 @@ watch(propsRefs.showPopup, () => {
 
 function closePopup() {
     mapImageContentData.value = null;
+    selectedTab.value = 'details';
     emit('close:popup');
 }
 
@@ -125,7 +143,7 @@ function getSynonymStrFromArr(synonymJson) {
             });
         }
     }
-    return nameArr.length > 0 ? ('[' + nameArr.join(', ') + ']') : '';
+    return nameArr.length > 0 ? ('[' + nameArr.join(', ') + ']') : null;
 }
 
 function getVernacularStrFromArr(vernacularJson) {
@@ -140,7 +158,7 @@ function getVernacularStrFromArr(vernacularJson) {
             });
         }
     }
-    return nameArr.length > 0 ? nameArr.join(', ') : '';
+    return nameArr.length > 0 ? nameArr.join(', ') : null;
 }
 
 function setCardSize(cardSize) {
@@ -151,6 +169,9 @@ function setCardSize(cardSize) {
 function setDisplayValue() {
     if(props.showPopup){
         setMapImageContentData();
+        if(taxonImageArr.value.length > 0){
+            selectedTab.value = 'images';
+        }
     }
     displayPopup.value = props.showPopup;
 }
@@ -161,6 +182,11 @@ function setHeaderSize(headerSize) {
 
 async function setMapImageContentData() {
     mapImageContentData.value = await checklistStore.getMapImageContentData(props.taxon['tid']);
+}
+
+function setTabSize(panelSize) {
+    tabHeight.value = panelSize.height;
+    tabWidth.value = panelSize.width;
 }
 
 onMounted(() => {
