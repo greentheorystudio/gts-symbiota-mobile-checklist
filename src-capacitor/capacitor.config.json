@@ -1,6 +1,6 @@
 {
-  "appId": "com.greentheorystudio.symbiota.mobile.checklist",
-  "appName": "Green Theory Studios Symbiota Mobile Checklist",
+  "appId": "org.cal.ibis.channel.islands.flora",
+  "appName": "Channel Islands Flora",
   "webDir": "www",
   "server": {
     "androidScheme": "https",

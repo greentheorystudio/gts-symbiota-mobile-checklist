@@ -1,8 +1,8 @@
 {
-  "name": "gts-symbiota-mobile-checklist",
+  "name": "channel-islands-flora",
   "version": "0.0.1",
-  "description": "A Quasar Project",
-  "productName": "Green Theory Studio's Symbiota Mobile Checklist",
+  "description": "Channel Islands Flora",
+  "productName": "Channel Islands Flora",
   "author": "Ben Brandt <ben@greentheorystudio.com>",
   "type": "module",
   "private": true,
