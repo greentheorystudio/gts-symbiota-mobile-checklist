@@ -13,6 +13,8 @@
     "dev:ios": "npm run copy:sql:wasm && quasar dev -m capacitor -T ios",
     "dev:android": "npm run copy:sql:wasm && quasar dev -m capacitor -T android",
     "build": "quasar build",
+    "build:ios": "quasar build -m capacitor -T ios --ide",
+    "build:android": "quasar build -m capacitor -T android --ide",
     "copy:sql:wasm": "copyfiles -u 3 node_modules/sql.js/dist/sql-wasm.wasm public/assets",
     "remove:sql:wasm": "rimraf public/assets/sql-wasm.wasm",
     "postinstall": "quasar prepare"
